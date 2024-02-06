@@ -1,0 +1,6 @@
+.dashBoard .theDataHub .dataHubBtnArea ul{width: 100%;height: 23px;list-style-type: none;border-bottom: solid 1px #E5E5EC;color: #505050;font-size: 16px;padding-bottom: 6px;}
+.dashBoard .theDataHub .dataHubBtnArea ul > li{list-style-type: none;float: left;text-align: center;}
+.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child{width: 25%;  }
+.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child + li{width: 25%;}
+.dashBoard .theDataHub .dataHubBtnArea button {border:none;background-color: transparent;color: #666666;}
+.dashBoard .theDataHub .dataHubBtnArea button.active {color:#292969;;font-weight: bold;border-bottom: solid 3px;width: 100%;padding-bottom:6px}

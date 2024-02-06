@@ -1,0 +1,42 @@
+.activeHublist{margin: 0 240px 0 240px; display: flex;flex-wrap: wrap; justify-content: left;  
+    gap:4px;align-items: center;   transition: margin-right 0.3s ease-in-out;}
+.activeHublist.sidebarOpen {margin-right: 460px;}
+.activeHublist .title{width: 100%;height: 52px; margin: 40px 0 4px 0;}
+.activeHublist .title span{color: #111; font-size: 36px;  font-family: "Pretendard";
+    letter-spacing: -0.9px; display: block;}
+.activeHublist .sub_title{margin-bottom: 40px;}
+.activeHublist .sub_title span{width: 700px;height: 24px;font-family: "Pretendard";font-size: 16px;
+    text-align: left;color: #505050;margin: 0 auto;}
+.activeHublist .dataHubBtnArea{width:100%; height: 48px; }
+.activeHublist .dataHubBtnArea ul{width: 100%;height: 48px;list-style-type: none;color: #505050;
+    font-size: 16px;}
+.activeHublist .dataHubBtnArea ul > li{width: 88px; list-style-type: none;float: left;text-align: left;}
+.activeHublist .dataHubBtnArea ul > li:first-child{width: 88px; margin-right:8px }
+.activeHublist .dataHubBtnArea ul > li:first-child + li{width: 88px; margin-right:8px }
+.activeHublist .dataHubBtnArea ul > li:first-child + li + li{width: 88px; margin-right:8px }
+.activeHublist .dataHubBtnArea ul > li:first-child + li + li + li
+{width: 88px; margin-right:8px }
+.activeHublist .dataHubBtnArea{border-bottom: 1px solid #DBDBDB; padding-bottom:20px}
+.activeHublist .dataHubBtnArea button {width: 88px; height: 48px; background-color: transparent;color: #666666;border-radius: 40px; border: 1px solid #DBDBDB;}
+.activeHublist .dataHubBtnArea button.active {width: 88px; height: 48px; 
+    border: 1px solid #105AEB; border-radius: 40px;background: #ECF2FF;}
+
+.activeHublist .contbox{width: 100%;display: flex;flex-wrap: wrap; justify-content: left; gap:14px;align-items: center; float: left;}
+.activeHublist .theActiveHub{float: left;width: 228px;height: 248px; border-radius: 8px;background-color: #FFF;box-shadow: 0px 2px 14px 0px rgba(0, 0, 0, 0.08);}
+.activeHublist .selectAndSearch{ margin-top: 24px; display: flex; height:48px; width: 100%; margin-bottom:16px; justify-content: space-between;}
+/* .activeHublist .selectAndSearch ul{width: 50%;height: 70px;} */
+/* .activeHublist .selectAndSearch ul select {width:200px; height: 480px;border-radius: 8px;border: 1px solid #BDBDBD;padding:14px 16px 14px 16px;} */
+/* .activeHublist .selectAndSearch ul .selectArea{width:300px;} */
+
+.activeHublist .selectAndSearch .selectArea{width:39%; display: flex; align-items: center; }
+/* .activeHublist .selectAndSearch ul:first-child{width: 43%;} */
+.activeHublist .selectAndSearch .buttonArea{display: flex}
+.activeHublist .selectAndSearch .selectArea .real{width:103px;}
+.activeHublist .selectAndSearch .buttonArea .filter{height: 48px; width:78px; margin-right:8px;padding: 10px 14px; justify-content: center;
+    font-size: 14px;align-items: center;border-radius: 6px;border: 1px solid #BDBDBD;}
+.activeHublist .selectAndSearch .buttonArea .fileupload{height: 48px; display: flex; gap:6;justify-content: center;align-items: center;
+    padding: 10px 14px; border-radius: 6px;border: 1px solid #105AEB; margin-right:23px;
+    background-color: #105AEB;color:#FFF}
+.overlay {position: fixed;top: 0;left: 0;width: 100%;height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); display: flex; justify-content: center;
+    align-items: center;}

@@ -1,0 +1,28 @@
+  /*대쉬보드*/
+  .dashBoard { margin: 0 auto; width:1440px; height: 1080px;  
+    /* overflow-x: hidden; overflow-y: hidden; */
+  }
+  .dashBoard .title{width: 100%;height: 52px;}
+  .dashBoard .title span{color: #111;font-family: "Pretendard";font-size: 36px;
+    letter-spacing: -0.9px;margin: 32px auto; display: block;}
+  .dashBoard .sub_title span{width: 700px;height: 24px;top: 192px;left: 240px;
+    font-family: "Pretendard";font-size: 16px;font-weight: 400;line-height: 24px;
+    letter-spacing: -0.025em;text-align: left;color: #505050;margin: 0 auto;}
+  .dashBoard .selectArea{display:flex;}
+  .dashBoard .selectArea ul{width: 100%;height: 48px;margin-top:48px;margin-bottom:16px;}
+  .dashBoard .selectArea ul select {width: 105px;height: 48px;border-radius: 8px;border: 1px solid #BDBDBD;
+    padding:14px 16px 14px 16px;}
+  .dashBoard .selectArea ul:first-child{width: 107px;}
+  .dashBoard .selectArea ul:first-child + ul{float: left;width: 80%;}
+
+  
+  .dashBoard.theDataHub .dataHubBtnArea ul{width: 100%;height: 23px;list-style-type: none;
+    border-bottom: solid 1px #E5E5EC;color: #505050;font-size: 16px;padding-bottom: 6px;}
+  .dashBoard.theDataHub .dataHubBtnArea ul > li{list-style-type: none;float: left;
+    text-align: center;}
+  .dashBoard.theDataHub .dataHubBtnArea ul > li:first-child{width: 25%;  }
+  .dashBoard.theDataHub .dataHubBtnArea ul > li:first-child + li{width: 25%;}
+  .dashBoard.theDataHub .dataHubBtnArea button {border:none;background-color: transparent;
+    color: #666666;z-index:10000;}
+  .dashBoard.theDataHub .dataHubBtnArea button.active {color:#292969;;font-weight: bold; 
+    border-bottom: solid 3px;width: 100%;padding-bottom:6px}

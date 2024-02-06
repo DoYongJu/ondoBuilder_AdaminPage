@@ -1,0 +1,23 @@
+body {background: #F7F7F7;}
+::selection {background: #F7F7F7;}
+.search_wrapper .input_holder {height:48px;width:48px;overflow: hidden;background: #F7F7F7;border-radius:8px;position: relative;border: 1px solid #BDBDBD;margin-left:8px;}
+.search_wrapper.active .input_holder {width:366px;border-radius: 6px;background: #F7F7F7;;transition: all .5s cubic-bezier(0.000, 0.105, 0.035, 1.570);}
+.search_wrapper .input_holder .search_input {width:100%;height: 50px;padding:0px 70px 0 20px;opacity: 0;position: absolute;top:0px;left:0px;background: transparent;
+    box-sizing: border-box;border:none;outline:none;font-family:"Open Sans", Arial, Verdana;font-size: 16px;font-weight: 400;line-height: 20px;color:black;
+    transform: translate(0, 60px) ;transition: all .3s cubic-bezier(0.000, 0.105, 0.035, 1.570);transition-delay: 0.3s;}
+.search_wrapper.active .input_holder .search_input {opacity: 1;transform: translate(50px, 0px);}
+.search_wrapper .input_holder .search_icon {width:48px;height:48px;border:none;border-radius:6px;background: #F7F7F7;;padding:0px;outline:none;position: relative;
+    float:left;cursor: pointer;transform: translate(0, -2px) ;transition: all 0.3s ease-in-out;}
+.search_wrapper.active .input_holder .search_icon {width: 40px;height:40px;margin: 10px;border-radius: 30px;}
+.search_wrapper .input_holder .search_icon span {width:22px;height:22px;display: inline-block;vertical-align: middle;position:relative;
+    transform: rotate(45deg);transition: all .4s cubic-bezier(0.650, -0.600, 0.240, 1.650)}
+.search_wrapper.active .input_holder .search_icon span {transform: rotate(-45deg);}
+.search_wrapper .input_holder .search_icon span::before, .search_wrapper .input_holder .search_icon span::after {position: absolute; content:'';}
+.search_wrapper .input_holder .search_icon span::before {width: 4px;height: 11px;left: 9px;top: 18px;border-radius: 2px;background: #030303;}
+.search_wrapper .input_holder .search_icon span::after {width: 14px;height: 14px;left: 0px;top: 0px;border-radius: 16px;border: 4px solid #030303;}
+.search_wrapper .close {position: absolute;z-index: 1;top:24px;right:20px;width:25px;height:25px;cursor: pointer;transform: rotate(-180deg);
+    transition: all .3s cubic-bezier(0.285, -0.450, 0.935, 0.110);transition-delay: 0.2s;}
+.search_wrapper.active .close {right:-50px;transform: rotate(45deg);transition: all .6s cubic-bezier(0.000, 0.105, 0.035, 1.570);transition-delay: 0.5s;}
+.search_wrapper .close::before, .search_wrapper .close::after {position:absolute;content:'';background: #FE5F55;border-radius: 2px;}
+.search_wrapper .close::before {width: 5px;height: 25px;left: 10px;top: 0px;}
+.search_wrapper .close::after {width: 25px;height: 5px;left: 0px;top: 10px;}

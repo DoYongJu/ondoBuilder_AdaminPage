@@ -1,0 +1,135 @@
+ul,li{ margin: 0px; padding: 0px; }
+
+
+.App {
+  /* width: 100%;
+  height: 1080px; */
+  /* min-height:919px;
+  max-height: auto; */
+  background: #f7f7f7;  
+  /* overflow-x: hidden;
+  overflow-y: hidden; */
+
+}
+
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {border-radius: 16px;background: #B0C5F2;}
+::-webkit-scrollbar-track { background-color: #F7F7F7; }
+
+/*dataHubTemplate*/
+.dataHubTemplate{
+  margin: 0 auto; 
+  width: 1440px; 
+  display: flex;
+  flex-wrap: wrap;
+  gap:16px;
+  justify-content: left;
+  align-items: center;
+  margin-top: 24px;
+
+}
+.dataHubTemplate .theDataHub{
+  width: 401px;
+  height: 591px;
+  padding-top:14px;
+  border-radius: 14px;
+  background: #FFF;
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.10);
+  border: 2px solid #BDBDBD;
+  padding:20px 33px 40px 31px;
+  font-style: normal;
+}
+.dataHubTemplate .theDataHub .theDataHubPlus{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top:278px;
+  color: #505050;
+
+}
+.dataHubTemplate .theDataHub .headArea{
+  margin-bottom:40px;
+}
+.dataHubTemplate .theDataHub .headArea .firstp{
+  color: #111;
+  font-family: "Pretendard";
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 34px; /* 141.667% */
+  letter-spacing: -0.6px;
+  margin-top:20px;
+  margin-bottom:40px;
+}
+.dataHubTemplate .theDataHub:hover{
+  border:2px solid #105AEB;
+}
+.dataHubTemplate .theDataHub .contentArea {
+  justify-content: space-between;
+  height:74px;
+  width: 100%;
+  border-top: 1px solid #E5E5EC;
+  padding-top:24px;
+  display:flex;
+  color: #505050;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 22px; 
+  letter-spacing: -0.375px;  
+ }
+ .dataHubTemplate .theDataHub .cirChart {
+  padding : 19px 16px 15px 16px;
+  display: flex;
+ 
+ }
+ .dataHubTemplate .theDataHub .BarChart {
+  margin-top:12px;
+  padding-bottom:28px;
+ }
+ .dataHubTemplate .theDataHub .cirChartDoc{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+ }
+ .dataHubTemplate .theDataHub .cirChartDocArea{
+  width: 100%;
+  display: inline-block;
+  
+ }
+ .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc{
+  padding-top:35px;
+ }
+ .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc > li:first-child{
+  width: 10px; height:10px; float: left; margin: 5px 5px 0 0;
+ }
+ .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc > li:first-child + li{
+  width: 40%; float: left;   text-align: left;color: #505050;font-family: "Pretendard";font-size: 16px;
+ }
+ .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc > li:first-child + li+li{
+  width: 40%; float: right;   text-align: right;color: #111;font-family: "Pretendard";font-size: 16px;
+ }
+ 
+ .dataHubTemplate .theDataHub .barChartDoc{
+  list-style-type: none;
+  margin-top:12px;
+ }
+ .dataHubTemplate .theDataHub .barChartDocArea{
+  width: 100%;
+  display: inline-block;
+  margin-top:10px;
+ }
+ .dataHubTemplate .theDataHub .barChartDocArea > .barChartDoc > li:first-child{
+  width: 10px; height:10px; float: left; margin: 5px 5px 0 0;
+ }
+ .dataHubTemplate .theDataHub .barChartDocArea > .barChartDoc > li:first-child + li{
+  width: 15%; float: left;   text-align: left; color: #505050;font-family: "Pretendard";font-size: 16px;font-weight: 400;line-height: 24px;letter-spacing: -0.4px;
+ }
+ .dataHubTemplate .theDataHub .barChartDocArea > .barChartDoc > li:first-child + li+li{
+  width: 80%; float: right;   text-align: right; color: #111;font-family: "Pretendard";font-size: 16px;font-weight: 400;line-height: 24px;letter-spacing: -0.4px;
+ }
+
+
+
+
