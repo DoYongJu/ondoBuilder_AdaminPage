@@ -23,7 +23,7 @@ deploy:
     - kubectl version
   script:
     - |
-      cat << 'EOF' | kubectl apply --force -f -
+      cat << EOF | kubectl apply --force -f -
       apiVersion: apps/v1
       kind: Deployment
       metadata:
@@ -49,7 +49,7 @@ deploy:
               app: ondo-data-builder-front
           spec:
             containers:
-            - image: docker.jointree.kr/dev-helm/ondo-data-builder-front:${IMAGE_VERSION}
+            - image: docker.jointree.kr/dev-helm/ondo-data-builder-front:$IMAGE_VERSION
               imagePullPolicy: IfNotPresent
               name: ondo-data-builder-front
               terminationMessagePath: /dev/termination-log
@@ -61,7 +61,7 @@ deploy:
             terminationGracePeriodSeconds: 30
       EOF
     - | 
-      cat << 'EOF' | kubectl apply --force -f -
+      cat << EOF | kubectl apply --force -f -
       apiVersion: v1
       kind: Service
       metadata:
