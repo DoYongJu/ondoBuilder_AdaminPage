@@ -1,14 +1,23 @@
 stages:
+#  - package
   - package
+#package:
+#  stage: package
+#  before_script:
+#    - sudo docker login docker.jointree.kr -u $DOCKER_ID -p $DOCKER_PASS
+#  script:
+#    - sudo docker build -t docker.jointree.kr/dev-helm/ondo-data-builder-front:1 .
+#    - sudo docker push docker.jointree.kr/dev-helm/ondo-data-builder-front:1
+#  after_script:
+#    - sudo docker logout
+#  only:
+#    - master
 
-package:
-  stage: package
+deploy:
+  stage: deploy
   before_script:
-    - sudo docker login docker.jointree.kr -u $DOCKER_ID -p $DOCKER_PASS
+    - kubectl version
   script:
-    - sudo docker build -t docker.jointree.kr/dev-helm/ondo-data-builder-front:1 .
-    - sudo docker push docker.jointree.kr/dev-helm/ondo-data-builder-front:1
-  after_script:
-    - sudo docker logout
+    - kubectl create deployment ondo-data-builder-front --image=docker.jointree.kr/dev-helm/ondo-data-builder-front:1 -n ondo-gpt
   only:
-    - master
+    - master		
