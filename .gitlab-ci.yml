@@ -1,6 +1,10 @@
 stages:
 #  - package
   - deploy
+
+variables:
+  IMAGE_VERSION: '1'
+
 #package:
 #  stage: package
 #  before_script:
@@ -18,6 +22,68 @@ deploy:
   before_script:
     - kubectl version
   script:
-    - kubectl create deployment ondo-data-builder-front --image=docker.jointree.kr/dev-helm/ondo-data-builder-front:1 -n ondo-gpt
+    - |
+      cat << 'EOF' | kubectl apply --force -f -
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        labels:
+          app: ondo-data-builder-front
+        name: ondo-data-builder-front
+        namespace: ondo-gpt
+      spec:
+        progressDeadlineSeconds: 600
+        replicas: 1
+        revisionHistoryLimit: 10
+        selector:
+          matchLabels:
+            app: ondo-data-builder-front
+        strategy:
+          rollingUpdate:
+            maxSurge: 25%
+            maxUnavailable: 25%
+          type: RollingUpdate
+        template:
+          metadata:
+            labels:
+              app: ondo-data-builder-front
+          spec:
+            containers:
+            - image: docker.jointree.kr/dev-helm/ondo-data-builder-front:$IMAGE_VERSION
+              imagePullPolicy: IfNotPresent
+              name: ondo-data-builder-front
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: {}
+            terminationGracePeriodSeconds: 30
+      EOF
+    - | 
+      cat << 'EOF' | kubectl apply --force -f -
+      apiVersion: v1
+      kind: Service
+      metadata:
+        labels:
+          app: ondo-data-builder-front
+        name: ondo-data-builder-front
+        namespace: ondo-gpt
+      spec:
+        externalTrafficPolicy: Cluster
+        internalTrafficPolicy: Cluster
+        ipFamilies:
+        - IPv4
+        ipFamilyPolicy: SingleStack
+        ports:
+        - nodePort: 32461
+          port: 3000
+          protocol: TCP
+          targetPort: 3000
+        selector:
+          app: ondo-data-builder-front
+        sessionAffinity: None
+        type: NodePort
+      EOF
   only:
-    - master		
+    - master
