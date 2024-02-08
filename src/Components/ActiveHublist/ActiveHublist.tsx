@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import { useState, useEffect,useRef,  DragEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {MyObject, dataProps } from '../../Resources/Models';
+import { UploadedInfo } from '../../Resources/Models';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
@@ -14,16 +14,30 @@ function ActiveHublist(){
     const location = useLocation();
     const navigate = useNavigate();
     const [viewUpload, setViewUpload] = useState(false);
+    const [isFirst, setIsFirst] = useState(true);
     const [, setSelected] = useState('');
     const [, setSearchType] = useState('');
     const [, setSearchText] = useState('');
-    const [activeButton, setActiveButton] = useState('default');
-    const selectList = ['조회', '이름별', '주제별','생성일','수정일'];
+    const [selectedOption, setSelectedOption] = useState('');
 
-    const data:any= location.state;
+    const [activeButton, setActiveButton] = useState('default');
+    const selectList = ['조회','이름순','수정일 순','업로드 순'];
+    const filterList = ['선택','PDF','DOC','PPT','CSV'];
+
+    const type:string= location.state;
     
-    console.log(data);
+    console.log("fhdjsfhjkdhfjkdsHZfjSJK"+type);
     const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+    const [isActive, setActive] = useState(false);
+    const initialState ={ name: '', size: 0, type: '' };
+    // const [uploadedInfo, setUploadedInfo] = useState<UploadedInfo>(initialState);
+    const [uploadedInfo, setUploadedInfo] = useState(false);
+    const [selctedClick, setSelctedClick] = useState(false);
+
+
+
+
+
 
     const handleCloseSideBar = () => {
       setIsSideBarOpen(false);
@@ -50,15 +64,62 @@ function ActiveHublist(){
     const handleButtonClick = (value:string) => {
   
         switch(value){
-          case "doc" :   navigate('/ActiveHublist',{state:data}); break;
-          case "img" :  navigate('/ActiveHublist',{state:data}); break;
-          case "video" :  navigate('/ActiveHublist',{state:data}); break;
-          case "link" :  navigate('/ActiveHublist',{state:data}); break;
-          default :   navigate('/UpdateDataHub',{state:data}); 
+          case "doc" :   navigate('/ActiveHublist',{state:"doc"}); break;
+          case "img" :  navigate('/ActiveHublist',{state:"img"}); break;
+          case "video" :  navigate('/ActiveHublist',{state: "video"}); break;
+          case "link" :  navigate('/ActiveHublist',{state:"link"}); break;
+          default :   navigate('/UpdateDataHub',{state:type});  //24.02.07 추후 체크 필요
         setActiveButton(value);
         };
     };
+    //File 업로드 관련
+  const handleDragStart = () => setActive(true);
+  const handleDragEnd = () => setActive(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<UploadedInfo>(initialState);
 
+  
+  const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    const items = e.dataTransfer.items;
+
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.kind === 'file') {
+          const tempFile = item.getAsFile();
+          if (tempFile) {
+            const { name, size, type } = tempFile;
+            console.log('File Info - Name:',name,'Size:',size,'Type:',type);
+            const uploadedInfo = {name,size,type,};
+            setSelectedFile(uploadedInfo);
+            setViewUpload(true);
+            setUploadedInfo(true);
+            setActive(false);
+
+            setIsFirst(false); //나중에 파일 업로드 된 후 사용될 코드. 개발 테스트로 인해 현재 위치
+           
+          };
+        };
+      };
+    };
+  };
+  const handleDragOver = (event: DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+  };
+  const handleFileuploadButtonClick =()=>{
+    if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+  }
+  const handleFileChange = (e:any) => {
+    // Handle the selected file
+    const file = e.target.file;
+    const selectedFile = e.target.files[0];
+    setSelectedFile({name:selectedFile.name , size:selectedFile.size , type: selectedFile.type});
+    setViewUpload(true);
+    console.log('Selected File:', selectedFile);
+  };
     return (
 
       <div className={`activeHublist ${isSideBarOpen ? 'sidebarOpen' : ''}`}>
@@ -88,30 +149,68 @@ function ActiveHublist(){
                 <SearchBar />
             </div>
             <div className='buttonArea'>
-                <button className='filter' value='필터'>
+                <button onClick={()=>{setSelctedClick(!selctedClick)}} className='filter' value='필터'>
                     <LuListFilter size={20}/>필터
                 </button>
-                <button className='fileupload' value='파일업로드' onClick={()=>{ setViewUpload(true);}}>
-                    <FiUpload /> 파일업로드
+                {selctedClick &&
+                    <ul className="options-list">
+                    {filterList.slice(1).map((option, index) => ( 
+                        <li key={index} onClick={() => { setSelectedOption(option);}} value={option}>
+                        {option}
+                        <input type="checkbox"  className="Checkbox" value={option}></input>
+                        </li>
+                
+                    ))}
+                    </ul>
+                    }
+                <button className='fileupload' value='파일업로드' onClick={handleFileuploadButtonClick}>
+                    <input type="file" ref={fileInputRef} style={{ display: 'none' }}
+                        onChange={(e)=>handleFileChange(e)}/>
+                    <FiUpload /> 파일 업로드
                 </button>               
             </div>
         </div>
-
+        {/* 처음 진입 할때, 파일 드롭 화면 */}
+        {isFirst && 
         <div className='contbox'>
-        <div className='theActiveHub' onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);}}> 사이드 바 열기 </div>
-        <div className='theActiveHub'>  </div>
-        <div className='theActiveHub'>  </div>
-        <div className='theActiveHub'>  </div>
-        <div className='theActiveHub'>  </div>
-        <div className='theActiveHub'>  </div>
-        <div className='theActiveHub'>  </div>
-        {/* {data.map((item:MyObject) => (    
+            <div className="ChatFileInfo">
+            <label className={`preview${isActive ? ' active' : ''}`} 
+              onDragEnter={handleDragStart}
+              onDragLeave={handleDragEnd}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}> 
+              <input type="file" className="chatFile" />
+
+              {!uploadedInfo && (
+                <>
+                  <p className="preview_msg">
+                    클릭 혹은 파일을 이곳에 드롭하세요.
+                  </p>
+                  <p className="preview_desc">파일당 최대 3MB</p>
+                </>
+              )}
+            </label>
+          </div>
+        </div>
+        }
+
+        {!isFirst && 
+        <div className='contbox'>
+            <div className='theActiveHub' onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);}}> 사이드 바 열기 </div>
+            <div className='theActiveHub'>  </div>
+            <div className='theActiveHub'>  </div>
+            <div className='theActiveHub'>  </div>
+            <div className='theActiveHub'>  </div>
+            <div className='theActiveHub'>  </div>
+            <div className='theActiveHub'>  </div>
+            {/* {data.map((item:MyObject) => (    
             <div className='theActiveHub'> {item.name} </div>
             ))} */}
-        
         </div>
+        }
+        
         <SideBar isOpen={isSideBarOpen} onClose={handleCloseSideBar} /> 
-        {viewUpload?(  <div className="overlay"> <UploadFile onClose={handleCloseFileUpload} /> </div>  ):('')}
+        {viewUpload?(  <div className="overlay"> <UploadFile onClose={handleCloseFileUpload} oneFile={selectedFile}/> </div>  ):('')}
       
     </div>
     

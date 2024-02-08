@@ -20,90 +20,44 @@ ul,li{ margin: 0px; padding: 0px; }
 ::-webkit-scrollbar-track { background-color: #F7F7F7; }
 
 /*dataHubTemplate*/
-.dataHubTemplate{
-  margin: 0 auto; 
-  width: 1440px; 
-  display: flex;
-  flex-wrap: wrap;
-  gap:16px;
-  justify-content: left;
-  align-items: center;
-  margin-top: 24px;
+.dataHubTemplate{margin: 0 auto; width: 1440px; display: flex;flex-wrap: wrap;gap:16px;justify-content: left;
+  align-items: center;margin-top: 24px;}
+.dataHubTemplate .theDataHub{width: 400px;height: 500px;padding-top:14px;border-radius: 14px;
+  background: #FFF;box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.10);border: 2px solid #BDBDBD;
+  padding:20px 33px 40px 31px;}
+.dataHubTemplate .theDataHub .headArea .innerInfo{height:28px; width:100%; margin:16px 0 12px 0;} 
 
-}
-.dataHubTemplate .theDataHub{
-  width: 401px;
-  height: 591px;
-  padding-top:14px;
-  border-radius: 14px;
-  background: #FFF;
-  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.10);
-  border: 2px solid #BDBDBD;
-  padding:20px 33px 40px 31px;
-  font-style: normal;
-}
+
+.dataHubTemplate .theDataHub .headArea .innerInfo span{font-family: "Pretendard";
+  font-size: 18px;font-weight: 500;line-height: 28px;letter-spacing: -0.45px;}
+
+
 .dataHubTemplate .theDataHub .theDataHubPlus{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top:278px;
-  color: #505050;
+  display: flex;flex-direction: column;align-items: center;padding-top:278px;color: #505050;}
+.dataHubTemplate .theDataHub .headArea{width:100%;height:100%}
+.dataHubTemplate .theDataHub .headArea .titleArea{width: 100%; height:60px;  display: flex;
+  flex-direction: column;}
+.dataHubTemplate .theDataHub .headArea .titleArea .firstp{color: #111;font-family: "Pretendard";font-size: 24px;font-style: normal;font-weight: 600;
+  line-height: 34px;letter-spacing: -0.6px;}
+.dataHubTemplate .theDataHub .headArea .titleArea .secondp{max-width:191px; height:22px; color: #505050;font-family: Pretendard;font-size: 15px;
+font-style: normal; margin:0;font-weight: 400;line-height: 22px; letter-spacing: -0.375px;
+white-space: nowrap;overflow: hidden;text-overflow: ellipsis;} 
+/* end */
 
-}
-.dataHubTemplate .theDataHub .headArea{
-  margin-bottom:40px;
-}
-.dataHubTemplate .theDataHub .headArea .firstp{
-  color: #111;
-  font-family: "Pretendard";
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 34px; /* 141.667% */
-  letter-spacing: -0.6px;
-  margin-top:20px;
-  margin-bottom:40px;
-}
-.dataHubTemplate .theDataHub:hover{
-  border:2px solid #105AEB;
-}
-.dataHubTemplate .theDataHub .contentArea {
-  justify-content: space-between;
-  height:74px;
-  width: 100%;
-  border-top: 1px solid #E5E5EC;
-  padding-top:24px;
-  display:flex;
-  color: #505050;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 22px; 
-  letter-spacing: -0.375px;  
- }
- .dataHubTemplate .theDataHub .cirChart {
-  padding : 19px 16px 15px 16px;
-  display: flex;
- 
- }
+
+.dataHubTemplate .theDataHub:hover{border:2px solid #105AEB;}
+.dataHubTemplate .theDataHub .contentArea { justify-content: space-between;
+  height:80px;width: 100%;border-bottom: 1px solid #E5E5EC;display:flex;
+  color: #505050;font-size: 15px;font-weight: 500;line-height: 22px; letter-spacing: -0.375px;}
+ .dataHubTemplate .theDataHub .cirChart {width:100%; padding : 10px 16px 15px 0px;display: flex;}
  .dataHubTemplate .theDataHub .BarChart {
-  margin-top:12px;
+  margin-top:6px;
   padding-bottom:28px;
  }
- .dataHubTemplate .theDataHub .cirChartDoc{
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
- }
- .dataHubTemplate .theDataHub .cirChartDocArea{
-  width: 100%;
-  display: inline-block;
-  
- }
- .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc{
-  padding-top:35px;
- }
- .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc > li:first-child{
-  width: 10px; height:10px; float: left; margin: 5px 5px 0 0;
- }
+ .dataHubTemplate .theDataHub .cirChartDoc{list-style-type: none;padding: 0;margin: 0;}
+ .dataHubTemplate .theDataHub .cirChartDocArea{ width: 100%;display: inline-block;}
+ .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc{padding-top:35px;}
+ .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc > li:first-child{width: 10px; height:10px; float: left; margin: 5px 5px 0 0;}
  .dataHubTemplate .theDataHub .cirChartDocArea > .cirChartDoc > li:first-child + li{
   width: 40%; float: left;   text-align: left;color: #505050;font-family: "Pretendard";font-size: 16px;
  }
@@ -111,15 +65,8 @@ ul,li{ margin: 0px; padding: 0px; }
   width: 40%; float: right;   text-align: right;color: #111;font-family: "Pretendard";font-size: 16px;
  }
  
- .dataHubTemplate .theDataHub .barChartDoc{
-  list-style-type: none;
-  margin-top:12px;
- }
- .dataHubTemplate .theDataHub .barChartDocArea{
-  width: 100%;
-  display: inline-block;
-  margin-top:10px;
- }
+ .dataHubTemplate .theDataHub .barChartDoc{list-style-type: none;margin-top:12px;}
+ .dataHubTemplate .theDataHub .barChartDocArea{ width: 100%;display: inline-block;margin-top:10px;}
  .dataHubTemplate .theDataHub .barChartDocArea > .barChartDoc > li:first-child{
   width: 10px; height:10px; float: left; margin: 5px 5px 0 0;
  }

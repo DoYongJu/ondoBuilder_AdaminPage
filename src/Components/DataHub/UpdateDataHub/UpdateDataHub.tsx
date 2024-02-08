@@ -13,6 +13,7 @@ function UpdateDataHub() {
 
   const [activeButton, setActiveButton] = useState('info')|| location.state;
   const [nametext, sethubNameText] = useState('');
+  const [changeInfo, setChangeInfo] = useState(false);
   const [infoText, setInfoText] = useState('');
   const [currentCount, setCurrentCount] = useState(0);
   const totalCount = 50;
@@ -38,7 +39,7 @@ function UpdateDataHub() {
 
 
 
-  const handleInfoChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInfoChange = (event: any) => {
     const newText = event.target.value;
     setInfoText(newText);
   };
@@ -88,18 +89,33 @@ function UpdateDataHub() {
       </div>
 
       <div className="hubInfoBody">
-        <div className="key1"><span>허브 이름</span> <span>허브 설명</span></div>
-        <div className="value">
-          <input type="text" value={nametext}  onChange={handleNameChange}></input>
-          <input type="text" value={infoText} onChange={handleInfoChange}></input>
-          <div className="counters">
-            <span id="currentCount">{currentCount}</span>/
-            <span id="totalCount">{totalCount}</span>(글자수)
-          </div>
-          <div className="hubInfoBodyBtnArea">
-          <button>수정사항 저장</button>
-          </div>
+        <div className="first">
+          <div className='hubnameArea'><span>허브 이름</span></div> 
+          {!changeInfo &&<div className='hubnameSpace'><span>허브이름 스페이스</span></div>}
+          {changeInfo && 
+          <div className='hubnameSpace'> 
+            <input type="text" value={nametext}  onChange={handleNameChange}></input>
+          </div>}  
         </div>
+        <div className='second'>
+          <div className='hubnameArea'><span>허브 설명</span></div>
+          {!changeInfo && <div className='hubnameSpace'><span>데이터 허브 설명 공간</span></div>}
+          {changeInfo &&  
+            <div className='hubnameSpace'>
+              
+              <textarea  value={infoText} maxLength={totalCount}  onChange={handleInfoChange}></textarea>
+              <div className="counters">
+                  <span id="currentCount">{currentCount}</span>/
+                  <span id="totalCount">{totalCount}</span>(글자수)
+                </div>
+            </div>}  
+        </div>
+
+        <div className="hubInfoBodyBtnArea">
+        {changeInfo &&   <button className='saveInfo' onClick={()=>{setChangeInfo(!changeInfo)}}>정보 저장 </button> }
+        {!changeInfo &&   <button onClick={()=>{setChangeInfo(!changeInfo)}}>허브 정보 수정 </button> }
+        </div>
+       
       </div>
 
       <div className="hubInfoDetails">

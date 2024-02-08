@@ -11,7 +11,7 @@ const CircleChartUiRender: React.FC<dataProps>=({data})=>{
         height: 200,
         pieHole: 0.7,
         pieSliceText: 'none',
-        colors: ['#292969', '#284FB5', '#3B97CE', '#74C2E3'],
+        colors: [ '#E8E9EB','#292969', '#284FB5', '#3B97CE', '#74C2E3',],
         
   };
   const contents = dataHandler(data);
@@ -19,11 +19,9 @@ const CircleChartUiRender: React.FC<dataProps>=({data})=>{
   let chartData:any[][] = [['Task', 'Hours per Day']];
 
   contents.map( (item) => {
+
     chartData.push([item.name, item.val ]);
   });
-  
-        
-        
   
     return <Chart chartType="PieChart" width={0} height={0} data={chartData} options={options}/>;
 };

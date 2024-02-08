@@ -15,9 +15,9 @@ function Login() {
     setTokenRecoil = useSetRecoilState(tokenState);
 
 
-  const public_key = ` WEWJH876RE7G78DGKW31H8JFB98J2SKW`;
-  const cipherPwd = CryptoJS.AES.encrypt(password, public_key).toString();
-  console.log('cipherPwd'+cipherPwd);
+  // const public_key = ` WEWJH876RE7G78DGKW31H8JFB98J2SKW`;
+  // const cipherPwd = CryptoJS.AES.encrypt(password, public_key).toString();
+  // console.log('cipherPwd'+cipherPwd);
 
   async function loginApi() {
 
@@ -28,7 +28,7 @@ function Login() {
 
       await axios({
         method: 'POST',
-        url: 'http://192.168.20.193:3000/v1/api/auth/signin',
+        url: process.env.REACT_APP_LOGIN_API,
         headers: {"accept": 'application/json', 'Content-Type': 'application/json'},
         data: sendParam
         
@@ -68,7 +68,6 @@ function Login() {
     } else if (password === '') {
       alert(' password을 입력하세요');
     };
-    console.log(cipherPwd);
   };
 
   return (

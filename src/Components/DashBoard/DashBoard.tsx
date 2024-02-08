@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import './DashBoard.css';
 import {useRecoilValue} from 'recoil';
 import { MyObject } from '../../Resources/Models';
@@ -26,7 +27,34 @@ useEffect(() => {
           
 }, [searchText]);
 
-  
+async function setDashBoardApi() {
+    
+  const param = {
+      // username: username
+      // , email: email
+      // , password: password
+      // , company: company
+      // , division: division
+      // , tel: tel
+    };
+
+    await axios({
+      method: 'POST',
+      url: process.env.REACT_APP_DASHBOARD_API,
+      headers: {'Content-Type': 'application/json'},
+      data: param
+
+    }).then(response => {
+      //console.log(response) => ? 
+
+    
+    }).catch(error =>{
+      if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){
+      console.log('axios 과정중 에러발생 uploadFile 확인-yong')
+      };
+    
+    });
+};  
 function handleSelect (e:any){
   const selectedValue = e.target.value;
   setSelected(selectedValue);
@@ -60,17 +88,23 @@ function ClickTheDataHub( data: MyObject){
         <div key={data.name} className='theDataHub' onClick={()=>ClickTheDataHub(data)}>
           <div className='icon'><img style={{width:'35px', height:'35px'}} src={process.env.PUBLIC_URL + '/dataHub_List_Icon.png'} alt="온도 로고"/></div>
           <div className='headArea'>
-            <ul><p className='firstp'>{data.name}</p></ul>
-            <ul><p style={{width:'405px', height:'46px'}}>{data.title || "test"}</p></ul>
+            <div className='titleArea'>
+              <span className='firstp'>{data.name}</span>
+              <span className='secondp' style={{width:'405px', height:'46px'}}>{data.title || "test"}</span>
+            </div>
+            <div className='contentArea'>
+              <ul><p>허브 생성일</p><p>허브 수정일</p> </ul>
+              <ul><p>{data.generateDate}</p><p>{data.lastEditDate}</p></ul>
+            </div>
+            <div className='innerInfo'><span>내부 정보</span></div>
+            <div className='chartArea'><CustomChart data={data}/></div>
           </div>
-          <div className='chartArea'><CustomChart data={data}/></div>
-          <div className='contentArea'>
-            <ul><p>생성일</p><p>마지막 수정일</p> </ul>
-            <ul><p>{data.generateDate}</p><p>{data.lastEditDate}</p></ul>
-          </div>
+         
+          
+ 
         </div>
        ))} 
-       <div className='theDataHub'> <div className='theDataHubPlus'><ul><FaPlus size={20}/></ul><ul>허브추가</ul> </div></div>        
+       <div className='theDataHub' onClick={()=>{navigate('/AddHub');}}> <div className='theDataHubPlus'><ul><FaPlus size={20}/></ul><ul>허브추가</ul> </div></div>        
     </div>
   </div>
   );
@@ -84,10 +118,11 @@ const dummyData : MyObjects = [
     "generateDate": "2022-01-11",
     "lastEditDate": "2022-01-12",
     "title": "First entFirst DoentFirst DocumentFiocumentFirst DocumentFirst DocumentDocument",
-    "doc": 5,
-    "img": 4,
-    "text": 3,
-    "link": 2,
+
+    "doc": 0,
+    "img": 0,
+    "text": 0,
+    "link": 0,
    
   },
   {
@@ -97,7 +132,7 @@ const dummyData : MyObjects = [
     "lastEditDate": "2022-01-30",
     "title": "First Documentccccccccccccccccccccccccccccccccccccc",
     "doc": 15,
-    "img": 1,
+    "img": 0,
     "text": 2,
     "link": 1,
    

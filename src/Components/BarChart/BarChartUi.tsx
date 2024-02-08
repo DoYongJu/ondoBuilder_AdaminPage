@@ -11,7 +11,7 @@ const stickChartUiRender: React.FC<dataProps>=({data})=>{
       width:430,
       legend: { position: 'none'},
       isStacked: true,
-      colors: ['#292969', '#284FB5', '#3B97CE', '#74C2E3'],
+      colors: ['#E8E9EB','#292969', '#284FB5', '#3B97CE', '#74C2E3'],
 
       vAxis: {
         baselineColor: 'transparent',
@@ -35,8 +35,12 @@ const stickChartUiRender: React.FC<dataProps>=({data})=>{
     let chartData: any[][] =[['Fantasy & Sci F'],[0]];
 
     contents.map((item) => {
-      chartData[0].push(item.name);
-      chartData[1].push(item.val);
+      let name = item.name;
+      let val = item.val;
+      
+      chartData[0].push(name);
+      chartData[1].push(val);
+    
     });
 
     chartData[0].push({ role: 'annotation' });

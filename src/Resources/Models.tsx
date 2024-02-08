@@ -29,7 +29,15 @@ export interface dataProps {
 export interface tag{
   name: string | undefined; 
 }
-
+export interface UploadedInfo {
+  name: string;
+  size: number;
+  type: string;
+}
+export interface UploadFileProps {
+  onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  oneFile:UploadedInfo;
+};
 export type tagsList= tag[];
 export type contentList = content[];
 export type MyObjects = MyObject[];

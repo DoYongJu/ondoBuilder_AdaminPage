@@ -1,6 +1,17 @@
-.dashBoard .theDataHub .dataHubBtnArea ul{width: 100%;height: 23px;list-style-type: none;border-bottom: solid 1px #E5E5EC;color: #505050;font-size: 16px;padding-bottom: 6px;}
-.dashBoard .theDataHub .dataHubBtnArea ul > li{list-style-type: none;float: left;text-align: center;}
-.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child{width: 25%;  }
-.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child + li{width: 25%;}
-.dashBoard .theDataHub .dataHubBtnArea button {border:none;background-color: transparent;color: #666666;}
-.dashBoard .theDataHub .dataHubBtnArea button.active {color:#292969;;font-weight: bold;border-bottom: solid 3px;width: 100%;padding-bottom:6px}
+.dashBoard .theDataHub .dataHubBtnArea ul{width: 100%;height: 48px;list-style-type: none;color: #505050;
+  font-size: 16px;  font-style: normal;font-family: Pretendard;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.4px;}
+.dashBoard .theDataHub .dataHubBtnArea ul > li{list-style-type: none;float: left;text-align: center; cursor: pointer;}
+
+.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child{width: 96px;padding: 10px 4px;color: #505050;
+    height:28px;  border-radius: 40px;border: 1px solid #DBDBDB;margin-right:8px;
+    font-size: 16px;font-style: normal;font-weight: 500;line-height: 24px; letter-spacing: -0.4px;}
+.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child + li{width: 96px; height:28px; padding: 10px 4px;color: #505050;
+  border-radius: 40px;border: 1px solid #DBDBDB;}
+
+.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child.active{width: 96px;padding: 10px 4px;
+  height:28px;  border-radius: 40px;background-color: #ECF2FF;color:#105AEB; margin-right:8px;}
+.dashBoard .theDataHub .dataHubBtnArea ul > li:first-child+li.active{width: 96px;padding: 10px 4px;
+  height:28px;  border-radius: 40px; background-color:#ECF2FF; color:#105AEB; }    

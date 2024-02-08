@@ -1,12 +1,11 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
+import axios from 'axios';
 import { BiX } from "react-icons/bi";
 import './UploadFile.css';
 import SelectBox from '../SelectBox/SelectBox';
-import {tagsList, tag} from '../../Resources/Models';
+import {tagsList, tag, UploadedInfo, UploadFileProps} from '../../Resources/Models';
 
-interface UploadFileProps {
-    onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-};
+
 interface ImageType {
     id: number;
     name:string;
@@ -14,7 +13,7 @@ interface ImageType {
     order: number;
 };
 
-const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
+const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [text, setInfoText] = useState(''); 
     const [caroselNewView, setCaroselNewView] = useState(false);  
@@ -34,19 +33,44 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
 
       ]);
 
-    const selectList = ['선택', '선택하지 않음', '캐로셀01','캐로셀02','캐로셀04','캐로셀05','캐로셀06'];
+    let selectList = ['선택', '선택하지 않음', '캐로셀01','캐로셀02','캐로셀04','캐로셀05','캐로셀06'];
     const [selected, setSelected] = useState('');
+    const [addCarosel, setAddCarosel] = useState('');
+
+    async function uploadFileApi() {
+
+        const sendParam = {
+        //   email: email,
+        //   password: password,
+        };
+  
+        await axios({
+          method: '파일 올리는 api',
+          url: process.env.REACT_APP_UPLOAD_API,
+          headers: {"accept": 'application/json', 'Content-Type': 'application/json'},
+          data: sendParam
+          
+        }).then(response => {
+            //console.log(response) => ? 
+ 
+          
+        }).catch(error =>{
+          if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){
+           console.log('axios 과정중 에러발생 uploadFile 확인-yong')
+          };
+         
+        });
+  
+    };
+
+
+
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         setDraggedItem(images[index]);
-
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', index.toString());
-    };
-      
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-    };
+    };   
       
     const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         e.preventDefault();
@@ -69,10 +93,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
         }
     };
     
-    
-    
-    
-    
     const handleTextChange = (e:any) => {
         const newText = e.target.value;
         setInfoText(newText);
@@ -80,12 +100,12 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
     };
 
     const onSubmitSearch = (e:any) => {
+
         if (e.key === 'Enter'){
-
-            let tagText: string |undefined = inputRef.current?.value.trim(),
-                IsTag = tags.filter((tag: tag) => tag.name === tagText);
-
-            if(IsTag.length == 0 && tagText){
+            let tagText: string |undefined = inputRef.current?.value.trim();
+            let IsTag = tags.filter((tag: tag) => tag.name === tagText);
+    
+            if(IsTag.length === 0 && tagText){
                 setTags((prevTags) => [...prevTags, { name: tagText }]);
 
             }else if(IsTag.length > 0){
@@ -97,7 +117,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
 
             if (inputRef.current) {
                 inputRef.current.value = '';
+              
             };
+           
         };
 
     };
@@ -118,7 +140,27 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
 
     const imgClicked =()=>{
         // setDraggedItem('Clicked');
-    }
+    };
+
+    const onSubmitAddCarosel = (e:any) => {
+       
+        if (inputRef.current) {
+            const inputValue: string = inputRef.current?.value; 
+            if (e.key === 'Enter'){
+                setAddCarosel(inputValue);
+                e.preventDefault();
+            };
+
+            setAddCarosel(inputValue);
+           
+            };
+      
+        selectList= [...selectList,addCarosel]; //추후 api 연결을 통해 useEffect로 update 후 리스트를 리턴 할 예정
+            console.log(addCarosel)
+      
+
+    };
+
     return(
     <div className="FileUpload">
         <div className="header">
@@ -133,8 +175,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
                     <ul>확장자</ul>
                 </div>
                 <div className='value'>
-                    <ul>파일 이름 스페이스</ul>
-                    <ul>JPG</ul>
+                    <ul>{oneFile.name}</ul>
+                    <ul>{oneFile.type}</ul>
                 </div>
             </div>
             <div className='FileUploadInfo'>
@@ -178,10 +220,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
                     {images.map((img, index) => (
                         
                          <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
-                         onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)}
-                         onClick={imgClicked}
-                        //  style={{ backgroundColor: draggedItem !== null ? '#105AEB' : 'white'}}
-                         >
+                            onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
+                            onClick={imgClicked}>
                             <div className='imgArea' >
                                 <img style={{width:'102px', height:'102px' }} src={process.env.PUBLIC_URL +img.src}/>
                                 <div className="image-number">{img.order}</div>
@@ -195,9 +235,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose }) => {
                 }
               {caroselNewView&&
                 <div className='caroselInputArea'>
-                    <input type='text' placeholder="카로셀 추가"/>
-                    <button>닫기</button>
-                    <button>추가</button>
+                    <input type='text' placeholder="카로셀 추가" ref={inputRef} onKeyPress={onSubmitAddCarosel}/>
+                    <button className="deleteBtn" onClick={()=>{setCaroselNewView(!caroselNewView)}}>닫기</button>
+                    <button className="addBtn">추가</button>
                 </div>
                 }  
               

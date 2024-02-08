@@ -2,7 +2,7 @@
 .sidebar {position: fixed;top: 78px;right: -440px; margin-right:0px; width: 395px;
   height: 810px;background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);transition: right 0.3s ease-in-out;padding:18px 24px; 
-  overflow-y: auto;
+  overflow-y: auto;overflow-x: hidden;
 }
 .sidebar.open {right: 0; }
 .sidebar.open .nav{width:100%; display:flex;}
@@ -31,3 +31,16 @@
 .sidebar.open .fileDescription button{width:133px; height:20px; border: none; display: inline-flex;
   align-items: flex-start;color: #105AEB; font-size: 14px; background-color: #FFFFFF;font-style: normal;font-weight: 400;
   line-height: 20px; letter-spacing: -0.35px;gap: 8px;}
+
+
+
+
+
+.sidebar.open .nav ul span .options-list {list-style-type: none;border-radius: 8px;
+  position: absolute;top: 50px;left: 280px;width: 99px; background-color: white;
+  height:150px;  border-radius: 8px;box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);}
+  
+.sidebar.open .nav ul span .options-list li {padding: 10px 14px;cursor: pointer;height: 28px;background-color: #fff;
+   text-align: center;font-family: Pretendard;font-size: 14px;font-style: normal;
+    font-weight: 400;line-height: 20px; letter-spacing: -0.35px; text-align: left;}
+.sidebar.open .nav ul span .options-list li:hover{background-color:#ECF2FF;}

@@ -18,16 +18,24 @@
 .UpdateDataHub .hubInfoTitle .nameInfo span{color: #111; font-size: 24px; font-family: "Pretendard";}
 .UpdateDataHub .hubInfoTitle .hrLine{padding-bottom: 17px; width: 579px; height: 1px; border-bottom: 1px solid #DBDBDB; }
 
-.UpdateDataHub .hubInfoBody{ display: flex;  height:238px; width:100%; }
-.UpdateDataHub .hubInfoBody .key1 {display: flex;  flex-direction: column; width: 139px; height:190px;  }
-.UpdateDataHub .hubInfoBody .key1 span{margin-top:44px; width: 69px; height: 20px;}
-.UpdateDataHub .hubInfoBody .value {display: flex;  flex-direction: column; width: 560px; height:210px; margin-top:14px}
-.UpdateDataHub .hubInfoBody .value input{margin-top:16px; height: 48px; border-radius: 6px; border: 1px solid #BBB;background: #FFF;}
-.UpdateDataHub .hubInfoBody .value .counters{text-align: right; font-size: 13px; color: #767676 ; font-family: "Pretendard";}
+.UpdateDataHub .hubInfoBody{ display: flex;  flex-direction: column; height:238px; width:100%; }
+.UpdateDataHub .first{display: flex; height:60px; border-bottom:1px solid #D1D1D1;padding: 14px 0;}
+.UpdateDataHub .first .hubnameArea{width:30%; height:100%; display: flex; align-items: center;}
+.UpdateDataHub .first .hubnameSpace{width:70%; height:100%; display: flex; align-items: center; justify-content: right;}
+.UpdateDataHub .first .hubnameSpace input{width:400px; height: 20px; padding: 14px 16px; border-radius: 6px; border: 1px solid #BDBDBD; outline: none;font-family: Pretendard;}
+.UpdateDataHub .second{display: flex; height:60px;border-bottom:1px solid #D1D1D1; padding: 14px 0;}
+.UpdateDataHub .second .hubnameArea{width:30%; height:100%; display: flex; align-items: center;}
+.UpdateDataHub .second .hubnameSpace{width:70%; height:100%; display: flex; align-items: center;justify-content: right;}
+.UpdateDataHub .second .hubnameSpace textarea{ width: 400px;padding: 14px 16px;border-radius: 6px; outline: none;
+    border: 1px solid #BDBDBD;font-size: 14px;font-family: Pretendard;font-weight: 400;line-height: 20px; letter-spacing: -0.35px}
+.UpdateDataHub .second .hubnameSpace .counters{position: absolute; bottom: 470px; right: 1000px; color: #999;font-size: 14px;
+    font-style: normal;font-weight: 400;line-height: 20px; letter-spacing: -0.35px;}
 
 .UpdateDataHub .hubInfoBody .hubInfoBodyBtnArea{ width: 100%; height:48px; text-align: right; }
-.UpdateDataHub .hubInfoBody .hubInfoBodyBtnArea button{width:102px; height:48px; margin-top: 24px; padding:10px 8px; border-radius: 6px; border: 1px solid #105AEB; 
+.UpdateDataHub .hubInfoBody .hubInfoBodyBtnArea button{width:110px; height:48px; margin-top: 24px; padding:10px 8px; border-radius: 6px; border: 1px solid #105AEB; 
     background-color: transparent; color: #105AEB;}
+.UpdateDataHub .hubInfoBody .hubInfoBodyBtnArea .saveInfo{width:110px; height:48px; margin-top: 24px; padding:10px 8px; border-radius: 6px; 
+        background-color: transparent; color: white; background-color: #105AEB;}
 
 .UpdateDataHub .hubInfoDetails{width: 100%; height: 34px;  display: flex;  margin: 40px 0 10px 0;}
 .UpdateDataHub .hubInfoDetails .detailsInfo{width: 110px; height: 34px; margin-right:32px;}
@@ -45,7 +53,7 @@
 .UpdateDataHub .hubInfoDetailsFooter .title { margin-top: 32px;}
 .UpdateDataHub .hubInfoDetailsFooter .title span{color: #FF2F2F;text-align: left;font-size: 20px;font-weight: 500;line-height: 28px; letter-spacing: -0.5px;}
 .UpdateDataHub .hubInfoDetailsFooter .buttonArea{text-align: right;}
-.UpdateDataHub .hubInfoDetailsFooter .buttonArea button{border-radius: 6px;border: 1px solid #FF2F2F;height: 48px;padding: 10px 14px;justify-content: center;align-items: center;
+.UpdateDataHub .hubInfoDetailsFooter .buttonArea button{color: #FF2F2F; border-radius: 6px;border: 1px solid #FF2F2F;height: 48px;padding: 10px 14px;justify-content: center;align-items: center;
     background-color:#F7F7F7 ;}
 
 

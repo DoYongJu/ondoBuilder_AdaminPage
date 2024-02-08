@@ -40,7 +40,7 @@ const SearchBar = () => {
   return (
     <div className={`search_wrapper ${isExpanded ? 'active' : ''}`} ref={containerRef}>
       <div className={`input_holder ${isExpanded ? 'active' : ''}`} >
-        <input type="search" className='search_input' placeholder="Type to search" ref={inputRef} onKeyPress={onSubmitSearch} />
+        <input type="search" className='search_input' placeholder="Input word to search " ref={inputRef} onKeyPress={onSubmitSearch} />
         <button className='search_icon' onClick={handleIconClick} >
             <span></span>
         </button>

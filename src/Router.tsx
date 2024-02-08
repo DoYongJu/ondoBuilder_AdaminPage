@@ -12,6 +12,7 @@ import CreateDataHub from './Components/DataHub/CreateDataHub/CreateDataHub';
 import UpdateDataHub from './Components/DataHub/UpdateDataHub/UpdateDataHub';
 import InfoDataHub from './Components/DataHub/InfoDataHub/InfoDataHub';
 import ActiveHublist from './Components/ActiveHublist/ActiveHublist';
+import AddHub from './Components/AddHub/AddHub';
 import Cookies from 'js-cookie';
 
 
@@ -41,6 +42,7 @@ const Router = () => {
         <Route path="/InfoDataHub" element={<InfoDataHub />} />
         <Route path="/UpdateDataHub" element={<UpdateDataHub />} />
         <Route path="/ActiveHublist" element={<ActiveHublist />} />
+        <Route path="/AddHub" element={<AddHub />} />
       
         
       </Routes>

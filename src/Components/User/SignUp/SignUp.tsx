@@ -31,7 +31,7 @@ function SignUp() {
 
       await axios({
         method: 'POST',
-        url: 'http://172.16.2.14:3000/v1/api/auth/signup',
+        url: process.env.REACT_APP_SIGNUP_API,
         headers: {'Content-Type': 'application/json'},
         data: param
 

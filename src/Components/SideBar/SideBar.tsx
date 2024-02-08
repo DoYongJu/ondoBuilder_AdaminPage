@@ -11,17 +11,21 @@ interface SideBarProps {
   const SideBar: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
  
   const [changeProm, setChangeProm] = useState(false);
+  const [selctedClick, setSelctedClick] = useState(false);
   const [longProm, setLongProm] = useState(tmp);
   const [shortProm, setShortProm] = useState('');
-  
+  const [selectedOption, setSelectedOption] = useState('');
+  const selectList=[',','다운로드','수정','삭제'];
   useEffect(() => {
     const truncatedText = longProm.length > 300 ? longProm.slice(0, 300) + '...' : longProm;
     setShortProm(truncatedText);  
             
   }, [tmp]);
+
   function openProm(){
     setChangeProm(!changeProm)
-  }
+  };
+
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
      
@@ -30,7 +34,17 @@ interface SideBarProps {
           <span>파일정보</span>
         </ul>
         <ul>
-          <span><BiDotsHorizontalRounded  size={20}/></span>
+          <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
+          {selctedClick &&
+              <ul className="options-list">
+              {selectList.slice(1).map((option, index) => (
+                <li key={index} onClick={() => { setSelectedOption(option);}} value={option}>
+                  {option}
+                </li>
+              ))}
+            </ul>
+          }
+          </span>
         </ul>
         <ul>
           <span onClick={onClose} ><BiX size={20}  /></span>
@@ -62,9 +76,13 @@ interface SideBarProps {
       </div>
       <div className='fileDescription'>
         <ul>파일 프롬프트</ul>
-        <span> {changeProm?(shortProm):(longProm)}
+        <span> {changeProm?(longProm):(shortProm)}
         </span>
-        <button onClick={openProm}> {changeProm?('프롬프트 열기'):('프롬프트  접기')} <img src={process.env.PUBLIC_URL + '/promtBtn.svg'} alt="버튼svg."/></button>
+        <button onClick={openProm}> 
+        {!changeProm ? '프롬프트 열기' : '프롬프트 접기'}
+        {changeProm && <img src={process.env.PUBLIC_URL + '/promtBtn.svg'} alt="버튼svg." />}
+        {!changeProm && <img src={process.env.PUBLIC_URL + '/promtBtnDown.svg'} alt="버튼svg." />}
+        </button>
       </div>
    
     </div>
