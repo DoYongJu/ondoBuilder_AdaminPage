@@ -1,6 +1,6 @@
 FROM node:19.0.0-alpine
 
-WORKDIR /apptest
+WORKDIR /app
 
 COPY package.json package-lock.json .
 
