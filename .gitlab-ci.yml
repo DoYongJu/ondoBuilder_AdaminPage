@@ -17,8 +17,6 @@ package:
   only:
     refs:
       - master
-    changes:
-      - Dockerfile   
 
 deploy:
   stage: deploy
