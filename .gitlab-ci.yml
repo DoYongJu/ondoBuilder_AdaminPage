@@ -10,8 +10,8 @@ package:
   before_script:
     - sudo docker login docker.jointree.kr -u $DOCKER_ID -p $DOCKER_PASS
   script:
-    - sudo docker build -t docker.jointree.kr/dev-helm/ondo-data-builder-front:1 .
-    - sudo docker push docker.jointree.kr/dev-helm/ondo-data-builder-front:1
+    - sudo docker build -t docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID .
+    - sudo docker push docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
   after_script:
     - sudo docker logout
   only:
@@ -50,7 +50,7 @@ deploy:
               app: ondo-data-builder-front
           spec:
             containers:
-            - image: docker.jointree.kr/dev-helm/ondo-data-builder-front:$IMAGE_VERSION
+            - image: docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
               imagePullPolicy: IfNotPresent
               name: ondo-data-builder-front
               terminationMessagePath: /dev/termination-log
