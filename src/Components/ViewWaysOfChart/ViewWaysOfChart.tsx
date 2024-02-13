@@ -9,24 +9,21 @@ const ViewWaysOfChart: React.FC<dataProps>=({data})=>{
     const [chartType, setChartType] = useState('');
     const [activeButton1, setActiveButton1] = useState('default');
     const [activeButton2, setActiveButton2] = useState('');
-   //useEffct를 활용하여 value가 바뀔따마다 랜더링, 버튼 누르고 값 바뀌는지 확인해야함. 
+
     function handleBtn1(e: any){
         setChartType(e.target.dataset.value); 
         setActiveButton1('default');
         setActiveButton2('');
-        e.stopPropagation();
-       
+        e.stopPropagation();   
     };
+
     function handleBtn2(e: any){
         setChartType(e.target.dataset.value); 
         setActiveButton1('');
         setActiveButton2('default');
-        e.stopPropagation();
-      
-       
-      
-
+        e.stopPropagation();  
     };
+
     const colorCord = ['#E8E9EB','#292969', '#284FB5', '#3B97CE', '#74C2E3'];
 
     function contentsss(data:MyObject){
@@ -64,7 +61,7 @@ const ViewWaysOfChart: React.FC<dataProps>=({data})=>{
                   ) : null 
                 ))}
             </div>);
-          };
+        };
     };
 
     function renderChart (data:MyObject){

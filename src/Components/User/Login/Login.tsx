@@ -20,7 +20,7 @@ function Login() {
   // console.log('cipherPwd'+cipherPwd);
 
   async function loginApi() {
-
+    console.log('process.env.REACT_APP_LOGIN_API'+ process.env.REACT_APP_LOGIN_API);
       const sendParam = {
         email: email,
         password: password,
@@ -36,6 +36,7 @@ function Login() {
         // setusername(response.data.user_name);
         setTokenRecoil(response.data.accessToken);
         Cookies.set('accessToken', response.data.accessToken);
+        navigate('/DashBoard');
         // Cookies.set('username', response.data.user_name); 
      
         
@@ -49,18 +50,8 @@ function Login() {
   };
 
   function handleLogin() {
-    //개발용 자동 로그인 설정
-    const emaila = email === '' ? 'joinwyj@jointree.co.kr' : email;
-    const passworda = password === '' ? 'Ehdydwn@12' : password;
-    
-
-    setEmail(emaila);
-    setPassword(passworda);
-
     if ((email || password) !== '') {
-
       loginApi();
-      navigate('/DashBoard');
     };
 
     if (email === '') {
@@ -68,32 +59,36 @@ function Login() {
     } else if (password === '') {
       alert(' password을 입력하세요');
     };
+
   };
 
   return (
   <div className="Loginscreen">
   <div className="div">
-  <img className="logo-ondo" style={{width:'132px', height:'73px'}} src={process.env.PUBLIC_URL + '/ondoIcon.png'} alt="온도 로고"/>
+    <div className='logo-ondo'>
+        <img style={{width:'132px', height:'73px'}} src={process.env.PUBLIC_URL + '/ondoIcon.png'} alt="온도 로고"/>
+    </div>
     <div className="overlap-Logingroup">
-      <p className="p">
-        <span className="text-wrapper">
-          아직 커뮤니티에 가입하지 않으셨나요? <br />
-          여기서 간편하게{" "}
-        </span>
-        <span className="span"><Link to="/SignUp" style={{ textDecoration: 'none' , color:'#105AEB'}} > 회원등록</Link></span>
-        <span className="text-wrapper">을 할 수 있습니다.</span>
-      </p>
-      <div className="overlap">
-      <input className="text-wrapper-2" type="text" placeholder="비밀번호를 입력해 주세요." value={password} onChange={e => setPassword(e.target.value)}/>
+      <div className='loginArea'>
+        <div className="wrapper-4">로그인</div>
+        
+        <div className='inputArea'>
+          <input className="overlap" type="text" placeholder="이메일을 입력해 주세요." value={email} onChange={e => setEmail(e.target.value)}/>
+          <input  className="overlap" type="password" placeholder="비밀번호를 입력해 주세요." value={password} onChange={e => setPassword(e.target.value)}/>
+        </div>
+        
+        <div className="frame" onClick={handleLogin}>로그인 </div>
+        <p className="p">
+          <span className="text-wrapper">
+            아직 커뮤니티에 가입하지 않으셨나요? <br />
+            여기서 간편하게{" "}
+          </span>
+          <span className="span"><Link to="/SignUp" style={{ textDecoration: 'none' , color:'#105AEB'}} > 회원등록</Link></span>
+          <span className="text-wrapper">을 할 수 있습니다.</span>
+        </p>
+      
       </div>
-      <div className="div-wrapper">
-        <input className="text-wrapper-2" type="text" placeholder="이메일을 입력해 주세요." value={email} onChange={e => setEmail(e.target.value)}/>
-      </div>
-      <div className="frame" onClick={handleLogin}>
-        <div className="text-wrapper-3" >로그인</div>
-      </div>
-      <div className="text-wrapper-4">로그인</div>
-      <div className="line"  />
+      
     </div>
   </div>
   </div>

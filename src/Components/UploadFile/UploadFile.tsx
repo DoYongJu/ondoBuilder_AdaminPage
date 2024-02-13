@@ -3,7 +3,7 @@ import axios from 'axios';
 import { BiX } from "react-icons/bi";
 import './UploadFile.css';
 import SelectBox from '../SelectBox/SelectBox';
-import {tagsList, tag, UploadedInfo, UploadFileProps} from '../../Resources/Models';
+import {tagsList, tag, UploadFileProps} from '../../Resources/Models';
 
 
 interface ImageType {
@@ -21,21 +21,22 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
     const [tags, setTags] = useState<tagsList>([]);
     const totalCount = 100;
     const [draggedItem, setDraggedItem] = useState<ImageType | null>(null);
+    const [imageSrc, setImageSrc]: any = useState(null);
     const [images, setImages] = useState([
-        { id: 1, name: '온도로고', src: '/ondoIcon.png', order: 1 },
+        { id: 1,name: '온도로고',src: '/ondoIcon.png', order: 1 },
         { id: 2, name: '대쉬보드 아이콘',src: '/dataHub_List_Icon.png', order: 2 },
         { id: 3, name: '리액트로고fdjkshfjksdhfjsk',src: '/logo512.png', order: 3 },
         { id: 4, name: '강아지',src: '/dog1.jpg', order: 4 },
         { id: 5, name: '강아지222',src: '/dog1.jpg', order: 5 },
-        { id: 6, name: '대쉬보드 아이콘1',src: '/dataHub_List_Icon.png', order: 6 },
+        { id: 6, name: '온도로고22',src: '/ondoIcon.png', order: 6 },
         { id: 7, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
         { id: 8, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
-
       ]);
 
     let selectList = ['선택', '선택하지 않음', '캐로셀01','캐로셀02','캐로셀04','캐로셀05','캐로셀06'];
     const [selected, setSelected] = useState('');
     const [addCarosel, setAddCarosel] = useState('');
+
 
     async function uploadFileApi() {
 
@@ -63,17 +64,33 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
   
     };
 
-
-
-
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         setDraggedItem(images[index]);
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', index.toString());
     };   
+    const previewImg =(selectedFile:File)=>{
+        //파일 미리보기
+        const reader = new FileReader();
+        reader.readAsDataURL(selectedFile);
+       
+    
+    
+        reader.onload = () => {	
+            // let newImage ={id:images.length+1, name:image.name, src: reader.result, order:images.length+1 };
+            ///nsdghvfjkfdhgjkfdhgjkfdhgJKAHGDA여기서 부터 다시 계발
+            images.map((image) => ({ ...image, }));
+            //  setImageSrc(reader.result || null); 
+        };
+        console.log(images);
       
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    }
+    const handleDrop = (e: any, index: number) => {
         e.preventDefault();
+        const selectedFile = e.target.files[0];
+        previewImg(selectedFile);
+        
+
         if (draggedItem) {
             let targetIndex = Number(e.dataTransfer.getData('text/plain')),
                 updatedImages = images.map((image) => ({ ...image }));
@@ -152,7 +169,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
             };
 
             setAddCarosel(inputValue);
-           
             };
       
         selectList= [...selectList,addCarosel]; //추후 api 연결을 통해 useEffect로 update 후 리스트를 리턴 할 예정
@@ -185,7 +201,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
                     
                 </div>
                 <div className='fileTextArea'>
-                    <textarea  maxLength={totalCount} onChange={handleTextChange}> </textarea>
+                    <textarea  maxLength={totalCount} onChange={handleTextChange} defaultValue={'입력하세요.'}></textarea>
                     <span>{currentCount}/{totalCount}(글자수)</span>
                 </div>
             </div>

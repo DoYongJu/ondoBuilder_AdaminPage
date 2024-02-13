@@ -1,5 +1,9 @@
 
 
+
+
+
+
 export interface Users {
   userId: number;
   username: string;
@@ -29,14 +33,14 @@ export interface dataProps {
 export interface tag{
   name: string | undefined; 
 }
-export interface UploadedInfo {
-  name: string;
-  size: number;
-  type: string;
-}
+// export interface UploadedInfo {
+//   name: string;
+//   size: number;
+//   type: string;
+// }
 export interface UploadFileProps {
   onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  oneFile:UploadedInfo;
+  oneFile:File;
 };
 export type tagsList= tag[];
 export type contentList = content[];

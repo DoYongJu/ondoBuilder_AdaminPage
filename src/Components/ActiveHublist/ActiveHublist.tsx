@@ -1,6 +1,6 @@
-import { useState, useEffect,useRef,  DragEvent } from 'react';
+import { useState, useEffect, useRef, DragEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { UploadedInfo } from '../../Resources/Models';
+// import { UploadedInfo } from '../../Resources/Models';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
@@ -13,7 +13,6 @@ import './ActiveHublist.css';
 function ActiveHublist(){
     const location = useLocation();
     const navigate = useNavigate();
-    const [viewUpload, setViewUpload] = useState(false);
     const [isFirst, setIsFirst] = useState(true);
     const [, setSelected] = useState('');
     const [, setSearchType] = useState('');
@@ -26,25 +25,18 @@ function ActiveHublist(){
 
     const type:string= location.state;
     
-    console.log("fhdjsfhjkdhfjkdsHZfjSJK"+type);
     const [isSideBarOpen, setIsSideBarOpen] = useState(false);
     const [isActive, setActive] = useState(false);
-    const initialState ={ name: '', size: 0, type: '' };
-    // const [uploadedInfo, setUploadedInfo] = useState<UploadedInfo>(initialState);
+  
     const [uploadedInfo, setUploadedInfo] = useState(false);
     const [selctedClick, setSelctedClick] = useState(false);
-
-
-
-
-
 
     const handleCloseSideBar = () => {
       setIsSideBarOpen(false);
     };
 
     function handleCloseFileUpload(){
-        setViewUpload(false);
+      setSelectedFile(null);
     };
 
     const buttons = [
@@ -72,11 +64,12 @@ function ActiveHublist(){
         setActiveButton(value);
         };
     };
+    
     //File 업로드 관련
   const handleDragStart = () => setActive(true);
   const handleDragEnd = () => setActive(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [selectedFile, setSelectedFile] = useState<UploadedInfo>(initialState);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
@@ -89,14 +82,9 @@ function ActiveHublist(){
         if (item.kind === 'file') {
           const tempFile = item.getAsFile();
           if (tempFile) {
-            const { name, size, type } = tempFile;
-            console.log('File Info - Name:',name,'Size:',size,'Type:',type);
-            const uploadedInfo = {name,size,type,};
-            setSelectedFile(uploadedInfo);
-            setViewUpload(true);
+            setSelectedFile(tempFile);
             setUploadedInfo(true);
             setActive(false);
-
             setIsFirst(false); //나중에 파일 업로드 된 후 사용될 코드. 개발 테스트로 인해 현재 위치
            
           };
@@ -104,21 +92,27 @@ function ActiveHublist(){
       };
     };
   };
+
   const handleDragOver = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
   };
+
   const handleFileuploadButtonClick =()=>{
     if (fileInputRef.current) {
         fileInputRef.current.click();
       }
-  }
+  };
+
   const handleFileChange = (e:any) => {
-    // Handle the selected file
-    const file = e.target.file;
+   
     const selectedFile = e.target.files[0];
-    setSelectedFile({name:selectedFile.name , size:selectedFile.size , type: selectedFile.type});
-    setViewUpload(true);
     console.log('Selected File:', selectedFile);
+    if(selectedFile){
+      setSelectedFile(selectedFile);
+    }else{
+      setSelectedFile(null);
+    }
+    
   };
     return (
 
@@ -210,7 +204,11 @@ function ActiveHublist(){
         }
         
         <SideBar isOpen={isSideBarOpen} onClose={handleCloseSideBar} /> 
-        {viewUpload?(  <div className="overlay"> <UploadFile onClose={handleCloseFileUpload} oneFile={selectedFile}/> </div>  ):('')}
+        {selectedFile && (  
+        <div className="overlay"> 
+          <UploadFile onClose={handleCloseFileUpload} oneFile={selectedFile}/> 
+        </div>  )
+        }
       
     </div>
     
