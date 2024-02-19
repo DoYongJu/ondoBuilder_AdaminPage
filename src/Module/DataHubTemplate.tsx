@@ -14,17 +14,19 @@ const dataHandler=(content : MyObject)=>{
   
   contents.push({
     "name": "none",
-    "val": (content.doc === 0 && content.img === 0 && content.text === 0 && content.link === 0) ? 1 : 0
+    "val": (Number(content.doc_count) === 0 && Number(content.image_count) === 0 &&  
+            Number(content.video_count)  === 0 && Number(content.url_count) === 0) ? 1 : 0
+
   });
 
 
   content_inner_list.map((item) => {
    
     switch(item){
-      case "doc" : contents.push({"name" : "문서", "val" :  content.doc}); break;
-      case "img" : contents.push({"name" : "이미지", "val" : content.img }); break;
-      case "text" : contents.push({"name" : "비디오", "val" : content.text }); break;
-      case "link" : contents.push({"name" : "링크", "val" : content.link }); break;
+      case "doc_count" : contents.push({"name" : "문서", "val" :  Number(content.doc_count)}); break;
+      case "image_count" : contents.push({"name" : "이미지", "val" : Number(content.image_count) }); break;
+      case "video_count" : contents.push({"name" : "비디오", "val" : Number(content.video_count) }); break;
+      case "url_count" : contents.push({"name" : "링크", "val" : Number(content.url_count) }); break;
       default : break;
     }
     

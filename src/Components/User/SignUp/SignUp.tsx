@@ -19,7 +19,7 @@ function SignUp() {
   }, [password]);
 
   async function setSignUpApi() {
-    
+    console.log('process.env.REACT_APP_API'+ process.env.REACT_APP_API);
     const param = {
         username: username
         , email: email
@@ -31,7 +31,7 @@ function SignUp() {
 
       await axios({
         method: 'POST',
-        url: process.env.REACT_APP_SIGNUP_API,
+        url: process.env.REACT_APP_API+'/v1/api/auth/signup',
         headers: {'Content-Type': 'application/json'},
         data: param
 

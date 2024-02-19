@@ -13,16 +13,18 @@ export interface Users {
 
 export interface MyObject {
   hub_id:number;
-  name: string;
-  generateDate: string;
-  lastEditDate: string;
-  title: string;
-  doc: number,
-  img: number,
-  text: number,
-  link: number,
+  hub_name: string;
+  datahub_regdate: string;
+  datahub_upddate: string;
+  hub_description: string;
+  // writer_uid ->태호씨는 줌. 추후에 필요하면 추가.
+  doc_count: number,
+  image_count: number,
 
+  video_count: number,
+  url_count: number,
 };
+
 interface content{
   name: string,
   val: number,
@@ -33,15 +35,39 @@ export interface dataProps {
 export interface tag{
   name: string | undefined; 
 }
-// export interface UploadedInfo {
-//   name: string;
-//   size: number;
-//   type: string;
-// }
+export interface UploadedInfo {
+  name: string;
+  size: number;
+  type: string;
+}
 export interface UploadFileProps {
   onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
   oneFile:File;
 };
+interface selCaroselGroup{
+  carousel_id: number;
+  carousel_name: string;
+}
+interface dataByType{ 
+  doc_no: number;
+  download_url: string;
+  file_name:string;
+  file_name_type:string;
+  file_description:string;
+  content_type: string;
+  file_size: string;
+  file_src: string;
+  file_regdate: string;
+  file_upddate: string;
+  writer: string;
+  url_link:string;
+  url_description:string;
+  url_regdate:string;
+  url_upddate:string;
+
+}
+export type dataByTypeList = dataByType[];
+export type selCaroselGroupList = selCaroselGroup[];
 export type tagsList= tag[];
 export type contentList = content[];
 export type MyObjects = MyObject[];

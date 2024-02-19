@@ -4,12 +4,19 @@
 .activeHublist .title{width: 100%;height: 52px; margin: 40px 0 4px 0;}
 .activeHublist .title span{color: #111; font-size: 36px;  font-family: "Pretendard";
     letter-spacing: -0.9px; display: block;}
-.activeHublist .sub_title{margin-bottom: 40px;}
-.activeHublist .sub_title span{width: 700px;height: 24px;font-family: "Pretendard";font-size: 16px;
+.activeHublist .sub_title{width:100%; height:48px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;}
+.activeHublist .sub_title .text{width:556px; height: 100%; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;}
+.activeHublist .sub_title .text span{width: 700px;height: 24px;font-family: "Pretendard";font-size: 16px;
     text-align: left;color: #505050;margin: 0 auto;}
+.activeHublist .sub_title .btnArea{width:300px; height:100%; display: flex; justify-content: right; align-items: center;}
+.activeHublist .sub_title .btnArea .leftbtn{width: 48px;border-radius: 6px;border: 1px solid #BDBDBD;display: flex;justify-content: center; align-items: center;
+  height: 48px;border-radius: 6px 0px 0px 6px;}
+.activeHublist .sub_title .btnArea .rightbtn{width: 48px;border-radius: 6px; display: flex;justify-content: center; align-items: center;
+  border: 1px solid #BDBDBD; height: 48px;border-radius: 0px 6px 6px 0px;}
 .activeHublist .dataHubBtnArea{width:100%; height: 48px; }
-.activeHublist .dataHubBtnArea ul{width: 100%;height: 48px;list-style-type: none;color: #505050;
-    font-size: 16px;}
+.activeHublist .sub_title .btnArea button:focus{ border: 1px solid #105AEB;background: #E0EBFF; color:#105AEB}
+.activeHublist .dataHubBtnArea ul{width: 100%;height: 48px;list-style-type: none;color: #505050;font-size: 16px;}
 .activeHublist .dataHubBtnArea ul > li{width: 88px; list-style-type: none;float: left;text-align: left;}
 .activeHublist .dataHubBtnArea ul > li:first-child{width: 88px; margin-right:8px }
 .activeHublist .dataHubBtnArea ul > li:first-child + li{width: 88px; margin-right:8px }
@@ -24,75 +31,45 @@
 .activeHublist .contbox{width: 100%;display: flex;flex-wrap: wrap; justify-content: left; gap:14px;align-items: center; float: left;}
 .activeHublist .theActiveHub{float: left;width: 228px;height: 248px; border-radius: 8px;background-color: #FFF;box-shadow: 0px 2px 14px 0px rgba(0, 0, 0, 0.08);}
 .activeHublist .selectAndSearch{ margin-top: 24px; display: flex; height:48px; width: 100%; margin-bottom:16px; justify-content: space-between;}
-/* .activeHublist .selectAndSearch ul{width: 50%;height: 70px;} */
-/* .activeHublist .selectAndSearch ul select {width:200px; height: 480px;border-radius: 8px;border: 1px solid #BDBDBD;padding:14px 16px 14px 16px;} */
-/* .activeHublist .selectAndSearch ul .selectArea{width:300px;} */
-
 .activeHublist .selectAndSearch .selectArea{width:39%; display: flex; align-items: center;}
-/* .activeHublist .selectAndSearch ul:first-child{width: 43%;} */
-.activeHublist .selectAndSearch .buttonArea{display: flex}
+.activeHublist .selectAndSearch .buttonArea{display: flex; justify-content: right}
 .activeHublist .selectAndSearch .selectArea .real{width:120px;}
 .activeHublist .selectAndSearch .buttonArea .filter{height: 48px; width:78px; margin-right:8px;padding: 10px 14px; justify-content: center;
     font-size: 14px;align-items: center;border-radius: 6px;border: 1px solid #BDBDBD;cursor: pointer; }
 .activeHublist .selectAndSearch .buttonArea .fileupload{height: 48px; display: flex; gap:6;justify-content: center;align-items: center;
-    padding: 10px 14px; border-radius: 6px;border: 1px solid #105AEB; margin-right:23px;
-    background-color: #105AEB;color:#FFF; cursor: pointer;}
-.overlay {position: fixed;top: 0;left: 0;width: 100%;height: 100%;
-    background-color: rgba(0, 0, 0, 0.2); display: flex; justify-content: center;
-    align-items: center;}
-
-
-
-
-.activeHublist .contbox .ChatFileInfo {
-        width: 1441px;
-        height: 488px;
-        border-radius: 8px;
-        border: 2px dashed rgba(16, 90, 235, 0.42);}
-.activeHublist .contbox .ChatFileInfo .chatFile {
-        display: none;
-      }
-      .activeHublist .contbox .ChatFileInfo  .preview {
-        width: 90%;
-        height: 71%;
-        margin: auto;
-        padding: 70px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-      }
-      
-      .activeHublist .contbox .ChatFileInfo  .preview:hover {
-        border-color: #111;
-      }
-      
-      .activeHublist .contbox .ChatFileInfo .preview_msg {
-        font-weight: 500;
-        font-size: 18px;
-        margin: 20px 0 10px;
-      }
-      
-      .activeHublist .contbox .ChatFileInfo .preview_desc {
-        margin: 0;
-        font-size: 14px;
-      }
-      .activeHublist .contbox .ChatFileInfo .preview.active {
-        background-color: #efeef3;
-        border-color: #111;
-      }
-
-
+    padding: 10px 14px; border-radius: 6px;border: 1px solid #105AEB; background-color: #105AEB;color:#FFF; cursor: pointer;}
+.overlay {position: fixed;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, 0.2); display: flex; justify-content: center;align-items: center;}
+.activeHublist .contbox .ChatFileInfo {width: 1441px;height: 488px;border-radius: 8px;border: 2px dashed rgba(16, 90, 235, 0.42);}
+.activeHublist .contbox .ChatFileInfo .chatFile {display: none;}
+.activeHublist .contbox .ChatFileInfo .preview {width: 90%;height: 71%;margin: auto;padding: 70px;display: flex;
+flex-direction: column;justify-content: center;align-items: center;cursor: pointer;}   
+.activeHublist .contbox .ChatFileInfo  .preview:hover {border-color: #111;}     
+.activeHublist .contbox .ChatFileInfo .preview_msg {color: #505050;font-family: Pretendard;font-size: 16px;
+font-style: normal;font-weight: 400;line-height: 24px; letter-spacing: -0.4px;} 
+.activeHublist .contbox .ChatFileInfo .preview_desc {margin: 0;font-size: 14px;}
+.activeHublist .contbox .ChatFileInfo .preview.active {background-color: #efeef3;border-color: #111;}
 .activeHublist .selectAndSearch .buttonArea .options-list {list-style-type: none;border-radius: 8px;
         position: absolute;top: 318px;left: 1460px;width: 90px; background-color: white;
-        height:192px; border-radius: 8px;box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);}
-        
+        height:192px; border-radius: 8px;box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);}       
 .activeHublist .selectAndSearch .buttonArea .options-list li {padding: 10px 14px;cursor: pointer;height: 28px;background-color: #fff;
     display: flex; justify-content: space-between; align-items: center;color: #111;
     text-align: right;font-family: Pretendard;font-size: 14px;
-    font-style: normal;font-weight: 400;line-height: 20px;letter-spacing: -0.35px;}
-        
+    font-style: normal;font-weight: 400;line-height: 20px;letter-spacing: -0.35px;}     
 .activeHublist .selectAndSearch .buttonArea .options-list li .Checkbox{width: 18px;
     height: 18px; border:1px solid #BDBDBD}
 .activeHublist .selectAndSearch .buttonArea.options-list li:hover{background-color:#ECF2FF;}
+.activeHublist .waysOflist{width:100%; height:100%; display: flex; flex-direction: column; gap:8px;}
+.activeHublist .waysOflist .list{height:30px; background-color: #FAFAFA;border-radius: 5px; 
+ border:1px solid #DBDBDB; box-shadow:0px 2px 14px rgba(0, 0, 0, 0.08);padding:18px 24px; }
+.activeHublist .waysOflist .list ul{list-style-type: none;} 
+.activeHublist .waysOflist .list ul > li{float: left; display: flex; gap:20px; line-height: 32px;}
+.activeHublist .waysOflist .list ul > li:first-child{width: 30%; }
+.activeHublist .waysOflist .list ul > li:first-child + li{width: 30%; }
+.activeHublist .waysOflist .list ul > li:first-child + li+li{width: 10%;}
+.activeHublist .waysOflist .list ul > li:first-child + li+li+li{width: 10%;}
+.activeHublist .waysOflist .list ul > li:first-child + li+li+li+li{width: 10%;}
+.activeHublist .waysOflist .list ul > li:first-child + li+li+li+li+li{width: 10%;}
+
+
+
+

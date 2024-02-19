@@ -1,9 +1,12 @@
 import React, {useState, useRef, useEffect} from 'react';
 import axios from 'axios';
 import { BiX } from "react-icons/bi";
+import { useNavigate, useLocation } from 'react-router-dom';
 import './UploadFile.css';
 import SelectBox from '../SelectBox/SelectBox';
-import {tagsList, tag, UploadFileProps} from '../../Resources/Models';
+import {MyObject} from '../../Resources/Models';
+import {tagsList, tag, UploadFileProps, selCaroselGroupList} from '../../Resources/Models';
+import ConnectApi from '../../Module/ConnectApi';
 
 
 interface ImageType {
@@ -22,6 +25,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
     const totalCount = 100;
     const [draggedItem, setDraggedItem] = useState<ImageType | null>(null);
     const [imageSrc, setImageSrc]: any = useState(null);
+    const [caroselList, setCaroselList] = useState<selCaroselGroupList | null>(null);
     const [images, setImages] = useState([
         { id: 1,name: '온도로고',src: '/ondoIcon.png', order: 1 },
         { id: 2, name: '대쉬보드 아이콘',src: '/dataHub_List_Icon.png', order: 2 },
@@ -32,12 +36,67 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
         { id: 7, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
         { id: 8, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
       ]);
-
-    let selectList = ['선택', '선택하지 않음', '캐로셀01','캐로셀02','캐로셀04','캐로셀05','캐로셀06'];
+    let selectList = ['선택', '선택하지 않음', '캐로셀01'];
     const [selected, setSelected] = useState('');
     const [addCarosel, setAddCarosel] = useState('');
+    const location = useLocation();
+    const data:MyObject= location.state; //허브 정보
+    useEffect(() => {
+        //카로셀 그룹 조회->데이터 확인 완료 
+        function selectCaroselGroupApi() {
+            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/${data.hub_id}`})
+                .then((res) => {
+                    console.log(res.data);
+                    setCaroselList(res.data);
+                })
+                .catch((error) => {
+                    // API 요청이 실패했을 때 처리할 로직
+                    console.error('Error occurred:', error);
+                });
+        };
+    
+        selectCaroselGroupApi();
+    
+    }, []);
+    
+    useEffect(() => {
+        if (caroselList) {
+            caroselList.map((item, index) => (selectList= [...selectList, item.carousel_name]));
+        }
+    }, [caroselList]);
+  
+    //카로셀 그룹 추가->데이터 확인 완료 
+    function addCaroselGroupApi() {
+       
+        let sendParam={
+            hub_id: data.hub_id,
+            carousel_name: addCarosel,
+        }
+        ConnectApi({ method: 'POST', url: `/v1/api/datahub/carousel`, sendParam:sendParam})
+          .then((res) => {
+            console.log(res.data);
+            setCaroselNewView(!caroselNewView);
+          })
+          .catch((error) => {
+            // API 요청이 실패했을 때 처리할 로직
+            console.error('addCaroselGroupApi/ Error occurred:', error);
+          });
+      };
 
-
+    //파일 미리보기 기능
+    useEffect(() => {
+        const getFileInfo = () => {
+            if (oneFile) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setImageSrc(reader.result as string);
+                };
+                reader.readAsDataURL(oneFile);
+            }
+        };
+      
+        getFileInfo();
+    }, [oneFile]);
     async function uploadFileApi() {
 
         const sendParam = {
@@ -69,28 +128,10 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', index.toString());
     };   
-    const previewImg =(selectedFile:File)=>{
-        //파일 미리보기
-        const reader = new FileReader();
-        reader.readAsDataURL(selectedFile);
-       
-    
-    
-        reader.onload = () => {	
-            // let newImage ={id:images.length+1, name:image.name, src: reader.result, order:images.length+1 };
-            ///nsdghvfjkfdhgjkfdhgjkfdhgJKAHGDA여기서 부터 다시 계발
-            images.map((image) => ({ ...image, }));
-            //  setImageSrc(reader.result || null); 
-        };
-        console.log(images);
-      
-    }
-    const handleDrop = (e: any, index: number) => {
-        e.preventDefault();
-        const selectedFile = e.target.files[0];
-        previewImg(selectedFile);
-        
 
+    const handleDrop = (e:  React.DragEvent<HTMLDivElement>, index: number) => {
+        e.preventDefault();
+        // console.log('before changed'+images);
         if (draggedItem) {
             let targetIndex = Number(e.dataTransfer.getData('text/plain')),
                 updatedImages = images.map((image) => ({ ...image }));
@@ -107,7 +148,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
 
             setImages(updatedImages);
             setDraggedItem(null);
+            // console.log('after changed'+updatedImages);
         }
+       
     };
     
     const handleTextChange = (e:any) => {
@@ -134,7 +177,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
 
             if (inputRef.current) {
                 inputRef.current.value = '';
-              
             };
            
         };
@@ -170,11 +212,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
 
             setAddCarosel(inputValue);
             };
-      
-        selectList= [...selectList,addCarosel]; //추후 api 연결을 통해 useEffect로 update 후 리스트를 리턴 할 예정
-            console.log(addCarosel)
-      
-
     };
 
     return(
@@ -201,7 +238,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
                     
                 </div>
                 <div className='fileTextArea'>
-                    <textarea  maxLength={totalCount} onChange={handleTextChange} defaultValue={'입력하세요.'}></textarea>
+                    <textarea  maxLength={totalCount} onChange={handleTextChange} placeholder={'입력하세요.'}></textarea>
                     <span>{currentCount}/{totalCount}(글자수)</span>
                 </div>
             </div>
@@ -233,27 +270,40 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
                     </div>
                     {(selected&& selected!='선택하지 않음')&&
                     <div className='moveCaroselArea'>
-                    {images.map((img, index) => (
-                        
-                         <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
-                            onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
-                            onClick={imgClicked}>
-                            <div className='imgArea' >
-                                <img style={{width:'102px', height:'102px' }} src={process.env.PUBLIC_URL +img.src}/>
-                                <div className="image-number">{img.order}</div>
+                        {images.map((img, index) => (
+                            <>
+                            <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
+                                onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
+                                onClick={imgClicked}>
+                                <div className='imgArea' >
+                                    <img style={{width:'102px', height:'102px' }} src={process.env.PUBLIC_URL +img.src}/>
+                                    <div className="image-number">{img.order}</div>
+                                    <ul >{img.name}</ul>
+                                </div>
                             </div>
-                            <ul >{img.name}</ul>
-                        </div>
-                   
-                        ))}
+                            {index === images.length - 1 && (
+                                <>
+                                <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
+                                onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
+                                onClick={imgClicked}>
+                                    <div className='imgArea' > 
+                                        <img style={{width:'102px', height:'102px' }} src={imageSrc}/>
+                                        <div className="image-number">{images.length+1}</div>
+                                        <ul>{oneFile.name}</ul>   
+                                    </div>
+                                </div>
+                                </>
+                            )}
+                            </> 
+                        ))}                                     
                     </div>}
                 </div>
                 }
               {caroselNewView&&
                 <div className='caroselInputArea'>
                     <input type='text' placeholder="카로셀 추가" ref={inputRef} onKeyPress={onSubmitAddCarosel}/>
-                    <button className="deleteBtn" onClick={()=>{setCaroselNewView(!caroselNewView)}}>닫기</button>
-                    <button className="addBtn">추가</button>
+                    <button className="deleteBtn" onClick={()=>{setCaroselNewView(!caroselNewView)}}>취소</button>
+                    <button className="addBtn" onClick={addCaroselGroupApi}>추가</button>
                 </div>
                 }  
               

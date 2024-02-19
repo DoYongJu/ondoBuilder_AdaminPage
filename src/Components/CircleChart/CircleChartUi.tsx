@@ -23,6 +23,8 @@ const CircleChartUiRender: React.FC<dataProps>=({data})=>{
     chartData.push([item.name, item.val ]);
   });
   
+
+
     return <Chart chartType="PieChart" width={0} height={0} data={chartData} options={options}/>;
 };
 

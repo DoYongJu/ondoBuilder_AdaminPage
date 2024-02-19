@@ -9,9 +9,9 @@ function SignAccept() {
     <div className="SignAcceptscreen">
       <div className="group-wrapper">
         <div className="group">
-        <img className="logo-ondo" onClick={()=>{ navigate('/Login');}} style={{width:'132px', height:'73px'}} src={process.env.PUBLIC_URL + '/ondoIcon.png'} alt="온도 로고"/>
+        <img className="logo-ondo" onClick={()=>{ navigate('/login');}} style={{width:'132px', height:'73px'}} src={process.env.PUBLIC_URL + '/ondoIcon.png'} alt="온도 로고"/>
           <div className="overlap-group">
-            <div className="frame" onClick={()=>{ navigate('/Login');}} >
+            <div className="frame" onClick={()=>{ navigate('/login');}} >
               <div className="text-wrapper">돌아가기</div>
             </div>
             <p className="data-builder">

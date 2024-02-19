@@ -1,0 +1,35 @@
+.myPage{width:1920px; height:100%;display: flex; flex-direction: column; align-items: center; font-family: Pretendard;}
+.myPage .tabBar{width:1440px; height:21px; border-bottom: 1px solid #E0E0E0;background: #F7F7F7; padding:14px 240px; }
+.myPage .content{width:1180px; height:100%; display: flex;flex-direction: column; align-items: left;}
+.myPage .content ul{list-style-type: none;}
+.myPage .content ul:first-child{margin-top: 42px;font-size: 20px;font-weight: 500; line-height: 20px;letter-spacing: -0.5px;}
+.myPage .content ul:first-child +ul{margin-top:8px;color: #505050;font-size: 14px;font-weight: 400;line-height: 20px; letter-spacing: -0.35px; }
+.myPage .content ul:first-child +ul +ul{margin-top:60px;font-size: 20px;font-style: normal;font-weight: 500;line-height: 28px; letter-spacing: -0.5px;}
+.myPage .content ul:first-child +ul +ul +ul{height:1px; margin-top:14px; background-color: black;}
+.myPage .content ul:first-child +ul +ul +ul +ul{height:64px; border-bottom: 1px solid #E1E1E1; }
+.myPage .content ul:first-child +ul +ul +ul +ul >li{float: left; line-height: 64px;}
+.myPage .content ul:first-child +ul +ul +ul +ul >li:first-child+li{float: right;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul{height:64px;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul>li{float: left; line-height: 64px;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul>li:first-child+li{float: right;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul{margin-top: 41px;font-size: 20px;font-weight: 500; line-height: 20px;letter-spacing: -0.5px;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul{height:1px; margin-top:14px; background-color: black;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul{height:64px; border-bottom: 1px solid #E1E1E1;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul >li{float: left;line-height: 64px; }
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul >li:first-child+li{float: right;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul{height:64px; border-bottom: 1px solid #E1E1E1;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul >li{float: left; line-height: 64px;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul>li:first-child+li{float: right;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul{height:64px; border-bottom: 1px solid #E1E1E1;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul >li{float: left; line-height: 64px;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul>li:first-child+li{float: right;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul{height:64px; border-bottom: 1px solid #E1E1E1;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul >li{float: left;line-height: 64px; }
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul>li:first-child+li{float: right;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul{margin-top: 9px;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul >button{float: right;height: 44px;width: 110px;
+    padding: 10px 14px;border-radius: 4px;background: #F7F7F7;border: 1px solid #B8B8B8;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul +ul >button >span{font-size: 14px;font-style: normal;
+    font-weight: 500;line-height: 20px; letter-spacing: -0.35px;}
+
+

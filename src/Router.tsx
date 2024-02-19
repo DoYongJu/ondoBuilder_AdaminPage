@@ -8,11 +8,12 @@ import NavBar from './Components/NavBar/NavBar';
 import SignUp from './Components/User/SignUp/SignUp';
 import ChangePwd from './Components/User/ChangePwd/ChangePwd';
 import SignAccept from './Components/User/SignAccept/SignAccept';
-import CreateDataHub from './Components/DataHub/CreateDataHub/CreateDataHub';
 import UpdateDataHub from './Components/DataHub/UpdateDataHub/UpdateDataHub';
 import InfoDataHub from './Components/DataHub/InfoDataHub/InfoDataHub';
 import ActiveHublist from './Components/ActiveHublist/ActiveHublist';
 import AddHub from './Components/AddHub/AddHub';
+import Mypage from './Components/User/Mypage/Mypage';
+import History from './Components/User/History/History';
 import Cookies from 'js-cookie';
 
 
@@ -21,28 +22,30 @@ const Router = () => {
   const setUserName = useSetRecoilState(usernameState);
   const username = useRecoilValue(usernameState);
   const token= Cookies.get('accessToken');
-  // useEffect(() => {
-  //   const storedUsername = Cookies.get('username');
-  //   if (storedUsername) {
-  //     setUserName(storedUsername);
-  //   }
-  // }, [setUserName]);
+  useEffect(() => {
+    const storedUsername = Cookies.get('username');
+    if (storedUsername) {
+      setUserName(storedUsername);
+    }
+  }, [setUserName]);
   
   return (
     <BrowserRouter>
-     {token && <NavBar />}
+     {username && <NavBar />}
+     {/* <NavBar /> */}
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/DashBoard" element={<DashBoard />} />
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route path="/ChangePwd" element={<ChangePwd />} />
-        <Route path="/SignAccept" element={<SignAccept />} />
-        <Route path="/CreateDataHub" element={<CreateDataHub />} />
-        <Route path="/InfoDataHub" element={<InfoDataHub />} />
-        <Route path="/UpdateDataHub" element={<UpdateDataHub />} />
-        <Route path="/ActiveHublist" element={<ActiveHublist />} />
-        <Route path="/AddHub" element={<AddHub />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashBoard" element={<DashBoard />} />
+        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/changePwd" element={<ChangePwd />} />
+        <Route path="/signAccept" element={<SignAccept />} />
+        <Route path="/infoDataHub" element={<InfoDataHub />} />
+        <Route path="/updateDataHub" element={<UpdateDataHub />} />
+        <Route path="/activeHublist" element={<ActiveHublist />} />
+        <Route path="/addHub" element={<AddHub />} />
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/history" element={<History />} />
       
         
       </Routes>

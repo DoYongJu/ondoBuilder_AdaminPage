@@ -40,9 +40,7 @@ const NavBar = () => {
   function onClickQuest(){
     console.log('onClickQuest');
   };
-  function onClickMyPage(){
-    console.log('onClickMyPage');
-  };
+
   function onClickSetting(){
     console.log('onClickSetting');
   };
@@ -66,9 +64,9 @@ const NavBar = () => {
           </li>
           <div className='navOption'>
             <li><button  onClick={onClickQuest}><SlQuestion size={25}/> </button></li>
-            <li><button  onClick={onClickMyPage}><GoPerson size={25}/></button> </li>
+            <li><button onClick={() => {navigate('/mypage'); }}><GoPerson size={25}/></button> </li>
             <li><button  onClick={onClickSetting}><SlSettings size={25}/></button> </li>
-            <li><input type="button" value="+ 허브 추가" onClick={() => {navigate('/CreateDataHub'); }}/></li>
+            <li><input type="button" value="+ 허브 추가" onClick={() => {navigate('/addHub'); }}/></li>
           </div>
         </ul>
       </nav>

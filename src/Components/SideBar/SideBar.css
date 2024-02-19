@@ -1,6 +1,6 @@
 /* SideBar.css */
 .sidebar {position: fixed;top: 78px;right: -440px; margin-right:0px; width: 395px;
-  height: 810px;background-color: #fff;
+  height: 847px;background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);transition: right 0.3s ease-in-out;padding:18px 24px; 
   overflow-y: auto;overflow-x: hidden;
 }

@@ -9,7 +9,8 @@ import { FaPlus } from "react-icons/fa";
 import DataHub_module from '../../Module/Search_module';
 import { MyObjects } from '../../Resources/Models';
 import CustomChart from '../ViewWaysOfChart/ViewWaysOfChart';
-import {searchState } from '../../Resources/Atoms';
+import {searchState, tokenState} from '../../Resources/Atoms';
+import Cookies from 'js-cookie';
 
 function DashBoard() {
 
@@ -19,41 +20,49 @@ function DashBoard() {
   const searchText = useRecoilValue(searchState);
   const [datas, setDatas] = useState<MyObjects>([]);
   const navigate = useNavigate();
+  const token = useRecoilValue(tokenState);
 
+//   useEffect(() => {
+//     let dataFromApi = setDashBoardApi();
+//     setDatas(dataFromApi);
+            
+//   }, []);
+// useEffect(() => {
+
+//   const datass =  DataHub_module(datas,searchText);
+//   setDatas(datass);
+          
+// }, [searchText]);
 
 useEffect(() => {
-  const datass =  DataHub_module({dummyData},searchText);
-  setDatas(datass);
-          
-}, [searchText]);
+  const fetchData = async () => {
+    try {
+      const responseData = await setDashBoardApi();
+      // console.log(responseData);
+      if (responseData) {
+        setDatas(responseData);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-async function setDashBoardApi() {
-    
-  const param = {
-      // username: username
-      // , email: email
-      // , password: password
-      // , company: company
-      // , division: division
-      // , tel: tel
-    };
+  fetchData();
+}, []);
 
-    await axios({
-      method: 'POST',
-      url: process.env.REACT_APP_DASHBOARD_API,
-      headers: {'Content-Type': 'application/json'},
-      data: param
-
-    }).then(response => {
-      //console.log(response) => ? 
-
-    
-    }).catch(error =>{
-      if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){
-      console.log('axios 과정중 에러발생 uploadFile 확인-yong')
-      };
-    
+async function setDashBoardApi(): Promise<MyObjects> {
+  
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: process.env.REACT_APP_API + '/v1/api/datahub',
+      headers: {"accept": 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${Cookies.get('accessToken')}`},
     });
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };  
 function handleSelect (e:any){
   const selectedValue = e.target.value;
@@ -61,9 +70,6 @@ function handleSelect (e:any){
   setSearchType(selectedValue);
 };
 
-function ClickTheDataHub( data: MyObject){
-  navigate('/UpdateDataHub',{state:data}); 
-};
 
   return (
   <div className="dashBoard">
@@ -85,16 +91,16 @@ function ClickTheDataHub( data: MyObject){
     </div>
     <div className='dataHubTemplate'>
         {datas.map((data) => (    
-        <div key={data.name} className='theDataHub' onClick={()=>ClickTheDataHub(data)}>
+        <div key={data. hub_name} className='theDataHub' onClick={()=>navigate('/updateDataHub',{state:data})}>
           <div className='icon'><img style={{width:'35px', height:'35px'}} src={process.env.PUBLIC_URL + '/dataHub_List_Icon.png'} alt="온도 로고"/></div>
           <div className='headArea'>
             <div className='titleArea'>
-              <span className='firstp'>{data.name}</span>
-              <span className='secondp' style={{width:'405px', height:'46px'}}>{data.title || "test"}</span>
+              <span className='firstp'>{data. hub_name}</span>
+              <span className='secondp' style={{width:'405px', height:'46px'}}>{data.hub_description || "test"}</span>
             </div>
             <div className='contentArea'>
               <ul><p>허브 생성일</p><p>허브 수정일</p> </ul>
-              <ul><p>{data.generateDate}</p><p>{data.lastEditDate}</p></ul>
+              <ul><p>{data.datahub_regdate}</p><p>{data.datahub_upddate}</p></ul>
             </div>
             <div className='innerInfo'><span>내부 정보</span></div>
             <div className='chartArea'><CustomChart data={data}/></div>
@@ -104,75 +110,12 @@ function ClickTheDataHub( data: MyObject){
  
         </div>
        ))} 
-       <div className='theDataHub' onClick={()=>{navigate('/AddHub');}}> <div className='theDataHubPlus'><ul><FaPlus size={20}/></ul><ul>허브추가</ul> </div></div>        
+       <div className='theDataHub' onClick={()=>{navigate('/addHub');}}> <div className='theDataHubPlus'><ul><FaPlus size={20}/></ul><ul>허브추가</ul> </div></div>        
     </div>
   </div>
   );
 };
 
 
-const dummyData : MyObjects = [
-  {
-    "hub_id": 1,
-    "name": "도용주 1",
-    "generateDate": "2022-01-11",
-    "lastEditDate": "2022-01-12",
-    "title": "First entFirst DoentFirst DocumentFiocumentFirst DocumentFirst DocumentDocument",
 
-    "doc": 0,
-    "img": 0,
-    "text": 0,
-    "link": 0,
-   
-  },
-  {
-    "hub_id": 2,
-    "name": "Document 2fffffffffffff",
-    "generateDate": "2022-01-10",
-    "lastEditDate": "2022-01-30",
-    "title": "First Documentccccccccccccccccccccccccccccccccccccc",
-    "doc": 15,
-    "img": 0,
-    "text": 2,
-    "link": 1,
-   
-  },
-  {
-    "hub_id": 3,
-    "name": "Document 3",
-    "generateDate": "2022-01-10",
-    "lastEditDate": "2022-01-15",
-    "title": "First Document",
-    "doc": 15,
-    "img": 9,
-    "text": 13,
-    "link": 1,
-   
-  },
-  {
-    "hub_id": 4,
-    "name": "Document 4",
-    "generateDate": "2022-01-10",
-    "lastEditDate": "2022-01-13",
-    "title": "First Document",
-    "doc": 2,
-    "img": 4,
-    "text": 1,
-    "link": 2,
-   
-  },
-  {
-    "hub_id": 5,
-    "name": "Document 5",
-    "generateDate": "2022-01-16",
-    "lastEditDate": "2022-01-13",
-    "title": "Second Document",
-    "doc": 1,
-    "img": 6,
-    "text": 7,
-    "link": 2,
-   
-  },
-
-];
 export default DashBoard;

@@ -1,27 +1,38 @@
-import React, {useState,useEffect, ChangeEvent } from 'react';
+import React, {useState,useEffect } from 'react';
 import './UpdateDataHub.css';
-import { useNavigate, useLocation } from 'react-router-dom';
-import {MyObject} from '../../../Resources/Models'
 import Cookies from 'js-cookie';
+import { hubClassfiyState } from '../../../Resources/Atoms';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState} from 'recoil';
+import {MyObject} from '../../../Resources/Models';
+import ConnectApi from '../../../Module/ConnectApi';
+import Alert from '../../Alert/Alert';
+
+
+
 
 function UpdateDataHub() {
+  const setHubClassify = useSetRecoilState(hubClassfiyState);
+  const type = useRecoilValue(hubClassfiyState);
   const navigate = useNavigate();
-  const location = useLocation();
-  const writer = Cookies.get('username');
-  const data:MyObject= location.state;
-  console.log(data);
 
-  const [activeButton, setActiveButton] = useState('info')|| location.state;
+  const writer = Cookies.get('username');
+  const location = useLocation();
+  const data:MyObject= location.state;
+
+  const [activeButton, setActiveButton] = useState('info')|| type;
   const [nametext, sethubNameText] = useState('');
   const [changeInfo, setChangeInfo] = useState(false);
+  const [viewAlart, setViewAlart] = useState(false);
   const [infoText, setInfoText] = useState('');
   const [currentCount, setCurrentCount] = useState(0);
   const totalCount = 50;
- 
+  console.log("type: "+type)
+
 
   useEffect(() => {
-    sethubNameText(data.name);
-    setInfoText(data.title);
+    sethubNameText(data.hub_name);
+    setInfoText(data.hub_description);
   }, []);
 
 
@@ -37,33 +48,56 @@ function UpdateDataHub() {
     { label: '링크', value: 'link' },
   ];
 
+  function changehubInfoApi() {
+    setChangeInfo(!changeInfo);
 
+    const sendParam = {
+      hub_id: Number(data.hub_id),
+      hub_name:nametext,
+      hub_description: infoText,
+    };
 
-  const handleInfoChange = (event: any) => {
-    const newText = event.target.value;
-    setInfoText(newText);
-  };
-
-  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newText = event.target.value;
-    sethubNameText(newText);
+    ConnectApi({ method: 'PATCH', url: '/v1/api/datahub', sendParam: sendParam })
+      .then((res) => {
+      console.log(res);
+      navigate('/updateDataHub',{state:res.data}); 
+      })
+      .catch((error) => {
+        console.error('Error occurred:', error);
+      });
   };
   
   const handleButtonClick = (value:string) => {
+    setHubClassify(value);
     switch(value){
-      case "doc" :   navigate('/ActiveHublist',{state:data}); break;
-      case "img" :  navigate('/ActiveHublist',{state:data}); break;
-      case "video" :  navigate('/ActiveHublist',{state:data}); break;
-      case "link" :  navigate('/ActiveHublist',{state:data}); break;
-      default :   navigate('/UpdateDataHub',{state:data}); 
+      case "doc" :   navigate('/activeHublist',{state:data}); break;
+      case "img" :  navigate('/activeHublist',{state:data}); break;
+      case "video" :  navigate('/activeHublist',{state:data}); break;
+      case "link" :  navigate('/activeHublist',{state:data}); break;
+      default :   navigate('/updateDataHub',{state:data}); 
     };
     setActiveButton(value);
   };
 
-  function handleDeleteHub(){
-    console.log(`데이터 허브 삭제 버튼 눌림`);
+  async function handleDeleteHub(){
+    const sendParam = {
+      hub_id: data.hub_id
+    };
+    ConnectApi({ method: 'DELETE', url: '/v1/api/datahub', sendParam: sendParam })
+    .then((res) => {
+    console.log(res);
+    console.log('데이터 허브 삭제 완료');
+    })
+    .catch((error) => {
+      console.error('Error occurred:', error);
+    });
   };
-
+  const cancelEdit=()=>{
+    setViewAlart(true);
+  };
+  const closeAlart=()=>{
+    setViewAlart(false);
+  };
   return (
     
     <div className="UpdateDataHub">
@@ -91,19 +125,19 @@ function UpdateDataHub() {
       <div className="hubInfoBody">
         <div className="first">
           <div className='hubnameArea'><span>허브 이름</span></div> 
-          {!changeInfo &&<div className='hubnameSpace'><span>허브이름 스페이스</span></div>}
+          {!changeInfo &&<div className='hubnameSpace'><span>{data.hub_name}</span></div>}
           {changeInfo && 
           <div className='hubnameSpace'> 
-            <input type="text" value={nametext}  onChange={handleNameChange}></input>
+            <input type="text" value={nametext}  onChange={(e)=>{sethubNameText(e.target.value)}}></input>
           </div>}  
         </div>
         <div className='second'>
           <div className='hubnameArea'><span>허브 설명</span></div>
-          {!changeInfo && <div className='hubnameSpace'><span>데이터 허브 설명 공간</span></div>}
+          {!changeInfo && <div className='hubnameSpace'><span>{data.hub_description}</span></div>}
           {changeInfo &&  
             <div className='hubnameSpace'>
               
-              <textarea  value={infoText} maxLength={totalCount}  onChange={handleInfoChange}></textarea>
+              <textarea  value={infoText} maxLength={totalCount}  onChange={(e)=>{setInfoText(e.target.value)}}></textarea>
               <div className="counters">
                   <span id="currentCount">{currentCount}</span>/
                   <span id="totalCount">{totalCount}</span>(글자수)
@@ -112,7 +146,11 @@ function UpdateDataHub() {
         </div>
 
         <div className="hubInfoBodyBtnArea">
-        {changeInfo &&   <button className='saveInfo' onClick={()=>{setChangeInfo(!changeInfo)}}>정보 저장 </button> }
+        {changeInfo &&  
+          <> 
+            <button className='cancleInfo' onClick={cancelEdit}>수정 취소 </button> 
+            <button className='saveInfo' onClick={changehubInfoApi}>정보 저장 </button> 
+          </>}
         {!changeInfo &&   <button onClick={()=>{setChangeInfo(!changeInfo)}}>허브 정보 수정 </button> }
         </div>
        
@@ -124,15 +162,16 @@ function UpdateDataHub() {
       </div>
 
       <div className="hubInfoDetailsBody">
-        <div className="key1"><span>생성자</span> <span>생성일</span> <span>마지막 수정일</span></div>
-        <div className="value"><span>{writer}</span> <span>{data.generateDate}</span> <span>{data.lastEditDate}</span></div>
+        <div className="key1"><span>생성자</span> <span>생성일</span> <span>수정일</span></div>
+        <div className="value"><span>{writer}</span> <span>{data.datahub_regdate}</span> <span>{data.datahub_upddate}</span></div>
       </div>
       
       <div className="hubInfoDetailsFooter">
         <div className="title"><span>데이터 허브 삭제</span> </div>
-        <div className="description"><span>데이터허브를 삭제하시면, 이와 연결된 모든 챗봇, 어시스턴트, 업로드된 파일, 이미지, 동영상 및 URL 링크들도 함께 사라집니다. 중요한 점은, 데이터허브에서는 백업 기능을 제공하지 않기 때문에, 한번 삭제되면 모든 데이터는 복구할 수 없게 됩니다. 따라서 삭제 전에 필요한 정보가 있다면, 반드시 따로 저장해두시기 바랍니다</span></div>
+        <div className="description"><span>데이터허브를 삭제하시면, 연결된 모든 챗봇, 어시스턴트, 업로드된 파일, 이미지, 동영상 및 URL 링크들도 함께 사라집니다. 데이터허브에서는 백업 기능을 제공하지 않기 때문에, 한번 삭제되면 모든 데이터는 복구할 수 없게 됩니다.</span></div>
         <div className="buttonArea"><button onClick={handleDeleteHub}>데이터 허브 삭제</button></div>
       </div>
+      {viewAlart && <Alert onClose={closeAlart}/>}
     </div>
   );
 };

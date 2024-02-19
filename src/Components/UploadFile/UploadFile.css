@@ -14,7 +14,7 @@
 .FileUpload .body .FileUploadtitle .key ul{width:60px; color: #505050; font-size: 14px;font-weight: 400;line-height: 20px;
     letter-spacing: -0.35px}
 .FileUpload .body .FileUploadtitle .value{display: flex;  flex-direction: column;gap:16px}
-.FileUpload .body .FileUploadtitle .value ul{heightwidth:150px; font-size: 14px;font-weight: 400;line-height: 20px;
+.FileUpload .body .FileUploadtitle .value ul{width:150px; font-size: 14px;font-weight: 400;line-height: 20px;
     letter-spacing: -0.35px}
 
 
@@ -76,7 +76,7 @@
     gap:8px;
     justify-content: left; 
     padding:11px 0;
-    overflow-y: hidden;
+    overflow-y: hidden; 
     overflow-x: auto;
     &::-webkit-scrollbar-thumb {width: 1px;border-radius: 24px;background:#B0C5F2;;}
     &::-webkit-scrollbar-track {  background-color:#fff; }  
@@ -112,9 +112,9 @@
     letter-spacing: -0.35px;border: 1px solid #105AEB;background: #105AEB; margin-left:8px;}
 .FileUpload .body .caroselArea .caroselInputArea .deleteBtn{width:60px; padding: 14px;border-radius: 6px;color: #111111;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; /* 142.857% */
-    letter-spacing: -0.35px;border: 1px solid #105AEB; background-color:white; margin-left:8px;}
+    letter-spacing: -0.35px;border: none; background-color:white; margin-left:8px;}
 
 
-.FileUpload .footer{ height: 48px;width: 100%;padding: 16px 0 0 0;display: flex;justify-content: center;align-items: center; bottom:0}
+.FileUpload .footer{ height: 50px;width: 100%;padding: 16px 0 0 0;display: flex;justify-content: center;align-items: center; bottom:0}
 .FileUpload .footer button{border-radius: 6px; border: none;width: 100%;
-    background: #105AEB;padding: 10px 16px; color:white} 
+    background: #105AEB;padding: 14px 0; color:white} 

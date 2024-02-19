@@ -9,7 +9,7 @@ function module(dummyData: MyObjects,searchText:string){
   for(let i=0; i<dummyData.length; i++){
     var nowData =  dummyData[i];
 
-    if(nowData.generateDate.match(searchText) || nowData.title.match(searchText) || nowData.name.match(searchText) || nowData.lastEditDate.match(searchText)){
+    if(nowData. datahub_regdate.match(searchText) || nowData.hub_description.match(searchText) || nowData.hub_name.match(searchText) || nowData. datahub_upddate.match(searchText)){
    
       resultList.push(nowData);
     }

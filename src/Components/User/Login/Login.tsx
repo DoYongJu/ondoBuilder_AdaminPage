@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import Cookies from 'js-cookie';
 import { usernameState, tokenState } from '../../../Resources/Atoms';
-import CryptoJS from 'crypto-js';
+
 
 
 function Login() {
@@ -13,37 +13,32 @@ function Login() {
   const [email, setEmail] = useState(''),
     [password, setPassword] = useState(''),
     setTokenRecoil = useSetRecoilState(tokenState);
-
-
-  // const public_key = ` WEWJH876RE7G78DGKW31H8JFB98J2SKW`;
-  // const cipherPwd = CryptoJS.AES.encrypt(password, public_key).toString();
-  // console.log('cipherPwd'+cipherPwd);
-
   async function loginApi() {
-    console.log('process.env.REACT_APP_LOGIN_API'+ process.env.REACT_APP_LOGIN_API);
       const sendParam = {
         email: email,
         password: password,
       };
-
+      console.log(process.env.REACT_APP_API+'/v1/api/auth/signin')
       await axios({
         method: 'POST',
-        url: process.env.REACT_APP_LOGIN_API,
+        url: process.env.REACT_APP_API+'/v1/api/auth/signin',
         headers: {"accept": 'application/json', 'Content-Type': 'application/json'},
         data: sendParam
         
-      }).then(response => {
+      }).then(res => {
         // setusername(response.data.user_name);
-        setTokenRecoil(response.data.accessToken);
-        Cookies.set('accessToken', response.data.accessToken);
-        navigate('/DashBoard');
-        // Cookies.set('username', response.data.user_name); 
+        setTokenRecoil(res.data.accessToken);
+        Cookies.set('accessToken', res.data.accessToken);
+        Cookies.set('username', res.data.user_name); 
+        console.log(res.data);
+        navigate('/dashBoard');
      
         
       }).catch(error =>{
         if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){
           navigate('/SignAccept');
         };
+        console.log('error:'+ error);
        
       });
 
