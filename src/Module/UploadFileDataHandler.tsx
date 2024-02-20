@@ -1,9 +1,9 @@
 import ConnectApi from './ConnectApi';
 import {tagsList} from '../Resources/Models';
 
-const UploadFileDataHandler=({ classfiyType, hubId,file_description, file_tag, carousel_id, turn, doc,url_tag,url_description }: 
+const UploadFileDataHandler=({ classfiyType, hubId,file_description, file_tag, carousel_id, turn, doc,url_tag,url_description,prompt}: 
     { classfiyType: string, hubId: number, file_description?:string, file_tag?: string[],carousel_id?:number, turn?:number,
-        url_tag?: string[], url_description?: string, doc?:string })=>{
+        url_tag?: string[], url_description?: string, doc?:File, prompt?:string})=>{
     
     let apiUrl = '';
     let sendParam:any = {};
@@ -19,7 +19,7 @@ const UploadFileDataHandler=({ classfiyType, hubId,file_description, file_tag, c
             break;
         case 'doc':
             apiUrl = `/v1/api/datahub/doc`; 
-            sendParam = { hub_id: hubId, file_description: file_description, doc:doc};
+            sendParam = { hub_id: hubId, file_description: file_description, doc:doc, prompt:prompt};
             break;
         default:
             apiUrl = `/v1/api/datahub/urlUpload`;

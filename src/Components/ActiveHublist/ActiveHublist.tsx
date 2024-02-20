@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, DragEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
-import { UploadedInfo,  } from '../../Resources/Models';
 import { useRecoilValue, useSetRecoilState} from 'recoil';
 import { hubClassfiyState } from '../../Resources/Recoil';
 import SideBar from '../SideBar/SideBar';
@@ -17,6 +16,7 @@ import './ActiveHublist.css';
 
 
 function ActiveHublist(){
+    const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
     const location = useLocation();
     const navigate = useNavigate();
     const [isFirst, setIsFirst] = useState(true); //허브에 데이터가 없을 때
@@ -25,8 +25,8 @@ function ActiveHublist(){
     const [, setSearchType] = useState('');
     const [, setSearchText] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
-
-    const [activeButton, setActiveButton] = useState('default');
+    const data:MyObject= location.state; //허브 정보
+    const [activeButton, setActiveButton] = useState(type);
     const [selectList, setSelectList] = useState([
       { id: -1, name: '조회' },
       { id: -2, name: '이름순 않음' },
@@ -42,8 +42,8 @@ function ActiveHublist(){
     const [uploadedInfo, setUploadedInfo] = useState(false);
     const [selctedClick, setSelctedClick] = useState(false);
 
-    const data:MyObject= location.state; //허브 정보
-    const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
+
+    
     const setHubClassify = useSetRecoilState(hubClassfiyState);
     const buttons = [ //상단 탭 정보
         { label: '정보', value: 'info' },
@@ -61,6 +61,7 @@ function ActiveHublist(){
 
     const handleButtonClick = (value:string) => {
       setHubClassify(value);
+      setActiveButton(value);
         switch(value){
           case "doc" :   navigate('/ActiveHublist',{state:data}); break;
           case "img" :  navigate('/ActiveHublist',{state:data}); break;
@@ -68,7 +69,7 @@ function ActiveHublist(){
           case "url" :  navigate('/ActiveHublist',{state:data}); break;
           case "info" :  navigate('/updateDataHub',{state:data}); break;
           default : ;
-        setActiveButton(value);
+        
         };
     };
     
@@ -82,26 +83,29 @@ function ActiveHublist(){
   
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-    const items = e.dataTransfer.items;
+    // const items = e.dataTransfer.items;
+    const file = e.dataTransfer.files[0];
+    validateFile(file);
+    setActive(false);
 
-    if (items) {
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        if (item.kind === 'file') {
-          const tempFile = item.getAsFile();
-          handleFileChange(tempFile);
-          setActive(false);
+    // if (items) {
+    //   for (let i = 0; i < items.length; i++) {
+    //     const item = items[i];
+    //     if (item.kind === 'file') {
+    //       const tempFile = item.getAsFile();
+    //       handleFileChange(tempFile);
+    //       setActive(false);
 
-          // if (tempFile) {
-          //   setSelectedFile(tempFile);
-          //   setUploadedInfo(true);
-          //   setActive(false);
-          //   setIsFirst(false); //나중에 파일 업로드 된 후 사용될 코드. 개발 테스트로 인해 현재 위치
+    //       // if (tempFile) {
+    //       //   setSelectedFile(tempFile);
+    //       //   setUploadedInfo(true);
+    //       //   setActive(false);
+    //       //   setIsFirst(false); //나중에 파일 업로드 된 후 사용될 코드. 개발 테스트로 인해 현재 위치
            
-          // };
-        };
-      };
-    };
+    //       // };
+    //     };
+    //   };
+    // };
   };
 
   const handleFileuploadButtonClick =()=>{
@@ -148,10 +152,7 @@ function ActiveHublist(){
 
   return true;
   };
-
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
-    console.log(file);
+const validateFile = (file:File)=>{
     // 파일 타입 확인
     const fileType = file.type;
     // 파일 크기 확인
@@ -183,8 +184,12 @@ function ActiveHublist(){
         break;
     };
 };
-
-
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    validateFile(file);
+    e.target.value = '';
+    
+};
 
     return (
 

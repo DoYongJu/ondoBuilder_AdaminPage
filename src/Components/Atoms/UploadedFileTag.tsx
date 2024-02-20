@@ -20,7 +20,7 @@ const UploadedFileTag=({inputRef, onSubmitSearch, tags, deleteTag}:{inputRef:Ref
                     ))}
             </div>
             </div>
-     </div>
+        </div>
     );
 }; 
 export default UploadedFileTag;

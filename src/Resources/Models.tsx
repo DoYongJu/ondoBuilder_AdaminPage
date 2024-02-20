@@ -77,7 +77,13 @@ interface dataByType{
 //   url_description: string,
 //   doc:string
 // }
-
+export interface userInfoType{
+  email: string;
+  company: string;
+  username: string;
+  division: string; 
+  tel: string
+}
 export type dataByTypeList = dataByType[];
 export type selCaroselGroupList = selCaroselGroup[];
 export type tagsList= tag[];

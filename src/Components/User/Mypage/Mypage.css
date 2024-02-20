@@ -9,9 +9,13 @@
 .myPage .content ul:first-child +ul +ul +ul +ul{height:64px; border-bottom: 1px solid #E1E1E1; }
 .myPage .content ul:first-child +ul +ul +ul +ul >li{float: left; line-height: 64px;}
 .myPage .content ul:first-child +ul +ul +ul +ul >li:first-child+li{float: right;}
-.myPage .content ul:first-child +ul +ul +ul +ul +ul{height:64px;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul{height:64px; }
 .myPage .content ul:first-child +ul +ul +ul +ul +ul>li{float: left; line-height: 64px;}
-.myPage .content ul:first-child +ul +ul +ul +ul +ul>li:first-child+li{float: right;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul>li:first-child+li{float: right; }
+.myPage .content ul:first-child +ul +ul +ul +ul +ul>li:first-child+li button {float: center;height: 44px;width: 120px; 
+    padding: 10px 14px;border-radius: 4px;background: #F7F7F7;border: 1px solid #B8B8B8;}
+.myPage .content ul:first-child +ul +ul +ul +ul +ul>li:first-child+li button >span{font-size: 14px;font-style: normal;
+    font-weight: 500;line-height: 20px; letter-spacing: -0.35px;}
 .myPage .content ul:first-child +ul +ul +ul +ul +ul +ul{margin-top: 41px;font-size: 20px;font-weight: 500; line-height: 20px;letter-spacing: -0.5px;}
 .myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul{height:1px; margin-top:14px; background-color: black;}
 .myPage .content ul:first-child +ul +ul +ul +ul +ul +ul +ul +ul{height:64px; border-bottom: 1px solid #E1E1E1;}

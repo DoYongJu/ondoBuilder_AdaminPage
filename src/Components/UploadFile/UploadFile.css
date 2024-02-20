@@ -9,7 +9,7 @@
 .FileUpload .header button{ width: 20%; border:none; background-color: #FFF; text-align: right;}
 
 .FileUpload .body{height:560px;width:100%;border-top:1px solid #DBDBDB;padding: 16px 12px 16px 0;overflow-x: hidden; overflow-y: auto;}
-.FileUpload .body .FileUploadtitle{display: flex; height:56px; gap:28px }
+.FileUpload .body .FileUploadtitle{display: flex; height:56px; gap:28px; padding-top:24px; }
 .FileUpload .body .FileUploadtitle .key{display: flex;  flex-direction: column;gap:16px}
 .FileUpload .body .FileUploadtitle .key ul{width:60px; color: #505050; font-size: 14px;font-weight: 400;line-height: 20px;
     letter-spacing: -0.35px}
@@ -18,9 +18,9 @@
     letter-spacing: -0.35px}
 
 
-.FileUpload .body .FileUploadInfo{height:142px; width:432px;}
+.FileUpload .body .FileUploadInfo{height:142px; width:445px; margin-bottom: 24px;}
 .FileUpload .body .FileUploadInfo .FileUploadtitle{display: flex; height:20px; justify-content: space-between; color: #505050;
-    font-size: 14px;font-weight: 400;line-height: 20px;letter-spacing: -0.35px;margin-top: 24px;}
+    font-size: 14px;font-weight: 400;line-height: 20px;letter-spacing: -0.35px; }
 
     .FileUpload .body .FileUploadInfo .fileTextArea{ position: relative;width:100%; height: 88px;}
 .FileUpload .body .FileUploadInfo .fileTextArea textarea{width: 100%;outline: none;
@@ -29,8 +29,12 @@
 .FileUpload .body .FileUploadInfo .fileTextArea span{position: absolute; bottom: -20px; right: -20px; color: #999;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px;
     letter-spacing: -0.35px;}
-
-.FileUpload .body .FileTag{padding-top:24px; height: 260px;width:100%; }
+.FileUpload .body .linkArea{padding-top:24px; height: 50px;width:100%;margin-bottom:24px;}
+.FileUpload .body .linkArea .linktitle{width: 100%; color: #505050;   
+    font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; /* 142.857% */letter-spacing: -0.35px;}
+.FileUpload .body .linkArea .linkbody input{height: 48px; width:99%; border-radius: 6px;
+    border: 1px solid #BDBDBD; outline: none;}
+.FileUpload .body .FileTag{padding-top:24px; height: 200px;width:100%; margin-top:24px}
 .FileUpload .body .FileTag .FileTagtitle{width: 100%; color: #505050;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; /* 142.857% */letter-spacing: -0.35px;}
 .FileUpload .body .FileTag .FileTagbody{}
@@ -60,7 +64,7 @@
 
 
 
-.FileUpload .body .caroselArea{width:100%;}
+.FileUpload .body .caroselArea{width:100%; margin-top:48px}
 .FileUpload .body .caroselArea .caroselTitle{height: 26px; color: #505050;
     font-family: Pretendard;font-size: 14px;font-style: normal;
     font-weight: 400;line-height: 20px; /* 142.857% */letter-spacing: -0.35px;}

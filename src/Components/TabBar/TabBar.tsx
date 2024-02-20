@@ -1,40 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import './TabBar.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 interface TabState {
     id: number;
     active: boolean;
     title:string;
+    path: string;
   }
 
 const TabBar=()=>{
     const navigate = useNavigate();
+    const location = useLocation();
     const [tabs, setTabs] = useState<TabState[]>([
-        { id: 1, active: false, title:'사용자 정보' },
-        { id: 2, active: false, title:'히스토리'},
-        { id: 3, active: false, title:'사용자 관리' },
+        { id: 1, active: true, title:'사용자 정보' , path: '/mypage'},
+        { id: 2, active: false, title:'히스토리' ,path: '/history'},
+        { id: 3, active: false, title:'사용자 관리' ,path: '/mypage'},
       ]);
 
-    const handleTabClick = (clickedTabTitle: string) => {
-       
-      const updatedTabs = tabs.map(tab =>
-        tab.title === clickedTabTitle ? { ...tab, active: true } : { ...tab, active: false }
-      );
+      useEffect(() => {
+        const updatedTabs = tabs.map(tab => ({
+            ...tab,
+            active: tab.path === location.pathname
+        }));
+        setTabs(updatedTabs);
+    }, [location.pathname]);
 
-      setTabs(updatedTabs);
-      switch(clickedTabTitle){
-        case '사용자 정보': navigate('/mypage'); break;
-        case '히스토리': navigate('/history'); break;
-        case '사용자 관리': break;
-        default: break; 
-      };
+    const handleTabClick = (clickedTab: TabState) => {
+        navigate(clickedTab.path);
     };
     
     return(
         <div className='tabBarComponent'>
             <ul>
             {tabs.map(tab => (
-                <li key={tab.id} className={tab.active ? 'active' : ''} onClick={() => handleTabClick(tab.title)}>
+                <li key={tab.id} className={tab.active ? 'active' : ''} onClick={() => handleTabClick(tab)}>
                     {tab.title}
                 </li>
             ))}

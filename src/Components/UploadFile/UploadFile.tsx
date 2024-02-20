@@ -9,9 +9,10 @@ import {tagsList, tag, UploadFileProps, selCaroselGroupList} from '../../Resourc
 import ConnectApi from '../../Module/ConnectApi';
 import UploadFileDataHandler from '../../Module/UploadFileDataHandler';
 import UploadedFileName from '../Atoms/UploadedFileName';
-import UploadedFileInfo from '../Atoms/UploadedFileInfo';
+import UploadedFileTextArea from '../Atoms/UploadedFileTextArea';
 import UploadedFileTag from '../Atoms/UploadedFileTag';
 import UploadedFileCarosel from '../Atoms/UploadedFileCarosel';
+
 
 
 interface ImageType {
@@ -23,7 +24,9 @@ interface ImageType {
 
 const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [description, setInfoText] = useState(''); 
+    const [urlInfo, setInfoUrl] = useState(''); //url 입력 input
+    const [description, setInfoText] = useState(''); //파일설명 input
+    const [promtText, setPromtText] = useState(''); //프롬프트 textArea 
     const [caroselNewView, setCaroselNewView] = useState(false);  
     const [currentCount, setCurrentCount] = useState(0);
     const [tags, setTags] = useState<tagsList>([]);
@@ -43,7 +46,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         { id: -1, name: '선택' },
         { id: -2, name: '선택하지 않음' }
     ]);
-    const [selected, setSelected] = useState('');
+    const [selectedCaroselId, setSelectedCaroselId] = useState('');
     const [addCarosel, setAddCarosel] = useState('');
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
@@ -77,8 +80,25 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         getFileInfo();  //파일 미리보기 기능
     }, []);
 
+    //카로셀 선택 후 해당 이미지를 api로 get ->2/21 개발 중, 추후 데이터 확인 필요. 
+    useEffect(() => { 
+        function getImgListApi(){
+            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/datahub/carouser/img/${selectedCaroselId}` })
+            .then((res) => {
+                const data = res.data;
+                // const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
+                // setSelectList(prevList => [...prevList, ...newList]); 이해 안됨... 대호씨 문의해봐야 함 왜 캐로셀 조회랑 res가 똑같은지,
+                //id 와 name 으로 미리보기가 가능한지 테스트 필요
+            })
+            .catch((error) => {
+                console.error('getCaroselGroupApi/ Error occurred:', error);
+            });
+        };
+        getImgListApi();
+    
+    }, [selectedCaroselId]);
 
-    //카로셀 그룹 추가->데이터 확인 완료 
+    //카로셀 그룹 추가
     function addCaroselGroupApi() {
        
         let sendParam={
@@ -91,7 +111,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             setCaroselNewView(!caroselNewView);
           })
           .catch((error) => {
-            // API 요청이 실패했을 때 처리할 로직
             console.error('addCaroselGroupApi/ Error occurred:', error);
           });
     };
@@ -159,15 +178,15 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     };
 
     function handleSelect (selectedValue:any){
-        console.log('selectedValue'+selectedValue);
-        setSelected(selectedValue);
+        setSelectedCaroselId(selectedValue.id);
+        console.log(selectedCaroselId);
     };
 
     const saveFile = () => {
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
         
-        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description })
+        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile})
         // console.log('Updated Images:', images);
     };
 
@@ -189,6 +208,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     };
 
     return(
+        
     <div className="FileUpload">
         <div className="header">
             <ul>파일 업로드</ul>
@@ -196,17 +216,17 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         </div>
         <div className='body'>
             {fileType === 'doc' &&oneFile && //해야해...
-                <>
-                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
-                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                <>  <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTextArea title='파일 프롬프트' placeholder='파일에 대한 프롬프트를 입력해주세요.' handleTextChange={(e)=>{ setPromtText(e.target.value);}}/>
                 </>
             }
             {fileType === 'img' &&oneFile && 
                 <>
                     <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/>
-                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
-                    <UploadedFileCarosel caroselNewView={caroselNewView} selected={selected} handleSelect={handleSelect}
+                    <UploadedFileCarosel caroselNewView={caroselNewView} selected={selectedCaroselId} handleSelect={handleSelect}
                     selectList={selectList} setCaroselNewView={setCaroselNewView} images={images} handleDragStart={handleDragStart}
                     handleDrop={handleDrop} imgClicked={imgClicked} inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel}
                     addCaroselGroupApi={addCaroselGroupApi}/>
@@ -214,15 +234,20 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
             {fileType === 'video' &&oneFile && 
                 <>
-                    <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/> 동영상ㅇㄴㄴ
-                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/> 
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>
             }
-            {fileType === 'link' &&  //링크는 파일 업로드가 아니잖아..?
+            {fileType === 'link' && 
                 <>
-                    <div><input type="text"  placeholder="엔터로 태그를 등록해주세요." ref={inputRef} onKeyPress={onSubmitSearch} /></div>
-                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <div className='linkArea'>
+                        <div className='linktitle'><ul>URL 입력</ul></div>
+                        <div className='linkbody'>
+                        <div><input type="text"  placeholder="URL을 입력 해주세요." onChange={(e)=>{setInfoUrl(e.target.value)}} /></div>
+                        </div>
+                     </div>
+                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>
             }
