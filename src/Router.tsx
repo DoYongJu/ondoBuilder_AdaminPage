@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { usernameState, tokenState } from './Resources/Atoms';
+import { usernameState, tokenState } from './Resources/Recoil';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Login from './Components/User/Login/Login';
 import DashBoard from './Components/DashBoard/DashBoard';
@@ -22,6 +22,7 @@ const Router = () => {
   const setUserName = useSetRecoilState(usernameState);
   const username = useRecoilValue(usernameState);
   const token= Cookies.get('accessToken');
+  
   useEffect(() => {
     const storedUsername = Cookies.get('username');
     if (storedUsername) {

@@ -3,7 +3,7 @@ import './NavBar.css';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { useRecoilValue } from 'recoil';
-import { usernameState, tokenState } from '../../Resources/Atoms';
+import { usernameState, tokenState } from '../../Resources/Recoil';
 import { SlQuestion } from "react-icons/sl";
 import { SlSettings } from "react-icons/sl";
 import { GoPerson } from "react-icons/go";

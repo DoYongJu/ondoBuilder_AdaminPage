@@ -42,7 +42,8 @@ export interface UploadedInfo {
 }
 export interface UploadFileProps {
   onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  oneFile:File;
+  oneFile?:File;
+  fileType:string;
 };
 interface selCaroselGroup{
   carousel_id: number;
@@ -66,6 +67,17 @@ interface dataByType{
   url_upddate:string;
 
 }
+// export interface dataForUploadType{
+//   hub_id: number,
+//   file_tag: tagsList,
+//   file_description: string,
+//   carousel_id: number,
+//   turn: number,
+//   url_tag: string,
+//   url_description: string,
+//   doc:string
+// }
+
 export type dataByTypeList = dataByType[];
 export type selCaroselGroupList = selCaroselGroup[];
 export type tagsList= tag[];

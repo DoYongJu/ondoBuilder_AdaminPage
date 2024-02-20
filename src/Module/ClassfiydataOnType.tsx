@@ -16,21 +16,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfi
         function selectDataByTypeApi() {
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/${hubId}?type=${classfiyType}`})
                 .then((res) => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     setList(res.data);
-                    // if (list !== null && list.length > 0) {
-                    //     const nameAndType = res.data.hub_name.split('.');
-                    //     const updatedList: dataByTypeList = [
-                    //       {
-                    //         ...list[0], 
-                    //         file_name: nameAndType[0], 
-                    //         file_name_type: nameAndType[1] 
-                    //       },
-                    //       ...list.slice(1) 
-                    //     ];
-                    //     setDelicatedlist(updatedList);
-                    //   }
-                    //   console.log('chaged: '+delicatedlist);
                     switch (classfiyType) {
                         case 'doc':
                             setImageSrc('/doc.svg');
@@ -47,9 +34,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfi
                         default:
                             setImageSrc(''); 
                             break;
-                    };
-        
-                      
+                    };     
 
                 })
                 .catch((error) => {
@@ -75,8 +60,16 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfi
         }else{
             return (
                 <>{}{list?.map((item, index) => (
-                    <div className='theActiveHub' key={index} onClick={onClick} > {item.file_description}
-                    <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
+                    <div className='theActiveHub' key={index} onClick={onClick} >
+                        <ul>
+                            <img style={{width:'62px', height:'86px' }} src={process.env.PUBLIC_URL +imageSrc}/>
+                        </ul>
+                        <ul><li>{item.file_name}</li></ul>
+                        <ul>
+                            <li>업로드일</li>
+                            <li>{item.file_regdate}</li>
+                        </ul>
+                 
                     </div>
                 ))}
                 </>

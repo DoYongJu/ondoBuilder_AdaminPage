@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import Cookies from 'js-cookie';
-import { usernameState, tokenState } from '../../../Resources/Atoms';
+import { usernameState, tokenState } from '../../../Resources/Recoil';
 
 
 
@@ -13,6 +13,7 @@ function Login() {
   const [email, setEmail] = useState(''),
     [password, setPassword] = useState(''),
     setTokenRecoil = useSetRecoilState(tokenState);
+  
   async function loginApi() {
       const sendParam = {
         email: email,

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {useSetRecoilState} from 'recoil';
-import {searchState } from '../../Resources/Atoms';
+import {searchState } from '../../Resources/Recoil';
 import './SearchBar.css';
 
 

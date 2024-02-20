@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {MyObject, dataProps } from '../../Resources/Models';
 import BarChartUi from '../BarChart/BarChartUi';
 import CircleChartUi from '../CircleChart/CircleChartUi';
-import dataHandler from '../../Module/DataHubTemplate';
+import dataHandler from '../../Module/DataHandler';
 import './ViewWaysOfChart.css';
 
 const ViewWaysOfChart: React.FC<dataProps>=({data})=>{

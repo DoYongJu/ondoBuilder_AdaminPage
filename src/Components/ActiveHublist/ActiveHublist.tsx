@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
 import { UploadedInfo,  } from '../../Resources/Models';
 import { useRecoilValue, useSetRecoilState} from 'recoil';
-import { hubClassfiyState } from '../../Resources/Atoms';
+import { hubClassfiyState } from '../../Resources/Recoil';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
@@ -19,15 +19,21 @@ import './ActiveHublist.css';
 function ActiveHublist(){
     const location = useLocation();
     const navigate = useNavigate();
-    const [isFirst, setIsFirst] = useState(false);
-    const [viewWays, setViewWays] = useState(false);
+    const [isFirst, setIsFirst] = useState(true); //허브에 데이터가 없을 때
+    const [viewWays, setViewWays] = useState(true); //true가 card방식으로 보기 눌렀을 때
     const [, setSelected] = useState('');
     const [, setSearchType] = useState('');
     const [, setSearchText] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
 
     const [activeButton, setActiveButton] = useState('default');
-    const selectList = ['조회','이름순','수정일 순','업로드 순'];
+    const [selectList, setSelectList] = useState([
+      { id: -1, name: '조회' },
+      { id: -2, name: '이름순 않음' },
+      { id: -3, name: '수정일 순' },
+      { id: -4, name: '업로드 순' },  
+  
+  ]);
     const filterList = ['선택','PDF','DOC','PPT','CSV'];
 
     const [isSideBarOpen, setIsSideBarOpen] = useState(false);
@@ -37,9 +43,9 @@ function ActiveHublist(){
     const [selctedClick, setSelctedClick] = useState(false);
 
     const data:MyObject= location.state; //허브 정보
-    const type = useRecoilValue(hubClassfiyState); //탭 눌렀을때 분류 타입
+    const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
     const setHubClassify = useSetRecoilState(hubClassfiyState);
-    const buttons = [
+    const buttons = [ //상단 탭 정보
         { label: '정보', value: 'info' },
         { label: '문서', value: 'doc' },
         { label: '이미지', value: 'img' },
@@ -71,6 +77,7 @@ function ActiveHublist(){
   const handleDragEnd = () => setActive(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
 
   
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
@@ -82,13 +89,16 @@ function ActiveHublist(){
         const item = items[i];
         if (item.kind === 'file') {
           const tempFile = item.getAsFile();
-          if (tempFile) {
-            setSelectedFile(tempFile);
-            setUploadedInfo(true);
-            setActive(false);
-            setIsFirst(false); //나중에 파일 업로드 된 후 사용될 코드. 개발 테스트로 인해 현재 위치
+          handleFileChange(tempFile);
+          setActive(false);
+
+          // if (tempFile) {
+          //   setSelectedFile(tempFile);
+          //   setUploadedInfo(true);
+          //   setActive(false);
+          //   setIsFirst(false); //나중에 파일 업로드 된 후 사용될 코드. 개발 테스트로 인해 현재 위치
            
-          };
+          // };
         };
       };
     };
@@ -100,16 +110,81 @@ function ActiveHublist(){
       }
   };
 
-  const handleFileChange = (e:any) => {
-    const selectedFile = e.target.files[0];
-    console.log('Selected File:', selectedFile);
-    if(selectedFile){
-      setSelectedFile(selectedFile);
-    }else{
-      setSelectedFile(null);
-    }
-    
+  function isImageFileType(fileType:string) {
+    let allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(fileType)) {
+        alert("올바른 이미지 파일 형식이 아닙니다. JPEG, PNG, JPG 파일만 업로드할 수 있습니다.");
+        return false;
+      };
+
+    return true;
   };
+
+  function isVideoFileType(fileType:string) {
+    let allowedTypes = ['video/mp4', 'video/avi', 'video/wmv', 'video/mov'];
+      if (!allowedTypes.includes(fileType)) {
+        alert("올바른 비디오 파일 형식이 아닙니다. mp4, avi, wmv, mov 파일만 업로드할 수 있습니다.");
+        return false;
+      };
+
+    return true;
+  };
+
+  function isDocFileType(fileType:string){
+    let allowedTypes = [
+      'application/vnd.ms-powerpoint', // ppt
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation', // pptx
+      'text/csv', // csv
+      'application/vnd.ms-excel', // xls
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // xlsx
+      'application/pdf', // pdf
+      'application/msword', // doc
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // docs
+    ];
+    if (!allowedTypes.includes(fileType)) {
+      alert("올바른 문서 파일 형식이 아닙니다. ppt, pptx, csv, xls, xlsx, pdf, doc, docs 파일만 업로드할 수 있습니다.");
+      return false;
+    };
+
+  return true;
+  };
+
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    console.log(file);
+    // 파일 타입 확인
+    const fileType = file.type;
+    // 파일 크기 확인
+    const fileSize = file.size;
+    //파일 validation
+    switch (type) { 
+      case 'img':
+        if (isImageFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
+            setSelectedFile(file);
+        } else {
+            alert('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+        }
+        break;
+    case "doc":
+        if (isDocFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
+            setSelectedFile(file);
+        } else {
+            alert('문서 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+        }
+        break;
+    case "video":
+        if (isVideoFileType(fileType) && fileSize <= 100 * 1024 * 1024) {
+            setSelectedFile(file);
+        } else {
+            alert('비디오 파일의 크기는 최대 100MB를 초과할 수 없습니다.');
+        }
+        break;
+    default:
+        break;
+    };
+};
+
+
 
     return (
 
@@ -159,11 +234,19 @@ function ActiveHublist(){
                     ))}
                     </ul>
                     }
-                <button className='fileupload' value='파일업로드' onClick={handleFileuploadButtonClick}>
-                    <input type="file" ref={fileInputRef} style={{ display: 'none' }}
-                        onChange={(e)=>handleFileChange(e)}/>
-                    <FiUpload /> 파일 업로드
-                </button>               
+                    {type==='url' && 
+                      <button className='fileupload' value='링크업로드' onClick={()=>setOpenInputModal(true)} >
+                        <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e)=>handleFileChange(e)}/>
+                        <FiUpload /> 링크 업로드
+                      </button>  
+                    }
+                    {type!=='url' && 
+                      <button className='fileupload' value='파일업로드' onClick={handleFileuploadButtonClick}>
+                        <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e)=>handleFileChange(e)}/>
+                        <FiUpload /> 파일 업로드
+                      </button>  
+                    }
+              
             </div>
         </div>
         {/* 처음 진입 할때, 파일 드롭 화면 */}
@@ -175,7 +258,7 @@ function ActiveHublist(){
               onDragLeave={handleDragEnd}
               onDrop={handleDrop}
               onDragOver={(e)=>{ e.preventDefault();}}> 
-              <input type="file" className="chatFile" />
+              <input type="file" className="chatFile" onChange={(e)=>handleFileChange(e)}/>
 
               {!uploadedInfo && (
                 <>
@@ -217,11 +300,19 @@ function ActiveHublist(){
 
         
         <SideBar isOpen={isSideBarOpen} onClose={()=>{ setIsSideBarOpen(false);}} /> 
-        {selectedFile && (  
-        <div className="overlay"> 
-          <UploadFile onClose={()=>{setSelectedFile(null);}} oneFile={selectedFile}/> 
-        </div>  )
-        }
+
+        {/* 모달 띄우는 코드 */}
+        {(selectedFile)&& (  
+          <div className="overlay"> 
+            <UploadFile onClose={()=>{setSelectedFile(null);}} oneFile={selectedFile} fileType={type}/> 
+          </div>  
+        )}
+        {(openInputModal)&& (  
+          <div className="overlay"> 
+            <UploadFile onClose={()=>{setOpenInputModal(false);}}  fileType={'link'}/> 
+          </div>  
+        )}
+        
       
     </div>
     

@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-async function ConnectApi({ method, url, sendParam }: { method: HttpMethod, url: string, sendParam?: any }): Promise<AxiosResponse> {
+async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMethod, url: string, sendParam?: any , formData?: boolean}): Promise<AxiosResponse> {
     const token = Cookies.get('accessToken');
     const config: AxiosRequestConfig = {
         method: method,
@@ -19,10 +19,14 @@ async function ConnectApi({ method, url, sendParam }: { method: HttpMethod, url:
             config.headers = config.headers ?? {};
             config.headers['Authorization'] = `Bearer ${token}`;
         };
+        if(formData){
+            config.headers = config.headers ?? {};
+            config.headers['Content-Type'] = `multipart/form-data`;
+        }
 
         try {
             const response = await axios(config);
-            console.log('response:', response);
+            // console.log('response:', response);
             return response;
            
         } catch (error) {

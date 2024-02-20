@@ -9,7 +9,7 @@ import { FaPlus } from "react-icons/fa";
 import DataHub_module from '../../Module/Search_module';
 import { MyObjects } from '../../Resources/Models';
 import CustomChart from '../ViewWaysOfChart/ViewWaysOfChart';
-import {searchState, tokenState} from '../../Resources/Atoms';
+import {searchState, tokenState} from '../../Resources/Recoil';
 import Cookies from 'js-cookie';
 
 function DashBoard() {

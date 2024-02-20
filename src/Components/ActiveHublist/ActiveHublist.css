@@ -70,6 +70,21 @@ font-style: normal;font-weight: 400;line-height: 24px; letter-spacing: -0.4px;}
 .activeHublist .waysOflist .list ul > li:first-child + li+li+li+li{width: 10%;}
 .activeHublist .waysOflist .list ul > li:first-child + li+li+li+li+li{width: 10%;}
 
+.activeHublist .contbox .theActiveHub{padding:14px 16px;}
+.activeHublist .contbox .theActiveHub ul{list-style-type: none; display: flex; gap:4px;}
+.activeHublist .contbox .theActiveHub ul:first-child{height: 172px; background-color: #105AEB; display: flex;justify-content: center; align-items: center;}
+.activeHublist .contbox .theActiveHub ul:first-child +ul{height:40px; padding-top: 4px;}
+.activeHublist .contbox .theActiveHub ul:first-child +ul +ul{height:24px; padding-top: 4px;}
+.activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child{float: left;}
+.activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child +li{float: right;}
+
+
+
+
+
+
+
+.activeHublist .contbox .theActiveHub ul > li{float: left;}
 
 
 

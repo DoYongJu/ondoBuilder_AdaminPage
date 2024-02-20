@@ -3,10 +3,15 @@ import axios from 'axios';
 import { BiX } from "react-icons/bi";
 import { useNavigate, useLocation } from 'react-router-dom';
 import './UploadFile.css';
-import SelectBox from '../SelectBox/SelectBox';
+
 import {MyObject} from '../../Resources/Models';
 import {tagsList, tag, UploadFileProps, selCaroselGroupList} from '../../Resources/Models';
 import ConnectApi from '../../Module/ConnectApi';
+import UploadFileDataHandler from '../../Module/UploadFileDataHandler';
+import UploadedFileName from '../Atoms/UploadedFileName';
+import UploadedFileInfo from '../Atoms/UploadedFileInfo';
+import UploadedFileTag from '../Atoms/UploadedFileTag';
+import UploadedFileCarosel from '../Atoms/UploadedFileCarosel';
 
 
 interface ImageType {
@@ -16,16 +21,14 @@ interface ImageType {
     order: number;
 };
 
-const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
+const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [text, setInfoText] = useState(''); 
+    const [description, setInfoText] = useState(''); 
     const [caroselNewView, setCaroselNewView] = useState(false);  
     const [currentCount, setCurrentCount] = useState(0);
     const [tags, setTags] = useState<tagsList>([]);
     const totalCount = 100;
     const [draggedItem, setDraggedItem] = useState<ImageType | null>(null);
-    const [imageSrc, setImageSrc]: any = useState(null);
-    const [caroselList, setCaroselList] = useState<selCaroselGroupList | null>(null);
     const [images, setImages] = useState([
         { id: 1,name: '온도로고',src: '/ondoIcon.png', order: 1 },
         { id: 2, name: '대쉬보드 아이콘',src: '/dataHub_List_Icon.png', order: 2 },
@@ -36,35 +39,45 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
         { id: 7, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
         { id: 8, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
       ]);
-    let selectList = ['선택', '선택하지 않음', '캐로셀01'];
+      const [selectList, setSelectList] = useState([
+        { id: -1, name: '선택' },
+        { id: -2, name: '선택하지 않음' }
+    ]);
     const [selected, setSelected] = useState('');
     const [addCarosel, setAddCarosel] = useState('');
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
+
+    
     useEffect(() => {
-        //카로셀 그룹 조회->데이터 확인 완료 
-        function selectCaroselGroupApi() {
-            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/${data.hub_id}`})
+
+        function setCaroselGroupApi() {
+            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/${data.hub_id}` })
                 .then((res) => {
-                    console.log(res.data);
-                    setCaroselList(res.data);
+                    const data = res.data;
+                    const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
+                    setSelectList(prevList => [...prevList, ...newList]);
                 })
                 .catch((error) => {
-                    // API 요청이 실패했을 때 처리할 로직
-                    console.error('Error occurred:', error);
+                    console.error('getCaroselGroupApi/ Error occurred:', error);
                 });
         };
-    
-        selectCaroselGroupApi();
-    
+
+        function getFileInfo(){
+            if (oneFile) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    images.push({ id: 0 ,name: oneFile.name, src:reader.result as string, order: images.length+1 },)
+                };
+                reader.readAsDataURL(oneFile);
+            }
+        };
+
+        setCaroselGroupApi(); //카로셀 그룹 조회
+        getFileInfo();  //파일 미리보기 기능
     }, []);
-    
-    useEffect(() => {
-        if (caroselList) {
-            caroselList.map((item, index) => (selectList= [...selectList, item.carousel_name]));
-        }
-    }, [caroselList]);
-  
+
+
     //카로셀 그룹 추가->데이터 확인 완료 
     function addCaroselGroupApi() {
        
@@ -81,46 +94,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
             // API 요청이 실패했을 때 처리할 로직
             console.error('addCaroselGroupApi/ Error occurred:', error);
           });
-      };
-
-    //파일 미리보기 기능
-    useEffect(() => {
-        const getFileInfo = () => {
-            if (oneFile) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setImageSrc(reader.result as string);
-                };
-                reader.readAsDataURL(oneFile);
-            }
-        };
-      
-        getFileInfo();
-    }, [oneFile]);
-    async function uploadFileApi() {
-
-        const sendParam = {
-        //   email: email,
-        //   password: password,
-        };
-  
-        await axios({
-          method: '파일 올리는 api',
-          url: process.env.REACT_APP_UPLOAD_API,
-          headers: {"accept": 'application/json', 'Content-Type': 'application/json'},
-          data: sendParam
-          
-        }).then(response => {
-            //console.log(response) => ? 
- 
-          
-        }).catch(error =>{
-          if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){
-           console.log('axios 과정중 에러발생 uploadFile 확인-yong')
-          };
-         
-        });
-  
     };
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -129,29 +102,27 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
         e.dataTransfer.setData('text/plain', index.toString());
     };   
 
-    const handleDrop = (e:  React.DragEvent<HTMLDivElement>, index: number) => {
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         e.preventDefault();
-        // console.log('before changed'+images);
         if (draggedItem) {
             let targetIndex = Number(e.dataTransfer.getData('text/plain')),
                 updatedImages = images.map((image) => ({ ...image }));
-    
+           
             // 현재 드래그한 이미지의 정보를 대상 이미지의 위치로 업데이트
-            updatedImages.splice(index, 0, { ...draggedItem, order: updatedImages[index].order });
+            updatedImages.splice(targetIndex > index ? index : index+1 , 0, { ...draggedItem, order: updatedImages[index].order });
             // 대상 이미지의 정보를 드래그한 이미지의 위치로 업데이트
-            updatedImages.splice(targetIndex + (targetIndex > index ? 1 : 0), 1);
-    
+            updatedImages.splice(targetIndex > index ? targetIndex + 1 : targetIndex, 1);
+            
             // 재조정된 순서값을 적용
             updatedImages.forEach((image, i) => {
                 image.order = i + 1;
             });
-
+            
             setImages(updatedImages);
             setDraggedItem(null);
-            // console.log('after changed'+updatedImages);
-        }
-       
+        };
     };
+    
     
     const handleTextChange = (e:any) => {
         const newText = e.target.value;
@@ -193,8 +164,11 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
     };
 
     const saveFile = () => {
-
-        console.log('Updated Images:', images);
+        const tagList: string[] = [];
+        tags.forEach((item) => item.name && tagList.push(item.name));
+        
+        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description })
+        // console.log('Updated Images:', images);
     };
 
     const imgClicked =()=>{
@@ -220,94 +194,38 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile }) => {
             <ul>파일 업로드</ul>
             <button  onClick={onClose}><BiX size={20}  /></button>
         </div>
-        
-        <div className='body'> 
-            <div className='FileUploadtitle'>
-                <div className='key'>
-                    <ul>파일 이름</ul>
-                    <ul>확장자</ul>
-                </div>
-                <div className='value'>
-                    <ul>{oneFile.name}</ul>
-                    <ul>{oneFile.type}</ul>
-                </div>
-            </div>
-            <div className='FileUploadInfo'>
-                <div className='FileUploadtitle'>
-                    <ul>파일 설명</ul>
-                    
-                </div>
-                <div className='fileTextArea'>
-                    <textarea  maxLength={totalCount} onChange={handleTextChange} placeholder={'입력하세요.'}></textarea>
-                    <span>{currentCount}/{totalCount}(글자수)</span>
-                </div>
-            </div>
-            <div className='FileTag'>
-               <div className='FileTagtitle'><ul>태그</ul></div>
-               <div className='FileTagbody'>
-                <div><input type="text"  placeholder="엔터로 태그를 등록해주세요." ref={inputRef} onKeyPress={onSubmitSearch} /></div>
-                <div className='tagListArea'>
-                    {tags.map((option, index) => (
-                            <div key={index} className='theItem'>
-                                <ul>
-                                    <li>{option.name}</li>
-                                    <li><span onClick={()=>deleteTag(index)}><BiX size={18}/></span></li>
-                                </ul>
-                            </div>
-                        ))}
-                </div>
-               </div>
-            </div>
-            <div className='caroselArea'>
-              <div className='caroselTitle'>카로셀</div>
-              {!caroselNewView&&
-                <div className='selectAndMoveArea'>
-                    <div className='caroselInputAreaSelect'>
-                        <div className='selectBoxArea'> 
-                        <SelectBox handleSelect ={handleSelect} selectList={selectList}/>
-                        </div>
-                        <button onClick={()=>{setCaroselNewView(!caroselNewView)}}>카로셀 추가</button>
-                    </div>
-                    {(selected&& selected!='선택하지 않음')&&
-                    <div className='moveCaroselArea'>
-                        {images.map((img, index) => (
-                            <>
-                            <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
-                                onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
-                                onClick={imgClicked}>
-                                <div className='imgArea' >
-                                    <img style={{width:'102px', height:'102px' }} src={process.env.PUBLIC_URL +img.src}/>
-                                    <div className="image-number">{img.order}</div>
-                                    <ul >{img.name}</ul>
-                                </div>
-                            </div>
-                            {index === images.length - 1 && (
-                                <>
-                                <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
-                                onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
-                                onClick={imgClicked}>
-                                    <div className='imgArea' > 
-                                        <img style={{width:'102px', height:'102px' }} src={imageSrc}/>
-                                        <div className="image-number">{images.length+1}</div>
-                                        <ul>{oneFile.name}</ul>   
-                                    </div>
-                                </div>
-                                </>
-                            )}
-                            </> 
-                        ))}                                     
-                    </div>}
-                </div>
-                }
-              {caroselNewView&&
-                <div className='caroselInputArea'>
-                    <input type='text' placeholder="카로셀 추가" ref={inputRef} onKeyPress={onSubmitAddCarosel}/>
-                    <button className="deleteBtn" onClick={()=>{setCaroselNewView(!caroselNewView)}}>취소</button>
-                    <button className="addBtn" onClick={addCaroselGroupApi}>추가</button>
-                </div>
-                }  
-              
-            </div>
+        <div className='body'>
+            {fileType === 'doc' &&oneFile && //해야해...
+                <>
+                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                </>
+            }
+            {fileType === 'img' &&oneFile && 
+                <>
+                    <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/>
+                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                    <UploadedFileCarosel caroselNewView={caroselNewView} selected={selected} handleSelect={handleSelect}
+                    selectList={selectList} setCaroselNewView={setCaroselNewView} images={images} handleDragStart={handleDragStart}
+                    handleDrop={handleDrop} imgClicked={imgClicked} inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel}
+                    addCaroselGroupApi={addCaroselGroupApi}/>
+                </>
+            }
+            {fileType === 'video' &&oneFile && 
+                <>
+                    <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/> 동영상ㅇㄴㄴ
+                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                </>
+            }
+            {fileType === 'link' &&  //링크는 파일 업로드가 아니잖아..?
+                <>
+                    <div><input type="text"  placeholder="엔터로 태그를 등록해주세요." ref={inputRef} onKeyPress={onSubmitSearch} /></div>
+                    <UploadedFileInfo totalCount={totalCount} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                </>
+            }
         </div>
         <div className='footer'> 
                     <button onClick={saveFile}>파일 저장 </button>

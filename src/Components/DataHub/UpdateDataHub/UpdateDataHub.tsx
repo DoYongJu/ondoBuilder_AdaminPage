@@ -1,12 +1,12 @@
 import React, {useState,useEffect } from 'react';
 import './UpdateDataHub.css';
 import Cookies from 'js-cookie';
-import { hubClassfiyState } from '../../../Resources/Atoms';
+import { hubClassfiyState } from '../../../Resources/Recoil';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState} from 'recoil';
 import {MyObject} from '../../../Resources/Models';
 import ConnectApi from '../../../Module/ConnectApi';
-import Alert from '../../Alert/Alert';
+import Alert from '../../Modal.components/Alert/Alert';
 
 
 

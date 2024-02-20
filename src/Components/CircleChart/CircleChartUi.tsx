@@ -1,7 +1,7 @@
 import React from 'react';
 import {dataProps } from '../../Resources/Models';
 import { Chart  } from "react-google-charts";
-import dataHandler from '../../Module/DataHubTemplate';
+import dataHandler from '../../Module/DataHandler';
 //원형 그래프
 const CircleChartUiRender: React.FC<dataProps>=({data})=>{
  

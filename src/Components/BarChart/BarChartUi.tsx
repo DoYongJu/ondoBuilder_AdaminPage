@@ -1,7 +1,7 @@
 import React from 'react';
 import { dataProps } from '../../Resources/Models';
 import { Chart  } from "react-google-charts";
-import dataHandler from '../../Module/DataHubTemplate';
+import dataHandler from '../../Module/DataHandler';
 
 // 바 그래프
 const stickChartUiRender: React.FC<dataProps>=({data})=>{
