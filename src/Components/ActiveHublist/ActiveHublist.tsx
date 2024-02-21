@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, DragEvent } from 'react';
+import ConnectApi from '../../Module/ConnectApi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
 import { useRecoilValue, useSetRecoilState} from 'recoil';
@@ -42,7 +43,25 @@ function ActiveHublist(){
     const [uploadedInfo, setUploadedInfo] = useState(false);
     const [selctedClick, setSelctedClick] = useState(false);
 
-
+    useEffect(() => {
+      //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
+      function selectDataByTypeApi() {
+          ConnectApi({ method: 'GET', url: `/v1/api/datahub/${data.hub_id}?type=${type}`})
+              .then((res) => {
+                if (res.data.length !== 0) {
+                  setIsFirst(false);
+                } else {
+                  setIsFirst(true);
+                };
+              })
+              .catch((error) => {
+                  console.error('Error occurred:', error);
+              });
+      };
+  
+      selectDataByTypeApi();
+  
+  }, [isFirst, viewWays]);
     
     const setHubClassify = useSetRecoilState(hubClassfiyState);
     const buttons = [ //상단 탭 정보

@@ -22,33 +22,30 @@ function DashBoard() {
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
 
-//   useEffect(() => {
-//     let dataFromApi = setDashBoardApi();
-//     setDatas(dataFromApi);
-            
-//   }, []);
-// useEffect(() => {
 
-//   const datass =  DataHub_module(datas,searchText);
-//   setDatas(datass);
-          
-// }, [searchText]);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const responseData = await setDashBoardApi();
-      // console.log(responseData);
-      if (responseData) {
-        setDatas(responseData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseData = await setDashBoardApi();
+        // console.log(responseData);
+        if (responseData) {
+          setDatas(responseData);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+    };
 
-  fetchData();
-}, []);
+    fetchData();
+  }, []);
+  useEffect(() => {
+
+    const datass =  DataHub_module({ data: datas }, searchText);
+    setDatas(datass);
+            
+  }, [searchText]);
 
 async function setDashBoardApi(): Promise<MyObjects> {
   

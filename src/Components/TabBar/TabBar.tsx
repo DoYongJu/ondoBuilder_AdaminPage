@@ -1,6 +1,7 @@
 import React, { useState,useEffect} from 'react';
 import './TabBar.css';
 import { useNavigate, useLocation } from 'react-router-dom';
+
 interface TabState {
     id: number;
     active: boolean;
@@ -14,10 +15,10 @@ const TabBar=()=>{
     const [tabs, setTabs] = useState<TabState[]>([
         { id: 1, active: true, title:'사용자 정보' , path: '/mypage'},
         { id: 2, active: false, title:'히스토리' ,path: '/history'},
-        { id: 3, active: false, title:'사용자 관리' ,path: '/mypage'},
+        { id: 3, active: false, title:'사용자 관리' ,path: '/mypage'}, //추후 페이지 생성 후 추가예정
       ]);
 
-      useEffect(() => {
+    useEffect(() => {
         const updatedTabs = tabs.map(tab => ({
             ...tab,
             active: tab.path === location.pathname

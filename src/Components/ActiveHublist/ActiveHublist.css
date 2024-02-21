@@ -29,7 +29,7 @@
     border: 1px solid #105AEB; border-radius: 40px;background: #ECF2FF;}
 
 .activeHublist .contbox{width: 100%;display: flex;flex-wrap: wrap; justify-content: left; gap:14px;align-items: center; float: left;}
-.activeHublist .theActiveHub{float: left;width: 228px;height: 248px; border-radius: 8px;background-color: #FFF;box-shadow: 0px 2px 14px 0px rgba(0, 0, 0, 0.08);}
+.activeHublist .theActiveHub{float: left;width: 196px;height: 224px; border-radius: 8px;background-color: #FFF;box-shadow: 0px 2px 14px 0px rgba(0, 0, 0, 0.08);}
 .activeHublist .selectAndSearch{ margin-top: 24px; display: flex; height:48px; width: 100%; margin-bottom:16px; justify-content: space-between;}
 .activeHublist .selectAndSearch .selectArea{width:39%; display: flex; align-items: center;}
 .activeHublist .selectAndSearch .buttonArea{display: flex; justify-content: right}
@@ -70,12 +70,18 @@ font-style: normal;font-weight: 400;line-height: 24px; letter-spacing: -0.4px;}
 .activeHublist .waysOflist .list ul > li:first-child + li+li+li+li{width: 10%;}
 .activeHublist .waysOflist .list ul > li:first-child + li+li+li+li+li{width: 10%;}
 
-.activeHublist .contbox .theActiveHub{padding:14px 16px;}
+.activeHublist .contbox .theActiveHub{padding:14px 16px; }
 .activeHublist .contbox .theActiveHub ul{list-style-type: none; display: flex; gap:4px;}
-.activeHublist .contbox .theActiveHub ul:first-child{height: 172px; background-color: #105AEB; display: flex;justify-content: center; align-items: center;}
-.activeHublist .contbox .theActiveHub ul:first-child +ul{height:40px; padding-top: 4px;}
-.activeHublist .contbox .theActiveHub ul:first-child +ul +ul{height:24px; padding-top: 4px;}
-.activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child{float: left;}
+.activeHublist .contbox .theActiveHub ul:first-child{height: 170px; display: flex;justify-content: center; align-items: center;}
+.activeHublist .contbox .theActiveHub ul:first-child +ul{ height:24px; padding-top: 4px;font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+    letter-spacing: -0.4px; }
+.activeHublist .contbox .theActiveHub ul:first-child +ul +ul{height:24px; padding-top: 4px;color: #767676;
+    font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; letter-spacing: -0.35px;}
+.activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child{float: left;width:60%}
 .activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child +li{float: right;}
 
 

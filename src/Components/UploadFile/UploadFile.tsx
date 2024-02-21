@@ -12,6 +12,7 @@ import UploadedFileName from '../Atoms/UploadedFileName';
 import UploadedFileTextArea from '../Atoms/UploadedFileTextArea';
 import UploadedFileTag from '../Atoms/UploadedFileTag';
 import UploadedFileCarosel from '../Atoms/UploadedFileCarosel';
+import InputBox from '../Atoms/InputBox';
 
 
 
@@ -186,7 +187,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
         
-        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile})
+        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile, prompt:promtText})
         // console.log('Updated Images:', images);
     };
 
@@ -215,7 +216,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             <button  onClick={onClose}><BiX size={20}  /></button>
         </div>
         <div className='body'>
-            {fileType === 'doc' &&oneFile && //해야해...
+            {fileType === 'doc' &&oneFile &&
                 <>  <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/>
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTextArea title='파일 프롬프트' placeholder='파일에 대한 프롬프트를 입력해주세요.' handleTextChange={(e)=>{ setPromtText(e.target.value);}}/>
@@ -241,13 +242,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
             {fileType === 'link' && 
                 <>
-                    <div className='linkArea'>
-                        <div className='linktitle'><ul>URL 입력</ul></div>
-                        <div className='linkbody'>
-                        <div><input type="text"  placeholder="URL을 입력 해주세요." onChange={(e)=>{setInfoUrl(e.target.value)}} /></div>
-                        </div>
-                     </div>
-                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <InputBox setText={setInfoUrl}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>
             }

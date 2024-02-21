@@ -2,21 +2,26 @@ import React from 'react';
 import { MyObjects } from '../Resources/Models';
 
 //검색 모듈
-function module(dummyData: MyObjects,searchText:string){
+function module(data: MyObjects, searchText: string) {
   searchText = searchText.toLowerCase();
-  let resultList :MyObjects =[];
+  let resultList: MyObjects = [];
 
-  for(let i=0; i<dummyData.length; i++){
-    var nowData =  dummyData[i];
+  for (let i = 0; i < data.length; i++) {
+    var nowData = data[i];
 
-    if(nowData. datahub_regdate.match(searchText) || nowData.hub_description.match(searchText) || nowData.hub_name.match(searchText) || nowData. datahub_upddate.match(searchText)){
-   
+    if ((nowData.datahub_upddate && nowData.datahub_upddate.match(searchText)) ||
+        (!nowData.datahub_upddate && searchText === "") ||
+        nowData.hub_description.match(searchText) || 
+        nowData.hub_name.match(searchText) ||
+        nowData.datahub_regdate.match(searchText)) {
+      
       resultList.push(nowData);
     }
-  };
+  }
 
- return resultList;
-};
+  return resultList;
+}
+
 
 //타입별 검색 모듈 -> 기능 삭제되나 백업용으로 존재
 // function module(dummyData: MyObjects, searchType:string, searchText:string, doSearch:boolean){
@@ -34,9 +39,9 @@ function module(dummyData: MyObjects,searchText:string){
 //  return filteredData;
 // };
 
-const DataHub_module = ({dummyData}:{dummyData:MyObjects}, searchText:string)=>{
+const DataHub_module = ({data}:{data:MyObjects}, searchText:string)=>{
 // ({ dummyData }: { dummyData: MyObjects })는 해당 함수의 파라미터로 객체를 받고, 이 객체는 dummyData라는 속성을 가지며 그 타입은 MyObjects입니다. 이 부분은 TypeScript의 비구조화 할당(destructuring)을 사용한 것
-  return module(dummyData, searchText);
+  return module(data, searchText);
 };
 
 

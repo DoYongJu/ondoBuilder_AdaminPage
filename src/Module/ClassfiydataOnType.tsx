@@ -2,7 +2,8 @@ import {useState, useEffect} from 'react';
 import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList} from '../Resources/Models';
 
-const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfiyType: string, hubId: string, viewType: string, onClick: () => void  }) =>{
+const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: 
+    { classfiyType: string, hubId: string, viewType: string, onClick: () => void, }) =>{
     console.log(hubId);
     console.log(classfiyType);
     const [imageSrc, setImageSrc] = useState('');
@@ -16,8 +17,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfi
         function selectDataByTypeApi() {
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/${hubId}?type=${classfiyType}`})
                 .then((res) => {
-                    // console.log(res.data);
                     setList(res.data);
+                    
                     switch (classfiyType) {
                         case 'doc':
                             setImageSrc('/doc.svg');
@@ -34,7 +35,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfi
                         default:
                             setImageSrc(''); 
                             break;
-                    };     
+                    }; 
+            
 
                 })
                 .catch((error) => {
@@ -100,7 +102,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfi
         }else{
             return (
                 <>
-                {}{list?.map((item, index) => (
+                {list?.map((item, index) => (
                     <div className='list' key={index} onClick={onClick}>
                     <ul>
                         <li> 
@@ -110,7 +112,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: { classfi
                         <li>{item.file_description}</li>
                         <li>{item.writer}</li>
                         <li>{item.file_regdate}</li>
-                        <li>{item.file_upddate}</li>
+                        {item.file_upddate ? <li>{item.file_upddate}</li> : <li>&nbsp;</li>}
                         <li>{item.file_size}</li>
                     </ul>
                   </div>

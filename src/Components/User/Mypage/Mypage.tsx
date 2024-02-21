@@ -3,9 +3,13 @@ import './Mypage.css';
 import TabBar from '../../TabBar/TabBar';
 import ConnectApi from '../../../Module/ConnectApi';
 import {userInfoType} from '../../../Resources/Models';
+import MypageInfoModal from '../../Atoms/MyPageInfoModal/MypageInfoModal';
 
 const Mypage =()=>{
     const [userInfo, setUserInfo] = useState<userInfoType | null>(null);
+    const [viewInputModal, setViewInputModal] = useState<string>('');
+    const [originpwd, setOriginpwd] = useState<string>('');
+    const [newpwd, setNewpwd] = useState<string>('');
     useEffect(() => {
 
         function setMyinfoApi() {
@@ -39,7 +43,7 @@ const Mypage =()=>{
             </ul>
             <ul>
                 <li>비밀번호</li>
-                <li><button><span>비밀번호 변경</span></button></li>
+                <li><button onClick={()=>{setViewInputModal('changepwd')}}><span>비밀번호 변경</span></button></li>
             </ul>
             <ul>사용자 정보</ul>
             <ul/>
@@ -60,9 +64,15 @@ const Mypage =()=>{
                 <li>{userInfo?.division}</li>
             </ul>
             <ul>
-                <button><span>내 정보변경</span></button>
+                <button onClick={()=>{setViewInputModal('changeInfo')}}><span>내 정보변경</span></button>
             </ul>
         </div>
+            {/* 모달 띄우는 코드 */}
+            {viewInputModal &&  
+                <div className="overlay"> 
+                    <MypageInfoModal onClose={()=>{setViewInputModal('');}} action={viewInputModal} handleSetText={setOriginpwd}/> 
+                </div>  
+            }
     </div>
     );
 };

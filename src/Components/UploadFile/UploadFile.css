@@ -29,10 +29,10 @@
 .FileUpload .body .FileUploadInfo .fileTextArea span{position: absolute; bottom: -20px; right: -20px; color: #999;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px;
     letter-spacing: -0.35px;}
-.FileUpload .body .linkArea{padding-top:24px; height: 50px;width:100%;margin-bottom:24px;}
-.FileUpload .body .linkArea .linktitle{width: 100%; color: #505050;   
+.FileUpload .body .oneInputArea{padding-top:24px; height: 50px;width:100%;margin-bottom:24px;}
+.FileUpload .body .oneInputArea .title{width: 100%; color: #505050;   
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; /* 142.857% */letter-spacing: -0.35px;}
-.FileUpload .body .linkArea .linkbody input{height: 48px; width:99%; border-radius: 6px;
+.FileUpload .body .oneInputArea .body input{height: 48px; width:99%; border-radius: 6px;
     border: 1px solid #BDBDBD; outline: none;}
 .FileUpload .body .FileTag{padding-top:24px; height: 200px;width:100%; margin-top:24px}
 .FileUpload .body .FileTag .FileTagtitle{width: 100%; color: #505050;
