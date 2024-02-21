@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, RouteProps } from 'react-router-dom';
 import { usernameState, tokenState } from './Resources/Recoil';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Login from './Components/User/Login/Login';
@@ -33,11 +33,10 @@ const Router = () => {
   return (
     <BrowserRouter>
      {username && <NavBar />}
-     {/* <NavBar /> */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashBoard" element={<DashBoard />} />
+        <Route  path="/dashBoard" element={<DashBoard />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/changePwd" element={<ChangePwd />} />
         <Route path="/signAccept" element={<SignAccept />} />
@@ -53,4 +52,15 @@ const Router = () => {
     </BrowserRouter>
   );
 };
+
+// const PrivateRoute: React.FC<RouteProps> = ({ element, ...rest }) => {
+//   const username = useRecoilValue(usernameState);
+
+//   return (
+//     <Route
+//       {...rest}
+//       element={username ? element : <Navigate to="/login" replace />}
+//     />
+//   );
+// };
 export default Router;

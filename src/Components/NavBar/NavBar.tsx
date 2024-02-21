@@ -21,7 +21,7 @@ const NavBar = () => {
   useEffect(() => {
     const cookieUsername = Cookies.get('username');
     setusername(prevUsername => cookieUsername || prevUsername);
-  }, []);
+  }, [username]);
 
 
   const handleSelect = (event: any) => {

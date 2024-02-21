@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './DashBoard.css';
+import NavBar from '../NavBar/NavBar';
 import {useRecoilValue} from 'recoil';
 import { MyObject } from '../../Resources/Models';
 import { useNavigate } from 'react-router-dom';
@@ -81,6 +82,8 @@ function handleSelect (value:string){
 
 
   return (
+    <>
+
   <div className="dashBoard">
     <div className="title"><span>My Hub List</span></div>
     <div className="sub_title"><span>등록된 허브와 내부 컨텐츠에 대해 확인하실 수 있습니다.</span></div>
@@ -124,6 +127,7 @@ function handleSelect (value:string){
        <div className='theDataHub' onClick={()=>{navigate('/addHub');}}> <div className='theDataHubPlus'><ul><FaPlus size={20}/></ul><ul>허브추가</ul> </div></div>        
     </div>
   </div>
+  </>
   );
 };
 

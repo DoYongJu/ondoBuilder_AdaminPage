@@ -27,11 +27,9 @@ function Login() {
         data: sendParam
         
       }).then(res => {
-        // setusername(response.data.user_name);
         setTokenRecoil(res.data.accessToken);
         Cookies.set('accessToken', res.data.accessToken);
         Cookies.set('username', res.data.user_name); 
-        console.log(res.data);
         navigate('/dashBoard');
      
         
