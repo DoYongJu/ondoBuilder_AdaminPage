@@ -6,17 +6,23 @@ import { MyObject } from '../../Resources/Models';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar'
 import { FaPlus } from "react-icons/fa";
-import DataHub_module from '../../Module/Search_module';
+import DataHub_module,{DataHub_listOfType_module}from '../../Module/Search_module';
 import { MyObjects } from '../../Resources/Models';
 import CustomChart from '../ViewWaysOfChart/ViewWaysOfChart';
 import {searchState, tokenState} from '../../Resources/Recoil';
+import SelectBox from '../../Components/SelectBox/SelectBox';
 import Cookies from 'js-cookie';
 
 function DashBoard() {
+  const selectList = [
+    { id: 1, name: '조회' },
+    { id: 2, name: '이름순' },
+    { id: 3, name: '주제순' },   
+    { id: 4, name: '생성일순' },
+    { id: 5, name: '수정일순' },
+  ];
 
-  const selectList = ['조회', '이름별', '주제별','생성일','마지막수정일'];
   const [Selected, setSelected] = useState('');
-  const [, setSearchType] = useState('');
   const searchText = useRecoilValue(searchState);
   const [datas, setDatas] = useState<MyObjects>([]);
   const navigate = useNavigate();
@@ -40,6 +46,14 @@ function DashBoard() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+
+    const datass =  DataHub_listOfType_module({ data: datas }, Selected);
+    setDatas(datass);
+            
+  }, [Selected]);
+
   useEffect(() => {
 
     const datass =  DataHub_module({ data: datas }, searchText);
@@ -61,10 +75,8 @@ async function setDashBoardApi(): Promise<MyObjects> {
     throw error;
   }
 };  
-function handleSelect (e:any){
-  const selectedValue = e.target.value;
-  setSelected(selectedValue);
-  setSearchType(selectedValue);
+function handleSelect (value:string){
+  setSelected(value);
 };
 
 
@@ -73,14 +85,16 @@ function handleSelect (e:any){
     <div className="title"><span>My Hub List</span></div>
     <div className="sub_title"><span>등록된 허브와 내부 컨텐츠에 대해 확인하실 수 있습니다.</span></div>
     <div className="selectArea">
+    
       <ul>
-        <select onChange={handleSelect} value={Selected}>
+        <SelectBox handleSelect={handleSelect} selectList={selectList}/>
+        {/* <select onChange={handleSelect} value={Selected}>
                   {selectList.map((option, index) => (
                     <option key={index} value={option}>
                       {option}
                     </option>
                   ))}
-        </select>
+        </select> */}
       </ul>
       <ul>
         <SearchBar/>

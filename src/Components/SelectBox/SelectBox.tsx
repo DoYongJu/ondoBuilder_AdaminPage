@@ -25,7 +25,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ handleSelect, selectList })=> {
           {isOpen && (
           <ul className="options-list">
             {selectList.slice(1).map((option, index) => (
-              <li key={index} onClick={() => { handleSelect(option); setSelectedOption(option.name) }} value={option.name}>
+              <li key={index} onClick={() => { handleSelect(option.name); setSelectedOption(option.name) }} value={option.name}>
                 {option.name}
               </li>
             ))}
