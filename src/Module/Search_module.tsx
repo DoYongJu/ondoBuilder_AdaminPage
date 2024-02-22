@@ -22,16 +22,53 @@ function DataHub_module({data}:{data:MyObjects}, searchText:string) {
   return resultList;
 };
 
+// function getPriority(char:string) {
+//   // 우선순위: 숫자 > 영어 > 영어 외의 언어 > 특수문자
+//   if (/[0-9]/.test(char)) return 1;
+//   if (/[a-zA-Z]/.test(char)) return 2;
+//   if (/[ㄱ-ㅎ가-힣]/.test(char)) return 3;
+//   return 4; // 특수문자
+// };
+
 export function DataHub_listOfType_module({data}:{data:MyObjects}, orderByType:string){
   let resultList: MyObjects = [...data];
-
+  console.log(resultList);
     switch (orderByType) {
       case '이름순':
-        resultList.sort((a, b) => a.hub_name.localeCompare(b.hub_name, 'ko-KR', { sensitivity: 'base' }));
+        resultList.sort((a,b) => {
+          if(a.hub_name > b.hub_name ) return 1;
+          if(a.hub_name < b.hub_name) return -1;
+          return 0;
+        });
         break;
       case '주제순':
-        resultList.sort((a, b) => a.hub_description.localeCompare(b.hub_description, 'ko-KR', { sensitivity: 'base' }));
-        break;
+        resultList.sort((a,b) => {
+          if(a.hub_description > b.hub_description ) return 1;
+          if(a.hub_description < b.hub_description) return -1;
+          return 0;
+        });
+        
+
+      //   resultList.sort((a, b) => {
+      //     const minLength = Math.min(a.hub_description.length, b.hub_description.length);
+      //     for (let i = 0; i < minLength; i++) {
+      //         const charA = a.hub_description[i];
+      //         const charB = b.hub_description[i];
+      //         const priorityA = getPriority(charA);
+      //         const priorityB = getPriority(charB);
+              
+      //         if (priorityA !== priorityB) {
+      //             return priorityA - priorityB;
+      //         } else if (charA !== charB) {
+      //             // 우선순위가 같은 경우에는 localeCompare 사용
+      //             return charA.localeCompare(charB);
+      //         };
+      //     }
+      //     // 문자열 길이가 다른 경우에는 짧은 문자열이 먼저 오도록 정렬
+      //     return a.hub_description.length - b.hub_description.length;
+      // }
+      // );
+      break;
       case '생성일순':
         resultList.sort((a, b) => new Date(a.datahub_regdate).getTime() - new Date(b.datahub_regdate).getTime());
         break;

@@ -21,7 +21,7 @@ function ActiveHublist(){
     const location = useLocation();
     const navigate = useNavigate();
     const [isFirst, setIsFirst] = useState(true); //허브에 데이터가 없을 때
-    const [viewWays, setViewWays] = useState(true); //true가 card방식으로 보기 눌렀을 때
+    const [viewWays, setViewWays] = useState(false); //false가 card방식으로 보기 눌렀을 때
     const [, setSelected] = useState('');
     const [, setSearchType] = useState('');
     const [, setSearchText] = useState('');

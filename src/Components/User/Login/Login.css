@@ -11,7 +11,7 @@
 .Loginscreen .div .overlap-Logingroup .loginArea .frame {align-items: center;background-color: #0f5aea;
   border-radius: 6px;display: flex; gap: 10px;height: 56px;justify-content: center;padding: 10px 16px;
   color:white;width: 432px; cursor: pointer;}
-.Loginscreen .div .overlap-Logingroup .loginArea .frame.disabled{background-color: #DBDBDB;color: #767676;cursor: not-allowed; } 
+.Loginscreen .div .overlap-Logingroup .loginArea .frame.disabled{ } 
 .Loginscreen .div .overlap-Logingroup .loginArea .wrapper-4 {
   color: #111111; border-bottom: 1px solid #D8D8D8; width: 460px;font-family: "Pretendard-Medium", Helvetica;
   font-size: 24px;font-weight: 500;letter-spacing: -0.6px;padding: 24px 0px 20px 0px;
