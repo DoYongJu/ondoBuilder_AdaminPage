@@ -1,5 +1,5 @@
 import React from 'react';
-import { MyObjects } from '../Resources/Models';
+import { MyObjects, MyObject } from '../Resources/Models';
 
 //검색 모듈
 function DataHub_module({data}:{data:MyObjects}, searchText:string) {
@@ -24,7 +24,7 @@ function DataHub_module({data}:{data:MyObjects}, searchText:string) {
 
 export function DataHub_listOfType_module({data}:{data:MyObjects}, orderByType:string){
   let resultList: MyObjects = [...data];
-  
+
     switch (orderByType) {
       case '이름순':
         resultList.sort((a, b) => a.hub_name.localeCompare(b.hub_name));
@@ -36,7 +36,11 @@ export function DataHub_listOfType_module({data}:{data:MyObjects}, orderByType:s
         resultList.sort((a, b) => new Date(a.datahub_regdate).getTime() - new Date(b.datahub_regdate).getTime());
         break;
       case '수정일순':
-        resultList.sort((a, b) => new Date(a.datahub_regdate).getTime() - new Date(b.datahub_regdate).getTime());
+        resultList.sort((a, b) => {
+          let aDate = a.datahub_upddate ? new Date(a.datahub_upddate).getTime() : new Date(a.datahub_regdate).getTime();
+          let bDate = b.datahub_upddate ? new Date(b.datahub_upddate).getTime() : new Date(b.datahub_regdate).getTime();
+          return aDate - bDate;
+        });
         break;
       default:
         return resultList;

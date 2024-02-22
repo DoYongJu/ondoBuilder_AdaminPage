@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import './AddHub.css';
 const AddHub=()=>{
     const navigate = useNavigate();
-    const totalCount = 100;
+    const totalCount = 50;
     const [currentCount, setCurrentCount] = useState(0);
     const [title, setTitle] = useState(''); //허브 이름
     const [text, setInfoText] = useState('');  //허브 설명
@@ -64,7 +64,7 @@ const AddHub=()=>{
                         <div className='hubInfoArea'>
                             <span>허브 설명</span>
                             <textarea  maxLength={totalCount} onChange={handleTextChange} > </textarea>
-                            <span className='count'>{currentCount}/{totalCount}(글자수)</span>     
+                            <span className='count'>{currentCount-1}/{totalCount}(글자수)</span>     
                         </div>
                     </div>
                     <div className='footerArea'>
