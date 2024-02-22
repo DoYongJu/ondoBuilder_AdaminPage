@@ -88,7 +88,10 @@
   .frame.disabled {
     /* 비활성화된 상태의 스타일 */
     cursor: not-allowed;border:none;
-    opacity: 0.5; 
+    background: #DBDBDB;
+  }
+  .frame.disabled .text-wrapper-3{
+    color: #767676;
   }
   
   .screen .text-wrapper-3 {
@@ -164,7 +167,7 @@
     height: 80px;
     left: 0;
     position: absolute;
-    top: 1px;
+    top: -5px;
     width: 464px;
   
   }

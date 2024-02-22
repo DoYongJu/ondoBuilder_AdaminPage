@@ -10,16 +10,23 @@ import { usernameState, tokenState } from '../../../Resources/Recoil';
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState(''),
+  const [errorMsgEmail, setErrorMsgEmail] = useState('');
+  const [errorMsgPwd, setErrorMsgPwd] = useState('');
+  const [email, setEmail] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true),
     [password, setPassword] = useState(''),
     setTokenRecoil = useSetRecoilState(tokenState);
   
+    useEffect(() => {
+      setIsButtonDisabled(validateNullcheck());
+    }, [email, password]); 
+
   async function loginApi() {
       const sendParam = {
         email: email,
         password: password,
       };
-      console.log(process.env.REACT_APP_API+'/v1/api/auth/signin')
+     
       await axios({
         method: 'POST',
         url: process.env.REACT_APP_API+'/v1/api/auth/signin',
@@ -36,25 +43,31 @@ function Login() {
       }).catch(error =>{
         if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){
           navigate('/SignAccept');
+        }else if( error.response.data.statusCode === 401 && error.response.data.message === "login failed"){ //비밀번호 오류
+          setErrorMsgPwd('비밀번호 오류입니다. 비밀번호를 다시 입력해주세요.')
+          console.log(errorMsgPwd);
+        }else if( error.response.data.statusCode === 400 && error.response.data.message === "User not found"){ //이메일 오류, 미등록회원
+          setErrorMsgEmail('등록되지 않은 회원입니다. 이메일을 다시 입력해주세요.');
+          console.log(errorMsgEmail);
         };
-        console.log('error:'+ error);
        
       });
 
   };
 
-  function handleLogin() {
-    if ((email || password) !== '') {
-      loginApi();
+  const validateNullcheck= ():boolean =>  {
+    setErrorMsgPwd('');
+    setErrorMsgEmail('');
+
+    if (email !== '') {
+        if (password !== '') {
+          return false;
+        };
     };
 
-    if (email === '') {
-      alert(' email을 입력하세요');
-    } else if (password === '') {
-      alert(' password을 입력하세요');
-    };
-
+    return true;
   };
+
 
   return (
   <div className="Loginscreen">
@@ -68,10 +81,12 @@ function Login() {
         
         <div className='inputArea'>
           <input className="overlap" type="text" placeholder="이메일을 입력해 주세요." value={email} onChange={e => setEmail(e.target.value)}/>
+          {errorMsgEmail && <span className='errorMsg'>{errorMsgEmail}</span> }
           <input  className="overlap" type="password" placeholder="비밀번호를 입력해 주세요." value={password} onChange={e => setPassword(e.target.value)}/>
+          {errorMsgPwd && <span className='errorMsg'>{errorMsgPwd}</span> }
         </div>
         
-        <div className="frame" onClick={handleLogin}>로그인 </div>
+        <div className={`frame ${isButtonDisabled ? 'disabled' : ''}`} onClick={isButtonDisabled ? undefined : loginApi }>로그인 </div>
         <p className="p">
           <span className="text-wrapper">
             아직 커뮤니티에 가입하지 않으셨나요? <br />

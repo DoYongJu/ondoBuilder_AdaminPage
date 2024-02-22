@@ -27,10 +27,10 @@ export function DataHub_listOfType_module({data}:{data:MyObjects}, orderByType:s
 
     switch (orderByType) {
       case '이름순':
-        resultList.sort((a, b) => a.hub_name.localeCompare(b.hub_name));
+        resultList.sort((a, b) => a.hub_name.localeCompare(b.hub_name, 'ko-KR', { sensitivity: 'base' }));
         break;
       case '주제순':
-        resultList.sort((a, b) => a.hub_description.localeCompare(b.hub_description));
+        resultList.sort((a, b) => a.hub_description.localeCompare(b.hub_description, 'ko-KR', { sensitivity: 'base' }));
         break;
       case '생성일순':
         resultList.sort((a, b) => new Date(a.datahub_regdate).getTime() - new Date(b.datahub_regdate).getTime());
