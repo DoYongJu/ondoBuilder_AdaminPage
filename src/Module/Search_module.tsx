@@ -29,9 +29,39 @@ function DataHub_module({data}:{data:MyObjects}, searchText:string) {
 //   if (/[ㄱ-ㅎ가-힣]/.test(char)) return 3;
 //   return 4; // 특수문자
 // };
-export function DataHub_sortIntheHub_module({data}:{data:dataByTypeList}, classify:string){
-  let resultList: dataByTypeList =data;
-  return resultList;
+export function DataHub_sortIntheHub_module({data}:{ data: dataByTypeList | undefined; }, classify?:string){
+  if(data){
+    let resultList: dataByTypeList =data;
+    switch (classify) {
+      case '이름순':
+        resultList.sort((a,b) => {
+          if(a.file_name > b.file_name ) return 1;
+          if(a.file_name < b.file_name) return -1;
+          return 0;
+        });
+        break;
+      case '수정일순':
+        resultList.sort((a, b) => {
+          let aDate = a.file_upddate ? new Date(a.file_upddate).getTime() : new Date(a.file_upddate).getTime();
+          let bDate = b.file_upddate ? new Date(b.file_upddate).getTime() : new Date(b.file_upddate).getTime();
+          return aDate - bDate;
+        });
+        break;
+      case '업로드순':
+      resultList.sort((a, b) => {
+        let aDate = a.file_regdate ? new Date(a.file_regdate).getTime() : new Date(a.file_regdate).getTime();
+        let bDate = b.file_regdate ? new Date(b.file_regdate).getTime() : new Date(b.file_regdate).getTime();
+        return aDate - bDate;
+      });
+      break;
+      
+      default:
+      break;
+       
+    };
+    return resultList;
+  }
+
 };
 export function DataHub_listOfType_module({data}:{data:MyObjects}, orderByType:string){
   let resultList: MyObjects = [...data];

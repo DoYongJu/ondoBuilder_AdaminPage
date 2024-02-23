@@ -10,7 +10,7 @@ import SelectBox from '../SelectBox/SelectBox';
 import UploadFile from '../UploadFile/UploadFile';
 import {MyObject} from '../../Resources/Models';
 import ClassfiydataOnType from '../../Module/ClassfiydataOnType';
-import { DataHub_sortIntheHub_module}from '../../Module/Search_module';
+
 import { LuListFilter } from "react-icons/lu";
 import { FiUpload } from "react-icons/fi";
 import { FiGrid } from "react-icons/fi";
@@ -23,8 +23,7 @@ function ActiveHublist(){
     const navigate = useNavigate();
     const [isFirst, setIsFirst] = useState(true); //허브에 데이터가 없을 때
     const [viewWays, setViewWays] = useState(true); //false가 card방식으로 보기 눌렀을 때
-    const [, setSelected] = useState('');
-    const [, setSearchType] = useState('');
+    const [searchType, setSearchType] = useState(''); //왼쪽상단 select에따른 정렬
     const [, setSearchText] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
     const [data, setData] = useState(location.state);//허브 정보
@@ -32,9 +31,9 @@ function ActiveHublist(){
     const [activeButton, setActiveButton] = useState(type);
     const [selectList, setSelectList] = useState([
       { id: -1, name: '조회' },
-      { id: -2, name: '이름순 않음' },
-      { id: -3, name: '수정일 순' },
-      { id: -4, name: '업로드 순' },  
+      { id: -2, name: '이름순' },
+      { id: -3, name: '수정일순' },
+      { id: -4, name: '업로드순' },  
   
   ]);
     const filterList = ['선택','PDF','DOC','PPT','CSV'];
@@ -83,7 +82,6 @@ function ActiveHublist(){
 
     function handleSelect (selectedValue:any){
         setSearchText('');
-        setSelected(selectedValue);
         setSearchType(selectedValue);
     };
 
@@ -309,7 +307,7 @@ const validateFile = (file:File)=>{
 
         {!isFirst && viewWays && (
           <div className='contbox'>
-            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);} }/>
+            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);} }/>
           </div>
         )}
         { !viewWays && ( 
@@ -326,7 +324,7 @@ const validateFile = (file:File)=>{
             </div>
 
             {!isFirst && (
-              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);} }/>
+              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);} }/>
             )}
           </div>
         )}

@@ -1,17 +1,16 @@
 import {useState, useEffect} from 'react';
 import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList} from '../Resources/Models';
+import { DataHub_sortIntheHub_module}from '../Module/Search_module';
 
-const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: 
-    { classfiyType: string, hubId: string, viewType: string, onClick: () => void,  }) =>{
-    console.log(hubId);
-    console.log(classfiyType);
+const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected}: 
+    { classfiyType: string, hubId: string, viewType: string, onClick: () => void, selected?:string  }) =>{
+    // console.log(selected);
+    // console.log(classfiyType);
     const [imageSrc, setImageSrc] = useState('');
     const [list, setList] = useState<dataByTypeList | null>(null);
     const [delicatedlist, setDelicatedlist] = useState<dataByTypeList | null>(null);
-    // useEffect(() => {
-    //     console.log('chasssnged: ', delicatedlist);
-    //   }, [delicatedlist]);
+
     useEffect(() => {
         //데이터 허브의 종속된 파일을 타입별로 조회
         function selectDataByTypeApi() {
@@ -48,6 +47,19 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }:
     
     }, [classfiyType]);
 
+    useEffect(() => {
+       function getContentBySelect(){
+        console.log("selected"+selected);
+        const datass = selected ? DataHub_sortIntheHub_module({ data: list ?? undefined }, selected) : undefined;
+          if(datass){
+            setList(datass);
+          };
+         
+       };
+       getContentBySelect();
+    
+    }, [selected]);
+
 
     if (viewType === 'true') {
         if(classfiyType === 'url'){
@@ -71,6 +83,10 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }:
                             <li>업로드일</li>
                             <li>{item.file_regdate}</li>
                         </ul>
+                        {/* <ul>
+                            <li>수정일</li>
+                            <li>{item.file_upddate}</li>
+                        </ul> */}
                  
                     </div>
                 ))}
