@@ -28,11 +28,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [urlInfo, setInfoUrl] = useState(''); //url 입력 input
     const [description, setInfoText] = useState(''); //파일설명 input
     const [promtText, setPromtText] = useState(''); //프롬프트 textArea 
-    const [caroselNewView, setCaroselNewView] = useState(false);  
-    const [currentCount, setCurrentCount] = useState(0);
-    const [tags, setTags] = useState<tagsList>([]);
-    const totalCount = 100;
-    const [draggedItem, setDraggedItem] = useState<ImageType | null>(null);
+    const [tags, setTags] = useState<tagsList>([]); //태그 값들
+    const [caroselNewView, setCaroselNewView] = useState(false); 
+    const [draggedItem, setDraggedItem] = useState<ImageType | null>(null); 
     const [images, setImages] = useState([
         { id: 1,name: '온도로고',src: '/ondoIcon.png', order: 1 },
         { id: 2, name: '대쉬보드 아이콘',src: '/dataHub_List_Icon.png', order: 2 },
@@ -43,6 +41,15 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         { id: 7, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
         { id: 8, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
       ]);
+  
+
+    //textArea 영역 글자수 제한
+    const [currentCount, setCurrentCount] = useState(0);
+    const totalCount = 100;
+
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false); //파일 비활성화 여부
+   
       const [selectList, setSelectList] = useState([
         { id: -1, name: '선택' },
         { id: -2, name: '선택하지 않음' }
@@ -51,7 +58,28 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [addCarosel, setAddCarosel] = useState('');
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
-
+    useEffect(() => {
+        function validNull(){
+            switch(fileType){
+                case 'doc':
+                    if(description!==''&& promtText!==''){setIsButtonDisabled(true)}
+                    break;
+                case 'img':
+                    if(description!==''&& selectedCaroselId!==''){setIsButtonDisabled(true)} //태그는 선택이지 않나 ?->태호씨
+                    break;
+                case 'video':
+                    if(description!==''){setIsButtonDisabled(true)} 
+                    break;
+                case 'url':
+                    if(description!==''&& urlInfo!==''){setIsButtonDisabled(true)}
+                    break;
+                default:
+                   
+                    break; 
+            }
+        };
+        validNull();
+    });
     
     useEffect(() => {
 
@@ -249,7 +277,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
         </div>
         <div className='footer'> 
-                    <button onClick={saveFile}>파일 저장 </button>
+            <button className={`btn ${isButtonDisabled ? '' : 'disabled'}`} onClick={isButtonDisabled ? undefined : saveFile }>파일 저장 </button>
         </div> 
        
     </div>

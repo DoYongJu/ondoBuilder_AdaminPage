@@ -120,5 +120,10 @@
 
 
 .FileUpload .footer{ height: 50px;width: 100%;padding: 16px 0 0 0;display: flex;justify-content: center;align-items: center; bottom:0}
-.FileUpload .footer button{border-radius: 6px; border: none;width: 100%;
+.FileUpload .footer .btn{border-radius: 6px; border: none;width: 100%;
     background: #105AEB;padding: 14px 0; color:white} 
+.FileUpload .footer .btn.disabled{
+    border-radius: 6px; border: none;width: 100%;
+  padding: 14px 0; color:#767676;;
+background-color: #DBDBDB;
+}

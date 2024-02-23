@@ -128,7 +128,7 @@ function UpdateDataHub() {
           {!changeInfo &&<div className='hubnameSpace'><span>{data.hub_name}</span></div>}
           {changeInfo && 
           <div className='hubnameSpace'> 
-            <input type="text" value={nametext}  onChange={(e)=>{sethubNameText(e.target.value)}}></input>
+            <input type="text" value={nametext}  onChange={(e)=>{sethubNameText((e.target.value).trim())}}></input>
           </div>}  
         </div>
         <div className='second'>
@@ -137,7 +137,7 @@ function UpdateDataHub() {
           {changeInfo &&  
             <div className='hubnameSpace'>
               
-              <textarea  value={infoText} maxLength={totalCount}  onChange={(e)=>{setInfoText(e.target.value)}}></textarea>
+              <textarea  value={infoText} maxLength={totalCount}  onChange={(e)=>{setInfoText((e.target.value).trim())}}></textarea>
               <div className="counters">
                   <span id="currentCount">{currentCount}</span>/
                   <span id="totalCount">{totalCount}</span>(글자수)

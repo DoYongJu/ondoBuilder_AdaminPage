@@ -21,7 +21,7 @@ function ActiveHublist(){
     const location = useLocation();
     const navigate = useNavigate();
     const [isFirst, setIsFirst] = useState(true); //허브에 데이터가 없을 때
-    const [viewWays, setViewWays] = useState(false); //false가 card방식으로 보기 눌렀을 때
+    const [viewWays, setViewWays] = useState(true); //false가 card방식으로 보기 눌렀을 때
     const [, setSelected] = useState('');
     const [, setSearchType] = useState('');
     const [, setSearchText] = useState('');
@@ -61,7 +61,7 @@ function ActiveHublist(){
   
       selectDataByTypeApi();
   
-  }, [isFirst, viewWays]);
+  }, [isFirst, viewWays, type]);
     
     const setHubClassify = useSetRecoilState(hubClassfiyState);
     const buttons = [ //상단 탭 정보
