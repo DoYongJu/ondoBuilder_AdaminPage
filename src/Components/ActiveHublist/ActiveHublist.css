@@ -12,10 +12,11 @@
 .activeHublist .sub_title .btnArea{width:300px; height:100%; display: flex; justify-content: right; align-items: center;}
 .activeHublist .sub_title .btnArea .leftbtn{width: 48px;border-radius: 6px;border: 1px solid #BDBDBD;display: flex;justify-content: center; align-items: center;
   height: 48px;border-radius: 6px 0px 0px 6px;}
+.activeHublist .sub_title .btnArea .leftbtn.active{border: 1px solid #105AEB;background: #E0EBFF; color:#105AEB}
+.activeHublist .sub_title .btnArea .rightbtn.active{border: 1px solid #105AEB;background: #E0EBFF; color:#105AEB}
 .activeHublist .sub_title .btnArea .rightbtn{width: 48px;border-radius: 6px; display: flex;justify-content: center; align-items: center;
   border: 1px solid #BDBDBD; height: 48px;border-radius: 0px 6px 6px 0px;}
 .activeHublist .dataHubBtnArea{width:100%; height: 48px; }
-.activeHublist .sub_title .btnArea button:focus{ border: 1px solid #105AEB;background: #E0EBFF; color:#105AEB}
 .activeHublist .dataHubBtnArea ul{width: 100%;height: 48px;list-style-type: none;color: #505050;font-size: 16px;}
 .activeHublist .dataHubBtnArea ul > li{width: 88px; list-style-type: none;float: left;text-align: left;}
 .activeHublist .dataHubBtnArea ul > li:first-child{width: 88px; margin-right:8px }

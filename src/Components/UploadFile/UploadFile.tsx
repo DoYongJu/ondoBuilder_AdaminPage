@@ -55,23 +55,29 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         { id: -2, name: '선택하지 않음' }
     ]);
     const [selectedCaroselId, setSelectedCaroselId] = useState('');
-    const [addCarosel, setAddCarosel] = useState('');
+    const [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
+
     useEffect(() => {
         function validNull(){
             switch(fileType){
                 case 'doc':
                     if(description!==''&& promtText!==''){setIsButtonDisabled(true)}
+                    else{setIsButtonDisabled(false)} 
                     break;
                 case 'img':
                     if(description!==''&& selectedCaroselId!==''){setIsButtonDisabled(true)} //태그는 선택이지 않나 ?->태호씨
+                    else{setIsButtonDisabled(false)} 
                     break;
                 case 'video':
-                    if(description!==''){setIsButtonDisabled(true)} 
+                    if(description!==''){setIsButtonDisabled(true)}
+                    else{setIsButtonDisabled(false)} 
                     break;
                 case 'url':
+                    console.log(urlInfo);
                     if(description!==''&& urlInfo!==''){setIsButtonDisabled(true)}
+                    else{setIsButtonDisabled(false)} 
                     break;
                 default:
                    
@@ -79,7 +85,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
         };
         validNull();
-    });
+    },[description, promtText, urlInfo]);
     
     useEffect(() => {
 
@@ -107,7 +113,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
 
         setCaroselGroupApi(); //카로셀 그룹 조회
         getFileInfo();  //파일 미리보기 기능
-    }, []);
+    }, [addCarosel]);
 
     //카로셀 선택 후 해당 이미지를 api로 get ->2/21 개발 중, 추후 데이터 확인 필요. 
     useEffect(() => { 
@@ -215,7 +221,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
         
-        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile, prompt:promtText})
+        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile, prompt:promtText, urlInfo:urlInfo})
         // console.log('Updated Images:', images);
     };
 
@@ -234,6 +240,10 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
 
             setAddCarosel(inputValue);
             };
+    };
+    const handleUrlChange=(e:any)=>{
+        const newText = e.target.value;
+        setInfoUrl(newText);
     };
 
     return(
@@ -270,7 +280,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
             {fileType === 'link' && 
                 <>
-                    <InputBox setText={setInfoUrl}/>
+                    <InputBox handleTheTextChange={handleUrlChange}/>
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>

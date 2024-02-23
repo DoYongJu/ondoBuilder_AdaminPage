@@ -3,7 +3,7 @@ import { BiX } from "react-icons/bi";
 import InputBox from '../../Atoms/InputBox';
 
 const MypageInfoModal=({action, onClose, saveFile, handleSetText}:{action:string, onClose: (event: React.MouseEvent<HTMLButtonElement>) => void,
-    saveFile?: (event: React.MouseEvent<HTMLButtonElement>) => void; handleSetText:(e:string)=>void })=>{
+    saveFile?: (event: React.MouseEvent<HTMLButtonElement>) => void; handleSetText:(e:any)=>void })=>{
     let title:string ='';
     let saveBtn:string ='';
 
@@ -19,7 +19,7 @@ const MypageInfoModal=({action, onClose, saveFile, handleSetText}:{action:string
                 <button  onClick={onClose}><BiX size={20}  /></button>
             </div>
             <div className='body'>
-                <InputBox setText={handleSetText}/>
+            <InputBox handleTheTextChange={handleSetText}/>
             </div>
             <div className='footer'> 
                     <button onClick={saveFile}>{saveBtn} </button>

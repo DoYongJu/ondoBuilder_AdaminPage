@@ -218,8 +218,8 @@ const validateFile = (file:File)=>{
         <div className="sub_title">
           <div className='text' ><span>{data.hub_description}</span></div> 
           <div className='btnArea'>
-              <button className='leftbtn' onClick={()=>{setViewWays(!viewWays)}}><FiGrid size={24} /></button>
-              <button className='rightbtn' onClick={()=>{setViewWays(!viewWays)}}><FiList size={25}/></button>
+              <button className={`leftbtn ${viewWays ? 'active' : ''}`} onClick={()=>{setViewWays(true)}}><FiGrid size={24} /></button>
+              <button className={`rightbtn ${viewWays ? '' : 'active'}`} onClick={()=>{setViewWays(false)}}><FiList size={25}/></button>
           </div>
         </div>
         <div className='dataHubBtnArea'>
