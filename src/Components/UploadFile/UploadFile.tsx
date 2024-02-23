@@ -12,7 +12,8 @@ import UploadedFileName from '../Atoms/UploadedFileName';
 import UploadedFileTextArea from '../Atoms/UploadedFileTextArea';
 import UploadedFileTag from '../Atoms/UploadedFileTag';
 import UploadedFileCarosel from '../Atoms/UploadedFileCarosel';
-import InputBox from '../Atoms/InputBox';
+import InputBox from '../Atoms/InputBox/InputBox';
+import Alert from '../Modal.components/Alert/Alert';
 
 
 
@@ -56,6 +57,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     ]);
     const [selectedCaroselId, setSelectedCaroselId] = useState('');
     const [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
+    const [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
 
@@ -85,7 +87,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
         };
         validNull();
-    },[description, promtText, urlInfo]);
+    },[description, promtText, urlInfo, selectedCaroselId]);
     
     useEffect(() => {
 
@@ -113,7 +115,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
 
         setCaroselGroupApi(); //카로셀 그룹 조회
         getFileInfo();  //파일 미리보기 기능
-    }, [addCarosel]);
+    }, [caroselNewView]);
 
     //카로셀 선택 후 해당 이미지를 api로 get ->2/21 개발 중, 추후 데이터 확인 필요. 
     useEffect(() => { 
@@ -129,7 +131,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                 console.error('getCaroselGroupApi/ Error occurred:', error);
             });
         };
-        getImgListApi();
+        // getImgListApi();
     
     }, [selectedCaroselId]);
 
@@ -142,7 +144,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         }
         ConnectApi({ method: 'POST', url: `/v1/api/datahub/carousel`, sendParam:sendParam})
           .then((res) => {
-            console.log(res.data);
+            console.log('/UploadFile/추가된 캐러셀 정보: '+res.data);
             setCaroselNewView(!caroselNewView);
           })
           .catch((error) => {
@@ -230,28 +232,24 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     };
 
     const onSubmitAddCarosel = (e:any) => {
-       
-        if (inputRef.current) {
-            const inputValue: string = inputRef.current?.value; 
-            if (e.key === 'Enter'){
-                setAddCarosel(inputValue);
-                e.preventDefault();
-            };
-
-            setAddCarosel(inputValue);
-            };
+      let addC = e.target.value;
+      setAddCarosel(addC);   
     };
     const handleUrlChange=(e:any)=>{
         const newText = e.target.value;
         setInfoUrl(newText);
     };
 
+    const openAlart=()=>{
+        setViewAlart(true);
+      };
+
     return(
         
     <div className="FileUpload">
         <div className="header">
             <ul>파일 업로드</ul>
-            <button  onClick={onClose}><BiX size={20}  /></button>
+            <button  onClick={openAlart}><BiX size={20}  /></button>
         </div>
         <div className='body'>
             {fileType === 'doc' &&oneFile &&
@@ -280,7 +278,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
             {fileType === 'link' && 
                 <>
-                    <InputBox handleTheTextChange={handleUrlChange}/>
+                    <InputBox title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange}/>
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>
@@ -289,7 +287,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         <div className='footer'> 
             <button className={`btn ${isButtonDisabled ? '' : 'disabled'}`} onClick={isButtonDisabled ?  saveFile : undefined }>파일 저장 </button>
         </div> 
-       
+       {viewAlart && <Alert onClose={()=>{setViewAlart(false);}} action='uploadFile' onCustomBtn={onClose}/>}
     </div>
     );
 };

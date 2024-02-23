@@ -5,7 +5,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
     onSubmitAddCarosel, addCaroselGroupApi}:
     {caroselNewView:boolean, selected:boolean|string, handleSelect:(e:any) => void, selectList:any[], setCaroselNewView:(caroselNewView: boolean)=>void,
     images:any[], handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
-    inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event: KeyboardEvent<HTMLInputElement>) => void, addCaroselGroupApi:()=>void})=>{
+    inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
       
     return(
         <div className='caroselArea'>
@@ -38,7 +38,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
           }
         {caroselNewView&&
           <div className='caroselInputArea'>
-              <input type='text' placeholder="카로셀 추가" ref={inputRef} onKeyPress={onSubmitAddCarosel}/>
+              <input type='text' placeholder="카로셀 추가" onChange={(e)=>onSubmitAddCarosel(e)}/>
               <button className="deleteBtn" onClick={()=>{setCaroselNewView(!caroselNewView)}}>취소</button>
               <button className="addBtn" onClick={addCaroselGroupApi}>추가</button>
           </div>

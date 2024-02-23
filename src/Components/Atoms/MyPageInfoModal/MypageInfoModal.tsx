@@ -1,6 +1,7 @@
 import './MypageInfoModal.css';
 import { BiX } from "react-icons/bi";
-import InputBox from '../../Atoms/InputBox';
+import InputBox from '../InputBox/InputBox';
+import '../InputBox/InputBox.css'
 
 const MypageInfoModal=({action, onClose, saveFile, handleSetText}:{action:string, onClose: (event: React.MouseEvent<HTMLButtonElement>) => void,
     saveFile?: (event: React.MouseEvent<HTMLButtonElement>) => void; handleSetText:(e:any)=>void })=>{
@@ -19,7 +20,9 @@ const MypageInfoModal=({action, onClose, saveFile, handleSetText}:{action:string
                 <button  onClick={onClose}><BiX size={20}  /></button>
             </div>
             <div className='body'>
-            <InputBox handleTheTextChange={handleSetText}/>
+                <div><InputBox title='기존 비밀번호' placeholder='기존 비밀번호를 입력하세요.' handleTheTextChange={handleSetText}/></div>
+                <div><InputBox title='신규 비밀번호' placeholder='신규 비밀번호를 입력하세요.' handleTheTextChange={handleSetText}/></div>
+                <div><InputBox title='신규 비밀번호 확인' placeholder='신규 비밀번호를 다시 입력하세요.' handleTheTextChange={handleSetText}/></div>
             </div>
             <div className='footer'> 
                     <button onClick={saveFile}>{saveBtn} </button>

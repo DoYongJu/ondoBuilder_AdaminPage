@@ -43,13 +43,6 @@ function ActiveHublist(){
   
     const [uploadedInfo, setUploadedInfo] = useState(false);
     const [selctedClick, setSelctedClick] = useState(false);
-    // useEffect(() => {
-
-    //   const datass =   DataHub_sortIntheHub_module({ data: data }, selectedOption);
-    //   console.log(selectedOption);
-    //   setData(datass);
-              
-    // }, [selectedOption]);
   
     useEffect(() => {
       //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
@@ -109,29 +102,9 @@ function ActiveHublist(){
   
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-    // const items = e.dataTransfer.items;
     const file = e.dataTransfer.files[0];
     validateFile(file);
     setActive(false);
-
-    // if (items) {
-    //   for (let i = 0; i < items.length; i++) {
-    //     const item = items[i];
-    //     if (item.kind === 'file') {
-    //       const tempFile = item.getAsFile();
-    //       handleFileChange(tempFile);
-    //       setActive(false);
-
-    //       // if (tempFile) {
-    //       //   setSelectedFile(tempFile);
-    //       //   setUploadedInfo(true);
-    //       //   setActive(false);
-    //       //   setIsFirst(false); //나중에 파일 업로드 된 후 사용될 코드. 개발 테스트로 인해 현재 위치
-           
-    //       // };
-    //     };
-    //   };
-    // };
   };
 
   const handleFileuploadButtonClick =()=>{
@@ -297,7 +270,6 @@ const validateFile = (file:File)=>{
                   <p className="preview_msg">
                   업로드할 파일을 이곳에 파일을 드래그 앤 드롭하세요
                   </p>
-                  {/* <p className="preview_desc">파일당 최대 3MB</p> */}
                 </>
               )}
             </label>

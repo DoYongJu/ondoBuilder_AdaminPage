@@ -21,12 +21,14 @@
 .UpdateDataHub .hubInfoBody{ display: flex;  flex-direction: column; height:238px; width:100%; }
 .UpdateDataHub .first{display: flex; height:40px; border-bottom:1px solid #D1D1D1;padding: 14px 0;}
 .UpdateDataHub .first .hubnameArea{width:30%; height:100%; display: flex; align-items: center;text-align: right;}
-.UpdateDataHub .first .hubnameSpace{width:70%; height:100%; display: flex; align-items: center; justify-content: right;text-align: right;}
+.UpdateDataHub .first .hubnameSpace{width:486px; height:100%; display: flex; align-items: center; justify-content: right;text-align: right; font-size: 14px;
+    font-style: normal; font-weight: 400;line-height: 20px; letter-spacing: -0.35px;}
 .UpdateDataHub .first .hubnameSpace input{width:400px; height: 20px; padding: 14px 16px; border-radius: 6px; border: 1px solid #BDBDBD; outline: none;font-family: Pretendard;}
-.UpdateDataHub .second{display: flex; height:60px;border-bottom:1px solid #D1D1D1; padding: 14px 0;}
-.UpdateDataHub .second .hubnameArea{width:30%; height:100%; display: flex; align-items: center;}
-.UpdateDataHub .second .hubnameSpace{width:70%; height:100%; display: flex; align-items: center;justify-content: right; text-align: right;}
-.UpdateDataHub .second .hubnameSpace span{width:486px;  max-width: 486px; height: auto; word-wrap: break-word; /* 긴 단어를 자동으로 줄바꿈 */}
+.UpdateDataHub .second{display: flex; height:60px;border-bottom:1px solid #D1D1D1; padding: 14px 0; justify-content: space-between;}
+.UpdateDataHub .second .hubnameArea{width:20%; height:100%; display: flex; align-items: center;}
+.UpdateDataHub .second .hubnameSpace{ height:100%; display: flex; align-items: center;}
+.UpdateDataHub .second .hubnameSpace span{width:100%; height: auto; word-wrap: break-word; font-size: 14px; 
+    font-style: normal;font-weight: 400;line-height: 20px; letter-spacing: -0.35px;}
 .UpdateDataHub .second .hubnameSpace textarea{ width: 400px;padding: 14px 16px;border-radius: 6px; outline: none;
     border: 1px solid #BDBDBD;font-size: 14px;font-family: Pretendard;font-weight: 400;line-height: 20px; letter-spacing: -0.35px}
 .UpdateDataHub .second .hubnameSpace .counters{position: absolute; bottom: 410px; right: 1000px; color: #999;font-size: 14px;
