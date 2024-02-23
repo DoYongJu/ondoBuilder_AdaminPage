@@ -10,6 +10,7 @@ import SelectBox from '../SelectBox/SelectBox';
 import UploadFile from '../UploadFile/UploadFile';
 import {MyObject} from '../../Resources/Models';
 import ClassfiydataOnType from '../../Module/ClassfiydataOnType';
+import { DataHub_sortIntheHub_module}from '../../Module/Search_module';
 import { LuListFilter } from "react-icons/lu";
 import { FiUpload } from "react-icons/fi";
 import { FiGrid } from "react-icons/fi";
@@ -26,7 +27,8 @@ function ActiveHublist(){
     const [, setSearchType] = useState('');
     const [, setSearchText] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
-    const data:MyObject= location.state; //허브 정보
+    const [data, setData] = useState(location.state);//허브 정보
+    // const data:MyObject= location.state; 
     const [activeButton, setActiveButton] = useState(type);
     const [selectList, setSelectList] = useState([
       { id: -1, name: '조회' },
@@ -42,7 +44,14 @@ function ActiveHublist(){
   
     const [uploadedInfo, setUploadedInfo] = useState(false);
     const [selctedClick, setSelctedClick] = useState(false);
+    // useEffect(() => {
 
+    //   const datass =   DataHub_sortIntheHub_module({ data: data }, selectedOption);
+    //   console.log(selectedOption);
+    //   setData(datass);
+              
+    // }, [selectedOption]);
+  
     useEffect(() => {
       //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
       function selectDataByTypeApi() {

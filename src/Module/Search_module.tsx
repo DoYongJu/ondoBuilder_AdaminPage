@@ -1,5 +1,5 @@
 import React from 'react';
-import { MyObjects, MyObject } from '../Resources/Models';
+import { MyObjects, dataByTypeList } from '../Resources/Models';
 
 //검색 모듈
 function DataHub_module({data}:{data:MyObjects}, searchText:string) {
@@ -29,7 +29,10 @@ function DataHub_module({data}:{data:MyObjects}, searchText:string) {
 //   if (/[ㄱ-ㅎ가-힣]/.test(char)) return 3;
 //   return 4; // 특수문자
 // };
-
+export function DataHub_sortIntheHub_module({data}:{data:dataByTypeList}, classify:string){
+  let resultList: dataByTypeList =data;
+  return resultList;
+};
 export function DataHub_listOfType_module({data}:{data:MyObjects}, orderByType:string){
   let resultList: MyObjects = [...data];
   console.log(resultList);

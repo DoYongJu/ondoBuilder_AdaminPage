@@ -287,7 +287,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
         </div>
         <div className='footer'> 
-            <button className={`btn ${isButtonDisabled ? '' : 'disabled'}`} onClick={isButtonDisabled ? undefined : saveFile }>파일 저장 </button>
+            <button className={`btn ${isButtonDisabled ? '' : 'disabled'}`} onClick={isButtonDisabled ?  saveFile : undefined }>파일 저장 </button>
         </div> 
        
     </div>

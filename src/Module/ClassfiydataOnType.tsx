@@ -3,7 +3,7 @@ import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList} from '../Resources/Models';
 
 const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick }: 
-    { classfiyType: string, hubId: string, viewType: string, onClick: () => void, }) =>{
+    { classfiyType: string, hubId: string, viewType: string, onClick: () => void,  }) =>{
     console.log(hubId);
     console.log(classfiyType);
     const [imageSrc, setImageSrc] = useState('');
