@@ -1,8 +1,31 @@
 .topGNB {height: 78px;padding-left: 240px;padding-right: 240px;background-color: white;border-bottom:1px solid #D7D7D9;display: flex;justify-content: space-between;align-items:center;}
-.topGNB .logo label{ margin-top: -18;font-size: 35px; font-weight: bold; color: black; line-height: 80px;}
+.topGNB .logo{cursor: pointer}
+.topGNB .logo label{ margin-top: -18;font-size: 35px; font-weight: bold; color: black; line-height: 80px; }
 .topGNB .topMenu {align-items:center;display: flex;text-align: center;gap:50px;}
 .topGNB .topMenu li{ display: inline-block; margin: 0 8px;}
-.topGNB .topMenu select {color: black;font-size: 18px;border:none;padding: 10px 16px;height: 48px;}
+.topGNB .topMenu .selectBoxArea{height:50px;}
 .topGNB .topMenu .navOption{display: flex;gap:10px;justify-content: center;align-items: center;}
-.topGNB .topMenu .navOption button{border:none;background-color: white;padding:0;}
+.topGNB .topMenu .navOption button{border:none;background-color: white;padding:0; cursor: pointer}
 .topGNB .topMenu input[type='button'] {width: 100%;height: 48px;background: white;color:#105AEB;border-radius: 40px;font-size: 18px;border: 1px solid #105AEB;cursor: pointer;outline: none;padding: 10px 18px 10px 16px;}
+
+
+/* 이름 및 로그아웃 selectBox */
+.topGNB .topMenu .custom-select-box {position: relative;  display: flex; z-index:100; width:114px;}
+.topGNB .topMenu .custom-select-box .select-header {border-radius: 8px;border: 1px solid #BDBDBD;padding:14px 16px 14px 16px;
+    cursor: pointer; width:90%;display: flex; justify-content: space-between; }
+
+    .topGNB .topMenu .custom-select-box .select-header:hover .options-list {border: none;border: 1px solid #BDBDBD;  padding:0;  height:50px; color: #FF2F2F;}
+    .topGNB .topMenu .custom-select-box .select-header .options-list {list-style-type: none;border-radius: 8px; padding:0 ; height:50px; color: #FF2F2F;
+    position: absolute;top: 100%;left: 0;width: 99%; background-color: #fff;overflow-y: auto;overflow-x: hidden;max-height: 168px;
+    transition: height 0.1s ease-in-out; 
+    &::-webkit-scrollbar {width: 4px }
+    &::-webkit-scrollbar-thumb {height: 50px;border-radius: 16px;background: #E6E6E6;}
+    &::-webkit-scrollbar-track { background-color: #F7F7F7; }
+ 
+}
+  
+.topGNB .topMenu .custom-select-box .select-header .options-list li {padding: 10px 14px;cursor: pointer;height: 28px;background-color: #fff;
+    border-radius: 8px;text-align: center;font-family: Pretendard;font-size: 14px;font-style: normal; 
+    font-weight: 400;line-height: 20px; letter-spacing: -0.35px; text-align: left;}
+  
+    .topGNB .topMenu .custom-select-box .select-header .options-list li:last-child {border-bottom: none;  line-height: 30px;}  

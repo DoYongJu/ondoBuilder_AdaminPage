@@ -8,9 +8,9 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 
 const Mypage =()=>{
-    const [viewInputModal, setViewInputModal] = useState<string>('');
-    const [userInfo] = useRecoilState (userInfoState);
-    const setUserPwdRecoil = useSetRecoilState(userInfoState);
+    const [viewInputModal, setViewInputModal] = useState<string>(''),
+        [userInfo] = useRecoilState (userInfoState),
+        setUserPwdRecoil = useSetRecoilState(userInfoState);
 
     useEffect(() => {
 

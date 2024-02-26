@@ -3,6 +3,8 @@ import './SideBar.css';
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
 import ConnectApi from '../../Module/ConnectApi';
+import { useRecoilValue} from 'recoil';
+import { hubClassfiyState } from '../../Resources/Recoil';
 interface SideBarProps {
     isOpen: boolean;
     onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -10,7 +12,9 @@ interface SideBarProps {
   let tmp ='국무회의는 대통령·국무총리와 15인 이상 30인 이하의 국무위원으로 구성한다. 행정권은 대통령을 수반으로 하는 정부에 속한다. 비상계엄하의 군사재판은 군인·군무원의 범죄나 군사에 관한 간첩죄의 경우와 초병·초소·유독음식물공급·포로에 관한 죄중 법률이 정한 경우에 한하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여 다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여 다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여 다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. ssss';
 
   const SideBar: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
- 
+  const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
+  const [imageSrc, setImageSrc] = useState('');
+
   const [changeProm, setChangeProm] = useState(false);
   const [selctedClick, setSelctedClick] = useState(false);
   const [longProm, setLongProm] = useState(tmp);
@@ -28,13 +32,29 @@ interface SideBarProps {
           .catch((error) => {
               console.error('Error occurred:', error);
           });
-  };
+    };
+    function chooseImgByType(){
+      switch(type){
+        case 'doc':
+          setImageSrc('/doc.svg');
+          break;
+      case 'img':
+          setImageSrc('/img.svg');
+          break;
+      case 'video':
+          setImageSrc('/video.svg');
+          break;
+      case 'url':
+          setImageSrc('/link.svg');
+          break;
+      default:
+          setImageSrc(''); 
+          break;
+      }
+    };
 
   selectInfoByOneFileApi();
-
-
- 
-            
+  chooseImgByType();      
   }, []);
 
   function openProm(){
@@ -69,7 +89,7 @@ interface SideBarProps {
           <span>조인트리 디오스 냉장고 2018 모델 수리방법 종합 정리본</span>
       </div>
       <div className='docsImgArea'>
-        {/* {보승씨가 주는 아이콘 삽입 자리} */}
+          <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
       </div>
       <div className='shortInfo'>
         <div className='key'>
