@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import {useRef, useState, useEffect } from 'react';
 import './Login.css';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
-import Cookies from 'js-cookie';
+import ConnectApi from '../../../Module/ConnectApi';
 import { usernameState, tokenState } from '../../../Resources/Recoil';
+import Cookies from 'js-cookie';
 
 
 
 function Login() {
   const navigate = useNavigate();
+  
   const [errorMsgEmail, setErrorMsgEmail] = useState('');
   const [errorMsgPwd, setErrorMsgPwd] = useState('');
   const [email, setEmail] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true),
     [password, setPassword] = useState(''),
     setTokenRecoil = useSetRecoilState(tokenState);
@@ -21,25 +24,18 @@ function Login() {
       setIsButtonDisabled(validateNullcheck());
     }, [email, password]); 
 
-  async function loginApi() {
-      const sendParam = {
-        email: email,
-        password: password,
-      };
-     
-      await axios({
-        method: 'POST',
-        url: process.env.REACT_APP_API+'/v1/api/auth/signin',
-        headers: {"accept": 'application/json', 'Content-Type': 'application/json'},
-        data: sendParam
-        
-      }).then(res => {
-        setTokenRecoil(res.data.accessToken);
-        Cookies.set('accessToken', res.data.accessToken);
-        Cookies.set('username', res.data.user_name); 
-        navigate('/dashBoard');
-     
-        
+  function loginApi() {
+    const sendParam = {
+      email: email,
+      password: password,
+    };
+
+    ConnectApi({ method: 'POST', url: `/v1/api/auth/signin`,sendParam:sendParam })
+        .then((res) => {
+          setTokenRecoil(res.data.accessToken);
+          Cookies.set('accessToken', res.data.accessToken);
+          Cookies.set('username', res.data.user_name); 
+          navigate('/dashBoard');
       }).catch(error =>{
         if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){
           navigate('/SignAccept');
@@ -51,8 +47,7 @@ function Login() {
           console.log(errorMsgEmail);
         };
        
-      });
-
+    });
   };
 
   const validateNullcheck= ():boolean =>  {
@@ -64,10 +59,13 @@ function Login() {
           return false;
         };
     };
-
     return true;
   };
-
+  const onSubmitSearch = (e:any) => {
+    if (e.key === 'Enter'){
+      loginApi();
+    };
+  };
 
   return (
   <div className="Loginscreen">
@@ -82,7 +80,7 @@ function Login() {
         <div className='inputArea'>
           <input className="overlap" type="text" placeholder="이메일을 입력해 주세요." value={email} onChange={e => setEmail((e.target.value))}/>
           {errorMsgEmail && <span className='errorMsg'>{errorMsgEmail}</span> }
-          <input  className="overlap" type="password" placeholder="비밀번호를 입력해 주세요." value={password} onChange={e => setPassword((e.target.value))}/>
+          <input  className="overlap" type="password" placeholder="비밀번호를 입력해 주세요." value={password} ref={inputRef} onKeyPress={onSubmitSearch} onChange={e => setPassword((e.target.value))}/>
           {errorMsgPwd && <span className='errorMsg'>{errorMsgPwd}</span> }
         </div>
         
