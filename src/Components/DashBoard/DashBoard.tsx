@@ -25,6 +25,7 @@ function DashBoard() {
 
   const [Selected, setSelected] = useState('');
   const searchText = useRecoilValue(searchState);
+  const [originDatas, setOriginDatas] = useState<MyObjects>([]);
   const [datas, setDatas] = useState<MyObjects>([]);
   const navigate = useNavigate();
   const token = useRecoilValue(tokenState);
@@ -38,6 +39,7 @@ function DashBoard() {
         const responseData = await setDashBoardApi();
         // console.log(responseData);
         if (responseData) {
+          setOriginDatas(responseData);
           setDatas(responseData);
         }
       } catch (error) {
@@ -50,14 +52,14 @@ function DashBoard() {
 
   useEffect(() => {
 
-    const datass =  DataHub_listOfType_module({ data: datas }, Selected);
+    const datass =  DataHub_listOfType_module({ data: originDatas }, Selected);
     setDatas(datass);
             
   }, [Selected]);
 
   useEffect(() => {
 
-    const datass =  DataHub_module({ data: datas }, searchText);
+    const datass =  DataHub_module({ data: originDatas }, searchText);
     setDatas(datass);
             
   }, [searchText]);

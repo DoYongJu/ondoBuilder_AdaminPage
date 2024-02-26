@@ -15,7 +15,7 @@ const TabBar=()=>{
     const [tabs, setTabs] = useState<TabState[]>([
         { id: 1, active: true, title:'사용자 정보' , path: '/mypage'},
         { id: 2, active: false, title:'히스토리' ,path: '/history'},
-        { id: 3, active: false, title:'사용자 관리' ,path: '/mypage'}, //추후 페이지 생성 후 추가예정
+        { id: 3, active: false, title:'사용자 관리' ,path: '/adminUser'},
       ]);
 
     useEffect(() => {

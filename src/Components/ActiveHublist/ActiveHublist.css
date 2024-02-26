@@ -33,7 +33,7 @@
 .activeHublist .theActiveHub{float: left;width: 196px;height: 224px; border-radius: 8px;background-color: #FFF;box-shadow: 0px 2px 14px 0px rgba(0, 0, 0, 0.08);}
 .activeHublist .selectAndSearch{ margin-top: 24px; display: flex; height:48px; width: 100%; margin-bottom:16px; justify-content: space-between;}
 .activeHublist .selectAndSearch .selectArea{width:39%; display: flex; align-items: center;}
-.activeHublist .selectAndSearch .buttonArea{display: flex; justify-content: right}
+.activeHublist .selectAndSearch .buttonArea{display: flex; justify-content: right;   position: relative;}
 .activeHublist .selectAndSearch .selectArea .real{width:120px;}
 .activeHublist .selectAndSearch .buttonArea .filter{height: 48px; width:78px; margin-right:8px;padding: 10px 14px; justify-content: center;
     font-size: 14px;align-items: center;border-radius: 6px;border: 1px solid #BDBDBD;cursor: pointer; }
@@ -50,7 +50,7 @@ font-style: normal;font-weight: 400;line-height: 24px; letter-spacing: -0.4px;}
 .activeHublist .contbox .ChatFileInfo .preview_desc {margin: 0;font-size: 14px;}
 .activeHublist .contbox .ChatFileInfo .preview.active {background-color: #efeef3;border-color: #111;}
 .activeHublist .selectAndSearch .buttonArea .options-list {list-style-type: none;border-radius: 8px;
-        position: absolute;top: 318px;left: 1460px;width: 90px; background-color: white;
+        position: absolute;top: 100%;left: 0;width: 90px; background-color: white;
         height:192px; border-radius: 8px;box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);}       
 .activeHublist .selectAndSearch .buttonArea .options-list li {padding: 10px 14px;cursor: pointer;height: 28px;background-color: #fff;
     display: flex; justify-content: space-between; align-items: center;color: #111;

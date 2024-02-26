@@ -16,7 +16,12 @@ function DataHub_module({data}:{data:MyObjects}, searchText:string) {
         nowData.datahub_regdate.match(searchText)) {
       
       resultList.push(nowData);
-    }
+    };
+
+    if (searchText === "") {
+      return data;
+    };
+    
   }
 
   return resultList;

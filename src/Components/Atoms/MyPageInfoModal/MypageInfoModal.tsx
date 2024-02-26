@@ -64,8 +64,11 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
 
         ConnectApi({ method: 'PATCH', url: `/v1/api/auth/user`, sendParam:sendParam })
         .then((res) => {
-            let data = res.data; //result: true => 02.26작성. 추후 api테스트 후 추가 개발 필요. 
-
+            let data = res.data;
+            if(data.result === true){
+                const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+                onClose(fakeEvent);
+            }
         })
         .catch((error) => {
             console.error('requestChangeUserInfoApi/ Error occurred:', error);
@@ -82,7 +85,8 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
         .then((res) => {
             let data = res.data;
             if(data.result === true){
-                console.log('dddddd'); //02.26 => 몽고 디비 꺼져있음. 대리님 문의
+                const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+                onClose(fakeEvent);
             }
         })
         .catch((error) => {

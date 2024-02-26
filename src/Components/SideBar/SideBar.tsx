@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './SideBar.css';
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
+import ConnectApi from '../../Module/ConnectApi';
 interface SideBarProps {
     isOpen: boolean;
     onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -16,11 +17,25 @@ interface SideBarProps {
   const [shortProm, setShortProm] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const selectList=[',','다운로드','수정','삭제'];
-  useEffect(() => {
-    const truncatedText = longProm.length > 300 ? longProm.slice(0, 300) + '...' : longProm;
-    setShortProm(truncatedText);  
+
+  useEffect(() => { //파일을 하나 눌렀을때 해당 관련 정보를 가져오는 api=>02.26개발중, 태호씨 api 나오면 연결
+    function selectInfoByOneFileApi() {
+      ConnectApi({ method: 'GET', url: `/v1/api/datahub/`})
+          .then((res) => {
+            const truncatedText = longProm.length > 300 ? longProm.slice(0, 300) + '...' : longProm;
+            setShortProm(truncatedText);  
+          })
+          .catch((error) => {
+              console.error('Error occurred:', error);
+          });
+  };
+
+  selectInfoByOneFileApi();
+
+
+ 
             
-  }, [tmp]);
+  }, []);
 
   function openProm(){
     setChangeProm(!changeProm)

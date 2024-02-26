@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { userInfoType, userPwdType  } from './Models';
+import { userInfoType, userPwdType, userFullInfoType  } from './Models';
 export const usernameState = atom({
   key: 'username',
   default: '',
@@ -37,6 +37,18 @@ export const userPwdState = atom<userPwdType>({
     originPwd: '',
     newPwd:'',
     checkPwd:'',
+  },
+});
+export const userFullInfo = atom<userFullInfoType>({
+  key: 'userPwdState',
+  default: {
+    uid: -1,
+    email:  '',
+    tel:  '',
+    company: '',
+    division:'',
+    username: '',
+    user_regdate: '',
   },
 });
 

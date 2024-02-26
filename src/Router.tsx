@@ -14,6 +14,7 @@ import ActiveHublist from './Components/ActiveHublist/ActiveHublist';
 import AddHub from './Components/AddHub/AddHub';
 import Mypage from './Components/User/Mypage/Mypage';
 import History from './Components/User/History/History';
+import AdminUser from './Components/User/AdminUser/AdminUser';
 import Cookies from 'js-cookie';
 
 
@@ -22,17 +23,18 @@ const Router = () => {
   const setUserName = useSetRecoilState(usernameState);
   const username = useRecoilValue(usernameState);
   const token= Cookies.get('accessToken');
+  const storedUsername = Cookies.get('username');
   
-  useEffect(() => {
-    const storedUsername = Cookies.get('username');
-    if (storedUsername) {
-      setUserName(storedUsername);
-    }
-  }, [setUserName]);
+  // useEffect(() => {
+  //   const storedUsername = Cookies.get('username');
+  //   if (storedUsername) {
+  //     setUserName(storedUsername);
+  //   }
+  // }, [setUserName]);
   
   return (
     <BrowserRouter>
-     {username && <NavBar />}
+     {storedUsername && <NavBar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
@@ -46,6 +48,7 @@ const Router = () => {
         <Route path="/addHub" element={<AddHub />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/history" element={<History />} />
+        <Route path="/adminUser" element={<AdminUser />} />
       
         
       </Routes>

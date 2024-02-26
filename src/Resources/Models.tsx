@@ -86,6 +86,17 @@ export interface userPwdType{
   newPwd: string;
   checkPwd: string;
 }
+
+export interface userFullInfoType{
+  uid: number;
+  email: string;
+  tel: string;
+  company: string;
+  division: string;
+  username: string;
+  user_regdate: string;
+}
+export type userFullInfoList = userFullInfoType[];
 export type dataByTypeList = dataByType[];
 export type selCaroselGroupList = selCaroselGroup[];
 export type tagsList= tag[];
