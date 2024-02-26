@@ -2,22 +2,23 @@ import React, { useState, useEffect } from 'react';
 import './Mypage.css';
 import TabBar from '../../TabBar/TabBar';
 import ConnectApi from '../../../Module/ConnectApi';
-import {userInfoType} from '../../../Resources/Models';
 import MypageInfoModal from '../../Atoms/MyPageInfoModal/MypageInfoModal';
+import { userInfoState } from '../../../Resources/Recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil';
+
 
 const Mypage =()=>{
-    const [userInfo, setUserInfo] = useState<userInfoType | null>(null);
     const [viewInputModal, setViewInputModal] = useState<string>('');
-    const [originpwd, setOriginpwd] = useState<string>('');
-    const [newpwd, setNewpwd] = useState<string>('');
+    const [userInfo] = useRecoilState (userInfoState);
+    const setUserPwdRecoil = useSetRecoilState(userInfoState);
+
     useEffect(() => {
 
         function setMyinfoApi() {
             ConnectApi({ method: 'GET', url: `/v1/api/auth/mypage` })
                 .then((res) => {
                     let data = res.data;
-                    setUserInfo(data);
- 
+                    setUserPwdRecoil(data);
                 })
                 .catch((error) => {
                     console.error('getCaroselGroupApi/ Error occurred:', error);
@@ -26,6 +27,7 @@ const Mypage =()=>{
         setMyinfoApi(); //개인정보get.
      
     }, []);
+
    
     return(
     <div className="myPage">
@@ -64,13 +66,17 @@ const Mypage =()=>{
                 <li>{userInfo?.division}</li>
             </ul>
             <ul>
-                <button onClick={()=>{setViewInputModal('changeInfo')}}><span>내 정보변경</span></button>
+                <button onClick={()=>{setViewInputModal('changeInfo');}}><span>내 정보변경</span></button>
             </ul>
         </div>
             {/* 모달 띄우는 코드 */}
-            {viewInputModal &&  
+            {viewInputModal === 'changepwd' &&  
                 <div className="overlay"> 
-                    <MypageInfoModal onClose={()=>{setViewInputModal('');}} action={viewInputModal} handleSetText={setOriginpwd}/> 
+                    <MypageInfoModal onClose={()=>{setViewInputModal('');}} action={viewInputModal} /> 
+                </div>  
+            }{viewInputModal === 'changeInfo' &&  userInfo && 
+                <div className="overlay"> 
+                    <MypageInfoModal onClose={()=>{setViewInputModal('');}} action={viewInputModal} infoDetails={userInfo} /> 
                 </div>  
             }
     </div>

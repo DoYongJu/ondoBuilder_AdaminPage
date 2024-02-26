@@ -80,9 +80,9 @@ function Login() {
         <div className="wrapper-4">로그인</div>
         
         <div className='inputArea'>
-          <input className="overlap" type="text" placeholder="이메일을 입력해 주세요." value={email} onChange={e => setEmail((e.target.value).trim)}/>
+          <input className="overlap" type="text" placeholder="이메일을 입력해 주세요." value={email} onChange={e => setEmail((e.target.value))}/>
           {errorMsgEmail && <span className='errorMsg'>{errorMsgEmail}</span> }
-          <input  className="overlap" type="password" placeholder="비밀번호를 입력해 주세요." value={password} onChange={e => setPassword((e.target.value).trim)}/>
+          <input  className="overlap" type="password" placeholder="비밀번호를 입력해 주세요." value={password} onChange={e => setPassword((e.target.value))}/>
           {errorMsgPwd && <span className='errorMsg'>{errorMsgPwd}</span> }
         </div>
         

@@ -14,7 +14,6 @@ const Alert: React.FC<AlartProps>=({onClose, onCustomBtn, action})=>{
             break;
         case 'uploadFile': title='페이지 나가기'; content='저장하지 않은 수정사항은 전부 사라집니다. 정말 현재 페이지를 나가시겠습니까?';
             break;
-            
         default:
             break;
     }

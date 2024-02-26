@@ -80,6 +80,12 @@ export interface userInfoType{
   division: string; 
   tel: string
 }
+
+export interface userPwdType{
+  originPwd: string;
+  newPwd: string;
+  checkPwd: string;
+}
 export type dataByTypeList = dataByType[];
 export type selCaroselGroupList = selCaroselGroup[];
 export type tagsList= tag[];
