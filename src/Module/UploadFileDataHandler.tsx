@@ -32,10 +32,8 @@ const UploadFileDataHandler = async ({
 
     try {
         await ConnectApi({ method: 'POST', url: apiUrl, sendParam: sendParam, formData: true });
-        console.log('/UploadFileDataHandler/ success');
         return true;
     } catch (error) {
-        console.error('Error occurred:', error);
         return false;
     }
 };

@@ -3,12 +3,22 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import ConnectApi from '../../../Module/ConnectApi';
 import { userFullInfoList } from '../../../Resources/Models';
 import { userInfoState } from '../../../Resources/Recoil'
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import './History.css';
 import TabBar from '../../TabBar/TabBar';
 
 const History =() =>{
 
-const [userInfos, setUserInfos] = useState<userFullInfoList>([]);
+    const [userInfos, setUserInfos] = useState<userFullInfoList>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
+    // 페이지네이션 계산을 위한 변수들
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = userInfos.slice(indexOfFirstItem, indexOfLastItem);
 
     useEffect(() => {
 
@@ -25,6 +35,9 @@ const [userInfos, setUserInfos] = useState<userFullInfoList>([]);
         setMyinfoApi(); //개인정보get.
      
     }, []);
+    const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setCurrentPage(value);
+      };
 
     return(
         <div className="history">
@@ -40,7 +53,7 @@ const [userInfos, setUserInfos] = useState<userFullInfoList>([]);
                     <li>작업내역</li>
                 </ul>
               
-                {userInfos.map((item, index) => (
+                {currentItems.map((item, index) => (
                     <div key={index} className="userInfoHistoryList">
                         <ul>
                             <li>{item.user_regdate}</li>
@@ -48,9 +61,11 @@ const [userInfos, setUserInfos] = useState<userFullInfoList>([]);
                             {/* 02.26 퍼블리싱 및 데이터 확인. 추후 하기의 데이터 개발 필요 */}
                             <li>작업내역 기입 예정</li> 
                         </ul>
-            
                     </div>
                 ))}
+            </div>
+            <div className="pagination">
+                <Pagination count={10} page={currentPage} onChange={handleChange} size='medium' />
             </div>
         </div>
     );

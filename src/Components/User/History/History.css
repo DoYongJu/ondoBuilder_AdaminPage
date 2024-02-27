@@ -1,4 +1,4 @@
-.history{width:1920px; height:100%;display: flex; flex-direction: column; align-items: center; font-family: Pretendard;}
+.history{width:1900px; height:100%;display: flex; flex-direction: column; align-items: center; font-family: Pretendard; justify-content: center;}
 .history .tabBar{width:1440px; height:21px; border-bottom: 1px solid #E0E0E0;background: #F7F7F7; padding:14px 240px; }
 .history .content{width:1180px; height:100%; display: flex;flex-direction: column; align-items: left;}
 .history .content ul{list-style-type: none; color: #505050;
@@ -23,3 +23,4 @@ border:solid 1px #CCC; filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.10)); bor
 .history .content .userInfoHistoryList ul >li{width:20%; float: left;text-align: left;}
 .history .content .userInfoHistoryList ul >li+li{width:60%}
 .history .content .userInfoHistoryList ul >li+li+li{width:20%}
+.history .pagination{ height: 100px; padding: 40px; }
