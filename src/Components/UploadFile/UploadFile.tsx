@@ -97,6 +97,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     const data = res.data;
                     const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
                     setSelectList(prevList => [...prevList, ...newList]);
+                  
                 })
                 .catch((error) => {
                     console.error('getCaroselGroupApi/ Error occurred:', error);
@@ -215,16 +216,22 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     };
 
     function handleSelect (selectedValue:any){
-        setSelectedCaroselId(selectedValue.id);
+        setSelectedCaroselId(selectedValue.id); //IId를 넣어야 한다고 생각하나 id를 넣으면 undefined라고 뜸.
         console.log(selectedCaroselId);
     };
 
-    const saveFile = () => {
+    async function saveFile(){
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
         
-        UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile, prompt:promtText, urlInfo:urlInfo})
-        // console.log('Updated Images:', images);
+        const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile, prompt:promtText, urlInfo:urlInfo})
+        if(boolean === true){
+            const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+            onClose(fakeEvent);
+        }else{
+            alert('업로드 실패');
+        }
+        
     };
 
     const imgClicked =()=>{

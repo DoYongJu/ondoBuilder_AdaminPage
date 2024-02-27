@@ -29,7 +29,7 @@
 .activeHublist .dataHubBtnArea button.active {width: 88px; height: 48px; 
     border: 1px solid #105AEB; border-radius: 40px;background: #ECF2FF;}
 
-.activeHublist .contbox{width: 100%;display: flex;flex-wrap: wrap; justify-content: left; gap:14px;align-items: center; float: left;}
+.activeHublist .contbox{width: 100%;display: flex;flex-wrap: wrap; justify-content: left; gap:13px;align-items: center; float: left;}
 .activeHublist .theActiveHub{float: left;width: 196px;height: 224px; border-radius: 8px;background-color: #FFF;box-shadow: 0px 2px 14px 0px rgba(0, 0, 0, 0.08);}
 .activeHublist .selectAndSearch{ margin-top: 24px; display: flex; height:48px; width: 100%; margin-bottom:16px; justify-content: space-between;}
 .activeHublist .selectAndSearch .selectArea{width:39%; display: flex; align-items: center;}

@@ -83,6 +83,7 @@ function UpdateDataHub() {
     const sendParam = {
       hub_id: data.hub_id
     };
+
     ConnectApi({ method: 'DELETE', url: '/v1/api/datahub', sendParam: sendParam })
     .then((res) => {
     console.log(res);

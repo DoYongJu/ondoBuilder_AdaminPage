@@ -12,17 +12,17 @@ import Cookies from 'js-cookie';
 function Login() {
   const navigate = useNavigate();
   
-  const [errorMsgEmail, setErrorMsgEmail] = useState('');
-  const [errorMsgPwd, setErrorMsgPwd] = useState('');
-  const [email, setEmail] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true),
+  const [errorMsgEmail, setErrorMsgEmail] = useState(''),
+    [errorMsgPwd, setErrorMsgPwd] = useState(''),
+    [email, setEmail] = useState(''),
+    inputRef = useRef<HTMLInputElement>(null),
+    [isButtonDisabled, setIsButtonDisabled] = useState(true),
     [password, setPassword] = useState(''),
     setTokenRecoil = useSetRecoilState(tokenState);
   
-    useEffect(() => {
+  useEffect(() => {
       setIsButtonDisabled(validateNullcheck());
-    }, [email, password]); 
+  }, [email, password]); 
 
   function loginApi() {
     const sendParam = {
@@ -41,10 +41,8 @@ function Login() {
           navigate('/SignAccept');
         }else if( error.response.data.statusCode === 401 && error.response.data.message === "login failed"){ //비밀번호 오류
           setErrorMsgPwd('비밀번호 오류입니다. 비밀번호를 다시 입력해주세요.')
-          console.log(errorMsgPwd);
         }else if( error.response.data.statusCode === 400 && error.response.data.message === "User not found"){ //이메일 오류, 미등록회원
           setErrorMsgEmail('등록되지 않은 회원입니다. 이메일을 다시 입력해주세요.');
-          console.log(errorMsgEmail);
         };
        
     });
@@ -61,6 +59,7 @@ function Login() {
     };
     return true;
   };
+
   const onSubmitSearch = (e:any) => {
     if (e.key === 'Enter'){
       loginApi();

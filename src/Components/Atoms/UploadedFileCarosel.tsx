@@ -1,10 +1,15 @@
 import SelectBox from '../SelectBox/SelectBox';
 import { RefObject, KeyboardEvent } from 'react';
-
+interface ImageType {
+    id: number;
+    name:string;
+    src: string;
+    order: number;
+};
 const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setCaroselNewView, images, handleDragStart, handleDrop, imgClicked, inputRef,
     onSubmitAddCarosel, addCaroselGroupApi}:
     {caroselNewView:boolean, selected:boolean|string, handleSelect:(e:any) => void, selectList:any[], setCaroselNewView:(caroselNewView: boolean)=>void,
-    images:any[], handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
+    images:ImageType[], handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
     inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
       
     return(

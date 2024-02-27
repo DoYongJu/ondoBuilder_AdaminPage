@@ -20,7 +20,6 @@ export interface MyObject {
   // writer_uid ->태호씨는 줌. 추후에 필요하면 추가.
   doc_count: number,
   image_count: number,
-
   video_count: number,
   url_count: number,
 };
@@ -34,6 +33,11 @@ export interface dataProps {
 }
 export interface tag{
   name: string | undefined; 
+}
+
+export type Option = {
+  id: number;
+  name: string;
 }
 
 export interface UploadFileProps {

@@ -25,16 +25,16 @@ const Router = () => {
   const token= Cookies.get('accessToken');
   const storedUsername = Cookies.get('username');
   
-  // useEffect(() => {
-  //   const storedUsername = Cookies.get('username');
-  //   if (storedUsername) {
-  //     setUserName(storedUsername);
-  //   }
-  // }, [setUserName]);
+  useEffect(() => {
+    const storedUsername = Cookies.get('username');
+    if (storedUsername) {
+      setUserName(storedUsername);
+    }
+  }, [setUserName]);
   
   return (
     <BrowserRouter>
-     {storedUsername && <NavBar />}
+     {username && <NavBar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />

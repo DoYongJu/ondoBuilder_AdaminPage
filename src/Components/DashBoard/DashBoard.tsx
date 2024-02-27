@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar'
 import { FaPlus } from "react-icons/fa";
 import DataHub_module,{DataHub_listOfType_module}from '../../Module/Search_module';
-import { MyObjects } from '../../Resources/Models';
+import { MyObjects,Option } from '../../Resources/Models';
 import CustomChart from '../ViewWaysOfChart/ViewWaysOfChart';
 import {searchState, tokenState} from '../../Resources/Recoil';
 import SelectBox from '../../Components/SelectBox/SelectBox';
@@ -55,8 +55,8 @@ function DashBoard() {
   }, [searchText]);
 
 
-function handleSelect (value:string){
-  setSelected(value);
+function handleSelect (item:Option){
+  setSelected(item.name);
 };
 
   return (

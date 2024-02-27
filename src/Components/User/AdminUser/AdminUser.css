@@ -1,0 +1,25 @@
+.AdminUser{width:1920px; height:100%;display: flex; flex-direction: column; align-items: center; font-family: Pretendard;}
+.AdminUser .tabBar{width:1440px; height:21px; border-bottom: 1px solid #E0E0E0;background: #F7F7F7; padding:14px 240px; }
+.AdminUser .content{width:1180px; height:100%; font-family: Pretendard; display: flex;flex-direction: column; align-items: left;}
+.AdminUser .content ul{list-style-type: none;}
+.AdminUser .content ul:first-child{margin-top: 42px;font-size: 20px;font-weight: 500; line-height: 20px;letter-spacing: -0.5px;}
+.AdminUser .content ul:first-child +ul{margin-top:8px;color: #505050;font-size: 14px;font-weight: 400;line-height: 20px; letter-spacing: -0.35px; }
+.AdminUser .content ul:first-child +ul +ul{height:26px; margin: 48px 0 20px 0; border-bottom: 1px solid #E1E1E1; padding: 8px 0}
+/* .AdminUser .content ul:first-child +ul +ul span{font-size: 20px;font-style: normal; font-weight: 500;line-height: 28px; 
+    letter-spacing: -0.5px;} */
+
+/*가입승인대기 테이블 윗부분*/
+.AdminUser .content .waitingListArea ul{ }
+.AdminUser .content .waitingListArea ul span{font-size: 20px;font-style: normal; font-weight: 500;line-height: 28px; 
+    letter-spacing: -0.5px;}
+
+.AdminUser .content .waitingListArea ul:first-child {border-bottom: 1px solid #E1E1E1 ; padding-bottom:8px}
+.AdminUser .content  .waitingListArea ul:first-child +ul{height: 20px; width:100%; background-color: #FCFCFC; padding: 17px 32px 19px 32px; 
+    border:solid 1px #CCC; filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.10)); border-radius: 5px; margin-top: 20px;}
+.AdminUser .content  .waitingListArea ul:first-child +ul> li{width:20%; float: left;text-align: left;}
+.AdminUser .content  .waitingListArea ul:first-child +ul> li+li{width:20%}
+.AdminUser .content  .waitingListArea ul:first-child +ul> li+li+li{width:15%}
+.AdminUser .content  .waitingListArea ul:first-child +ul> li+li+li+li{width:15%}
+.AdminUser .content  .waitingListArea ul:first-child +ul> li+li+li+li+li+li{width:15%}
+/*가입승인대기 테이블 리스트 부분*/
+

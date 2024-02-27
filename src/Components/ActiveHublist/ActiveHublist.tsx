@@ -18,33 +18,38 @@ import './ActiveHublist.css';
 
 
 function ActiveHublist(){
-    const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
-    const location = useLocation();
-    const navigate = useNavigate();
-    const [isFirst, setIsFirst] = useState(true); //허브에 데이터가 없을 때
-    const [viewWays, setViewWays] = useState(true); //false가 card방식으로 보기 눌렀을 때
-    const [searchType, setSearchType] = useState(''); //왼쪽상단 select에따른 정렬
-    const [, setSearchText] = useState('');
-    const [selectedOption, setSelectedOption] = useState('');
-    const [data, setData] = useState(location.state);//허브 정보
-    // const data:MyObject= location.state; 
-    const [activeButton, setActiveButton] = useState(type);
-    const [selectList, setSelectList] = useState([
+    const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
+      location = useLocation(),
+      navigate = useNavigate(),
+      [isFirst, setIsFirst] = useState(true), //허브에 데이터가 없을 때
+      [viewWays, setViewWays] = useState(true), //false가 card방식으로 보기 눌렀을 때
+      [searchType, setSearchType] = useState(''), //왼쪽상단 select에따른 정렬
+      [, setSearchText] = useState(''),
+      [selectedOption, setSelectedOption] = useState(''),
+      [data, setData] = useState(location.state),//허브 정보 
+      [activeButton, setActiveButton] = useState(type),
+      [selectList, setSelectList] = useState([
       { id: -1, name: '조회' },
       { id: -2, name: '이름순' },
       { id: -3, name: '수정일순' },
       { id: -4, name: '업로드순' },  
-  
-  ]);
-    const filterList = ['선택','PDF','DOC','PPT','CSV'];
+      ]),
 
-    const [isSideBarOpen, setIsSideBarOpen] = useState(false);
-    const [isActive, setActive] = useState(false);
+      filterList = ['선택','PDF','DOC','PPT','CSV'],
+      [isSideBarOpen, setIsSideBarOpen] = useState(false),
+      [isActive, setActive] = useState(false),
+      [uploadedInfo, setUploadedInfo] = useState(false),
+      [selctedClick, setSelctedClick] = useState(false),
+      setHubClassify = useSetRecoilState(hubClassfiyState);
   
-    const [uploadedInfo, setUploadedInfo] = useState(false);
-    const [selctedClick, setSelctedClick] = useState(false);
-  
-    useEffect(() => {
+    //File 업로드 관련
+    const handleDragStart = () => setActive(true);
+    const handleDragEnd = () => setActive(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
+
+  useEffect(() => {
       //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
       function selectDataByTypeApi() {
         ConnectApi({ method: 'GET', url: `/v1/api/datahub/${data.hub_id}?type=${type}`})
@@ -64,7 +69,7 @@ function ActiveHublist(){
   
   }, [isFirst, viewWays, type]);
     
-    const setHubClassify = useSetRecoilState(hubClassfiyState);
+
     const buttons = [ //상단 탭 정보
         { label: '정보', value: 'info' },
         { label: '문서', value: 'doc' },
@@ -91,14 +96,6 @@ function ActiveHublist(){
         
         };
     };
-    
-    //File 업로드 관련
-  const handleDragStart = () => setActive(true);
-  const handleDragEnd = () => setActive(false);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
-
   
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
@@ -151,44 +148,43 @@ function ActiveHublist(){
 
   return true;
   };
-const validateFile = (file:File)=>{
-    // 파일 타입 확인
-    const fileType = file.type;
-    // 파일 크기 확인
-    const fileSize = file.size;
-    //파일 validation
-    switch (type) { 
-      case 'img':
-        if (isImageFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
-            setSelectedFile(file);
-        } else {
-            alert('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
-        }
-        break;
-    case "doc":
-        if (isDocFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
-            setSelectedFile(file);
-        } else {
-            alert('문서 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
-        }
-        break;
-    case "video":
-        if (isVideoFileType(fileType) && fileSize <= 100 * 1024 * 1024) {
-            setSelectedFile(file);
-        } else {
-            alert('비디오 파일의 크기는 최대 100MB를 초과할 수 없습니다.');
-        }
-        break;
-    default:
-        break;
-    };
-};
+
+  const validateFile = (file:File)=>{
+      const fileType = file.type;
+      const fileSize = file.size;
+      //파일 validation
+      switch (type) { 
+        case 'img':
+          if (isImageFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
+              setSelectedFile(file);
+          } else {
+              alert('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+          }
+          break;
+      case "doc":
+          if (isDocFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
+              setSelectedFile(file);
+          } else {
+              alert('문서 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+          }
+          break;
+      case "video":
+          if (isVideoFileType(fileType) && fileSize <= 100 * 1024 * 1024) {
+              setSelectedFile(file);
+          } else {
+              alert('비디오 파일의 크기는 최대 100MB를 초과할 수 없습니다.');
+          }
+          break;
+      default:
+          break;
+      };
+  };
+
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     validateFile(file);
-    e.target.value = '';
-    
-};
+    e.target.value = '';  
+  };
 
     return (
 
@@ -279,7 +275,8 @@ const validateFile = (file:File)=>{
 
         {!isFirst && viewWays && (
           <div className='contbox'>
-            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);} }/>
+            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
+            onClick={()=>{ setIsSideBarOpen(!isSideBarOpen)}} selectedF={()=>{setSelectedFile(null)}}/>
           </div>
         )}
         { !viewWays && ( 
@@ -296,7 +293,8 @@ const validateFile = (file:File)=>{
             </div>
 
             {!isFirst && (
-              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);} }/>
+              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
+              onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);}} selectedF={()=>{setSelectedFile(null)}}/>
             )}
           </div>
         )}

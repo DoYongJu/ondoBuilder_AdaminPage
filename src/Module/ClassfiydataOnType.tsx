@@ -3,8 +3,8 @@ import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList} from '../Resources/Models';
 import { DataHub_sortIntheHub_module}from '../Module/Search_module';
 
-const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected}: 
-    { classfiyType: string, hubId: string, viewType: string, onClick: () => void, selected?:string  }) =>{
+const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, selectedF}: 
+    { classfiyType: string, hubId: string, viewType: string, onClick: () => void, selected?:string, selectedF?:(item:File | null)=>void }) =>{
     // console.log(selected);
     // console.log(classfiyType);
     const [imageSrc, setImageSrc] = useState('');
@@ -45,7 +45,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected}:
     
         selectDataByTypeApi();
     
-    }, [classfiyType]);
+    }, [classfiyType, selectedF]);
 
     useEffect(() => {
        function getContentBySelect(){
