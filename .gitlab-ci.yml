@@ -16,7 +16,7 @@ package:
     - sudo docker logout
   only:
     refs:
-      - master
+      - devbuild
 
 deploy:
   stage: deploy
@@ -87,4 +87,4 @@ deploy:
         type: NodePort
       EOF
   only:
-    - master
+    - devbuild
