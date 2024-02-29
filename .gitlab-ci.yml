@@ -33,7 +33,6 @@ build-source:
       - build/
     policy: pull-push
   script:
-    - npm ci
     - CI=false npm run build
 
 package:
@@ -62,7 +61,7 @@ deploy-login:
 deploy-imageup:
   stage: deploy
   script:
-    - argocd app set ondo-gpt -p databuilderfe=ondo-data-builder-front:v$CI_PIPELINE_IID
+    - argocd app set ondo-gpt -p databuilderfe=docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
     - argocd app sync ondo-gpt
   needs:
     - deploy-login
