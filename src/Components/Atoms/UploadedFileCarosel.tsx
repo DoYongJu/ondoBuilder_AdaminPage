@@ -9,7 +9,7 @@ interface ImageType {
 const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setCaroselNewView, images, handleDragStart, handleDrop, imgClicked, inputRef,
     onSubmitAddCarosel, addCaroselGroupApi}:
     {caroselNewView:boolean, selected:boolean|string, handleSelect:(e:any) => void, selectList:any[], setCaroselNewView:(caroselNewView: boolean)=>void,
-    images:ImageType[], handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
+    images?:ImageType[], handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
     inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
       
     return(
@@ -25,7 +25,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
               </div>
               {(selected&& selected!='선택하지 않음')&&
               <div className='moveCaroselArea'>
-                  {images.map((img, index) => (
+                  {images?.map((img, index) => (
                       
                       <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
                           onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}

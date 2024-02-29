@@ -38,11 +38,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         { id: 1,name: '온도로고',src: '/ondoIcon.png', order: 1 },
         { id: 2, name: '대쉬보드 아이콘',src: '/dataHub_List_Icon.png', order: 2 },
         { id: 3, name: '리액트로고fdjkshfjksdhfjsk',src: '/logo512.png', order: 3 },
-        { id: 4, name: '강아지',src: '/dog1.jpg', order: 4 },
-        { id: 5, name: '강아지222',src: '/dog1.jpg', order: 5 },
-        { id: 6, name: '온도로고22',src: '/ondoIcon.png', order: 6 },
-        { id: 7, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
-        { id: 8, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
+        { id: 4, name: '온도로고22',src: '/ondoIcon.png', order: 6 },
+        { id: 5, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
+        { id: 6, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
       ]
       );
   
@@ -93,7 +91,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     
     useEffect(() => {
 
-        function setCaroselGroupApi() {
+        function setCaroselGroupApi() {  //카로셀 목록 조회.
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/${data.hub_id}` })
                 .then((res) => {
                     const data = res.data;
@@ -106,7 +104,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                 });
         };
 
-        function getFileInfo(){
+        function getFileInfo(){ //새로 올리려는 파일 미리보기
             if (oneFile) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
@@ -118,17 +116,20 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
 
         setCaroselGroupApi(); //카로셀 그룹 조회
         getFileInfo();  //파일 미리보기 기능
-    }, [caroselNewView]);
+    }, [caroselNewView,selectedCaroselId ]);
 
-    //카로셀 선택 후 해당 이미지를 api로 get ->2/21 개발 중, 추후 데이터 확인 필요. 
+    //카로셀 선택 후 해당 이미지를 api로 get ->2/29 개발 중, 추후 데이터 미리보기 및 전반적인 개발 필요. 
     useEffect(() => { 
         function getImgListApi(){
-            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carouser/img/${selectedCaroselId}` })
+            
+            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${selectedCaroselId}` })
             .then((res) => {
                 const data = res.data;
-                const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
-                console.log(newList);
-                setImages(newList);
+               
+                    const newList = data.map((item:any) => ({ id: item.img_no, name: item.file_name }));
+                    console.log(newList);
+                    setImages(newList);
+                
                 //id 와 name 으로 미리보기가 가능한지 테스트 필요
             })
             .catch((error) => {
@@ -219,8 +220,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     };
 
     function handleSelect (selectedValue:any){
-        setSelectedCaroselId(selectedValue.id); //IId를 넣어야 한다고 생각하나 id를 넣으면 undefined라고 뜸.
-        console.log(selectedCaroselId);
+        setSelectedCaroselId(selectedValue.id);
+        console.log('selectedCaroselId: '+selectedCaroselId);
     };
 
     async function saveFile(){

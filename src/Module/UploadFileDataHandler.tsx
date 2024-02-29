@@ -14,11 +14,23 @@ const UploadFileDataHandler = async ({
     switch(classfiyType) {
         case 'img':
             apiUrl = `/v1/api/datahub/img`;
-            sendParam = {hub_id: hubId, 
-                        file_tag: file_tag, 
-                        file_description: file_description, 
-                        carousel_id:carousel_id, 
-                        turn:turn}
+
+            if(carousel_id === -2){
+                sendParam = {hub_id: hubId, 
+                            file_tag: file_tag, 
+                            file_description: file_description,
+                            img:content
+                             }
+            }else{
+                sendParam = {hub_id: hubId, 
+                            file_tag: file_tag, 
+                            file_description: file_description, 
+                            carousel_id:carousel_id, 
+                            turn:turn,
+                            img:content
+                            }
+            };
+
             break;
         case 'video':
             apiUrl = `/v1/api/datahub/video`;
