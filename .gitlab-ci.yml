@@ -30,10 +30,11 @@ build-source:
     key: dependencies
     paths:
       - node_modules/
-      - dist/
+      - build/
     policy: pull-push
   script:
-    - npm run build
+    - npm ci
+    - CI=false npm run build
 
 package:
   stage: package
