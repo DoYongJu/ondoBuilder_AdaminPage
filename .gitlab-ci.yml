@@ -1,12 +1,55 @@
 stages:
+  - set
+  - build
   - package
   - deploy
 
-variables:
-  IMAGE_VERSION: '1'
+cache:
+  key: dependencies
+  policy: pull-push
+  paths:
+    - node_modules/
+    - dist/
+
+install:
+  stage: set
+  cache:
+    key: dependencies
+    paths:
+      - node_modules/
+    policy: push
+  script:
+    - ". ~/.nvm/nvm.sh"
+    - nvm --version 
+    - nvm use 20.3.1
+    - npm ci
+  only:
+    refs:
+      - devbuild
+
+
+build-source:
+  stage: build
+  cache:
+    key: dependencies
+    paths:
+      - node_modules/
+      - build/
+    policy: pull-push
+  script:
+    - CI=false npm run build
+  only:
+    refs:
+      - devbuild
+
 
 package:
   stage: package
+  cache:
+    key: dependencies
+    paths:
+      - node_modules/
+    policy: pull-push
   before_script:
     - sudo docker login docker.jointree.kr -u $DOCKER_ID -p $DOCKER_PASS
   script:
@@ -18,73 +61,22 @@ package:
     refs:
       - devbuild
 
-deploy:
+deploy-login:
   stage: deploy
-  before_script:
-    - kubectl version
   script:
-    - |
-      cat << EOF | kubectl apply --force -f -
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        labels:
-          app: ondo-data-builder-front
-        name: ondo-data-builder-front
-        namespace: ondo-gpt
-      spec:
-        progressDeadlineSeconds: 600
-        replicas: 1
-        revisionHistoryLimit: 10
-        selector:
-          matchLabels:
-            app: ondo-data-builder-front
-        strategy:
-          rollingUpdate:
-            maxSurge: 25%
-            maxUnavailable: 25%
-          type: RollingUpdate
-        template:
-          metadata:
-            labels:
-              app: ondo-data-builder-front
-          spec:
-            containers:
-            - image: docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
-              imagePullPolicy: IfNotPresent
-              name: ondo-data-builder-front
-              terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File
-            dnsPolicy: ClusterFirst
-            restartPolicy: Always
-            schedulerName: default-scheduler
-            securityContext: {}
-            terminationGracePeriodSeconds: 30
-      EOF
-    - | 
-      cat << EOF | kubectl apply --force -f -
-      apiVersion: v1
-      kind: Service
-      metadata:
-        labels:
-          app: ondo-data-builder-front
-        name: ondo-data-builder-front
-        namespace: ondo-gpt
-      spec:
-        externalTrafficPolicy: Cluster
-        internalTrafficPolicy: Cluster
-        ipFamilies:
-        - IPv4
-        ipFamilyPolicy: SingleStack
-        ports:
-        - nodePort: 32461
-          port: 3000
-          protocol: TCP
-          targetPort: 3000
-        selector:
-          app: ondo-data-builder-front
-        sessionAffinity: None
-        type: NodePort
-      EOF
+    - argocd login $ARGO_HOST --username $ARGO_ID --password $ARGO_PASS --insecure
   only:
-    - devbuild
+    refs:
+      - devbuild
+
+
+deploy-imageup:
+  stage: deploy
+  script:
+    - argocd app set ondo-gpt -p databuilderfe=docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
+    - argocd app sync ondo-gpt
+  needs:
+    - deploy-login
+  only:
+    refs:
+      - devbuild

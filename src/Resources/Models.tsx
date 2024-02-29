@@ -45,10 +45,10 @@ export interface UploadFileProps {
   oneFile?:File;
   fileType:string;
 };
-interface selCaroselGroup{
-  carousel_id: number;
-  carousel_name: string;
-}
+// interface selCaroselGroup{
+//   carousel_id: number;
+//   carousel_name: string;
+// }
 interface dataByType{ 
   doc_no: number;
   download_url: string;
@@ -100,9 +100,16 @@ export interface userFullInfoType{
   username: string;
   user_regdate: string;
 }
+export interface imgInfoForCarsel{
+  file_name: string,
+  file_url: string,
+  turn: number,
+  image_no: number
+}
+export type imgInfoForCarselList = imgInfoForCarsel[];
 export type userFullInfoList = userFullInfoType[];
 export type dataByTypeList = dataByType[];
-export type selCaroselGroupList = selCaroselGroup[];
+// export type selCaroselGroupList = selCaroselGroup[];
 export type tagsList= tag[];
 export type contentList = content[];
 export type MyObjects = MyObject[];
