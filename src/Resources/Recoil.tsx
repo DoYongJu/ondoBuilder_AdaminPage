@@ -39,8 +39,8 @@ export const userPwdState = atom<userPwdType>({
     checkPwd:'',
   },
 });
-export const userFullInfo = atom<userFullInfoType>({
-  key: 'userPwdState',
+export const userFullInfoState = atom<userFullInfoType>({
+  key: 'userFullInfoState',
   default: {
     uid: -1,
     email:  '',

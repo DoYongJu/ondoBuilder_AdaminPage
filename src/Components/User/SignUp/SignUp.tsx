@@ -94,7 +94,7 @@ function SignUp() {
       <div className="overlap">
         <div className="text-wrapper">회원등록</div>
         <div className="line"></div>
-        <div className="text-wrapper-2">*</div>
+        {/* <div className="text-wrapper-2">*</div> */}
         <div className={`frame ${isButtonDisabled ? 'disabled' : ''}`} onClick={isButtonDisabled ? undefined : handleSignUp}>
           <div className="text-wrapper-3">회원 등록</div>
         </div>
@@ -145,15 +145,15 @@ function SignUp() {
         <div className="overlap-5">
           <input className="text-wrapper-4" type="company" placeholder="회사명을 입력해 주세요." value={company} onChange={e => setCompany(e.target.value)} />
         </div>
-        <div className="text-wrapper-11">회사명</div>
+        <div className="text-wrapper-11">소속</div>
         <div className="overlap-6">
           <input className="text-wrapper-4" type="text" placeholder="소속을 입력해주세요." value={division} onChange={e => setDivision(e.target.value)} />
         </div>
-        <div className="text-wrapper-13">소속</div>
+        <div className="text-wrapper-13">전화번호</div>
         <div className="overlap-7">
           <input className="text-wrapper-4" type="phone" placeholder="전화번호를 입력해주세요." value={tel} onChange={e => setTel(e.target.value)} /> 
         </div>
-        <div className="text-wrapper-12">전화번호</div>
+        <div className="text-wrapper-12">회사</div>
         
         <div className="text-wrapper-14">*</div>
         <div className="text-wrapper-15">*</div>

@@ -74,15 +74,14 @@ font-style: normal;font-weight: 400;line-height: 24px; letter-spacing: -0.4px;}
 .activeHublist .contbox .theActiveHub{padding:14px 16px; }
 .activeHublist .contbox .theActiveHub ul{list-style-type: none; display: flex; gap:4px;}
 .activeHublist .contbox .theActiveHub ul:first-child{height: 170px; display: flex;justify-content: center; align-items: center;}
-.activeHublist .contbox .theActiveHub ul:first-child +ul{ height:24px; padding-top: 4px;font-family: Pretendard;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px; /* 150% */
-    letter-spacing: -0.4px; }
+.activeHublist .contbox .theActiveHub ul:first-child +ul{ height:24px; padding-top: 4px;font-family: Pretendard; 
+    font-size: 16px;font-style: normal;font-weight: 400;line-height: 24px; letter-spacing: -0.4px; }
+.activeHublist .contbox .theActiveHub ul:first-child +ul>li{ white-space: nowrap; /* 텍스트가 한 줄에만 표시되도록 함 */
+    overflow: hidden; /* 넘치는 부분을 숨김 */
+    text-overflow: ellipsis; /* 넘치는 부분에 "..."을 추가하여 표시 */}
 .activeHublist .contbox .theActiveHub ul:first-child +ul +ul{height:24px; padding-top: 4px;color: #767676;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; letter-spacing: -0.35px;}
-.activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child{float: left;width:60%}
+.activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child{float: left;width:60%;}
 .activeHublist .contbox .theActiveHub ul:first-child +ul +ul >li:first-child +li{float: right;}
 
 

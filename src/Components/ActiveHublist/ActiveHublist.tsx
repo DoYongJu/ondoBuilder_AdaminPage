@@ -8,7 +8,7 @@ import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
 import UploadFile from '../UploadFile/UploadFile';
-import {MyObject} from '../../Resources/Models';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import ClassfiydataOnType from '../../Module/ClassfiydataOnType';
 
 import { LuListFilter } from "react-icons/lu";

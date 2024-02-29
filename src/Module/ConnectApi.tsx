@@ -10,7 +10,9 @@ async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMet
         url: process.env.REACT_APP_API + url,
         headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json; charset=utf-8',
+                'Accept-Charset': 'utf-8'
+              
                 },
         data: sendParam
         };
@@ -19,7 +21,7 @@ async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMet
             config.headers = config.headers ?? {};
             config.headers['Authorization'] = `Bearer ${token}`;
         };
-        if(formData){
+        if(formData===true){
             config.headers = config.headers ?? {};
             config.headers['Content-Type'] = `multipart/form-data`;
         }
@@ -27,6 +29,9 @@ async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMet
         try {
             const response = await axios(config);
             // console.log('response:', response);
+
+
+
             return response;
            
         } catch (error) {
