@@ -11,7 +11,7 @@ async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMet
         headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json; charset=utf-8',
-                'Accept-Charset': 'utf-8'
+        
               
                 },
         data: sendParam

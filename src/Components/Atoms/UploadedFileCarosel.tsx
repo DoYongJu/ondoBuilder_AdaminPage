@@ -1,5 +1,6 @@
 import SelectBox from '../SelectBox/SelectBox';
 import { RefObject, KeyboardEvent } from 'react';
+import {tagsList, tag, UploadFileProps, imgInfoForCarselList} from '../../Resources/Models';
 interface ImageType {
     id: number;
     name:string;
@@ -9,7 +10,7 @@ interface ImageType {
 const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setCaroselNewView, images, handleDragStart, handleDrop, imgClicked, inputRef,
     onSubmitAddCarosel, addCaroselGroupApi}:
     {caroselNewView:boolean, selected:boolean|string, handleSelect:(e:any) => void, selectList:any[], setCaroselNewView:(caroselNewView: boolean)=>void,
-    images:ImageType[], handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
+    images?:imgInfoForCarselList, handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
     inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
       
     return(
@@ -25,15 +26,15 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
               </div>
               {(selected&& selected!='선택하지 않음')&&
               <div className='moveCaroselArea'>
-                  {images.map((img, index) => (
+                  {images?.map((img, index) => (
                       
                       <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
                           onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
                           onClick={imgClicked}>
                           <div className='imgArea' >
-                              <img style={{width:'102px', height:'102px' }} src={process.env.PUBLIC_URL +img.src}/>
-                              <div className="image-number">{img.order}</div>
-                              <ul >{img.name}</ul>
+                              <img style={{width:'102px', height:'102px' }} src={img.file_url}/>
+                              <div className="image-number">{img.turn}</div>
+                              <ul >{img.file_name}</ul>
                           </div>
                       </div>
           

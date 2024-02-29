@@ -1,4 +1,4 @@
-import {tagsList, tag, UploadFileProps, selCaroselGroupList} from '../../Resources/Models';
+import {tagsList} from '../../Resources/Models';
 import { RefObject, KeyboardEvent } from 'react';
 import { BiX } from "react-icons/bi";
 const UploadedFileTag=({inputRef, onSubmitSearch, tags, deleteTag}:{inputRef:RefObject<HTMLInputElement>,tags:tagsList, 
