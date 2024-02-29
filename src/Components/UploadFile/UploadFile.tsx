@@ -23,7 +23,7 @@ interface ImageType {
     src: string;
     order: number;
 };
-
+type ImageTypeList=ImageType[];
 const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [urlInfo, setInfoUrl] = useState(''); //url 입력 input
@@ -32,7 +32,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [tags, setTags] = useState<tagsList>([]); //태그 값들
     const [caroselNewView, setCaroselNewView] = useState(false); 
     const [draggedItem, setDraggedItem] = useState<ImageType | null>(null); 
-    const [images, setImages] = useState([
+    // const [listByCarosel, setListByCarosel] = useState<|>([]);
+    const [images, setImages] = useState(
+        [
         { id: 1,name: '온도로고',src: '/ondoIcon.png', order: 1 },
         { id: 2, name: '대쉬보드 아이콘',src: '/dataHub_List_Icon.png', order: 2 },
         { id: 3, name: '리액트로고fdjkshfjksdhfjsk',src: '/logo512.png', order: 3 },
@@ -41,7 +43,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         { id: 6, name: '온도로고22',src: '/ondoIcon.png', order: 6 },
         { id: 7, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
         { id: 8, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
-      ]);
+      ]
+      );
   
 
     //textArea 영역 글자수 제한
@@ -76,8 +79,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     if(description!==''){setIsButtonDisabled(true)}
                     else{setIsButtonDisabled(false)} 
                     break;
-                case 'url':
-                    console.log(urlInfo);
+                case 'link':
                     if(description!==''&& urlInfo!==''){setIsButtonDisabled(true)}
                     else{setIsButtonDisabled(false)} 
                     break;
@@ -121,18 +123,19 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     //카로셀 선택 후 해당 이미지를 api로 get ->2/21 개발 중, 추후 데이터 확인 필요. 
     useEffect(() => { 
         function getImgListApi(){
-            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/datahub/carouser/img/${selectedCaroselId}` })
+            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carouser/img/${selectedCaroselId}` })
             .then((res) => {
                 const data = res.data;
-                // const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
-                // setSelectList(prevList => [...prevList, ...newList]); 이해 안됨... 대호씨 문의해봐야 함 왜 캐로셀 조회랑 res가 똑같은지,
+                const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
+                console.log(newList);
+                setImages(newList);
                 //id 와 name 으로 미리보기가 가능한지 테스트 필요
             })
             .catch((error) => {
                 console.error('getCaroselGroupApi/ Error occurred:', error);
             });
         };
-        // getImgListApi();
+        getImgListApi();
     
     }, [selectedCaroselId]);
 
@@ -223,8 +226,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     async function saveFile(){
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
-        
-        const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, doc:oneFile, prompt:promtText, urlInfo:urlInfo})
+    
+        const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, content:oneFile, prompt:promtText, urlInfo:urlInfo})
         if(boolean === true){
             const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
             onClose(fakeEvent);
@@ -285,7 +288,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
             {fileType === 'link' && 
                 <>
-                    <InputBox title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange}/>
+                    <InputBox type='text' title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange}/>
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>

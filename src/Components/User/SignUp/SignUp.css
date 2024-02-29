@@ -262,7 +262,7 @@
     letter-spacing: -0.35px;
     line-height: 20px;
     position: absolute;
-    top: 0;
+    top: -6px;
     white-space: nowrap;
   }
   
@@ -388,7 +388,7 @@
     font-family: "Pretendard-Regular", Helvetica;
     font-size: 14px;
     font-weight: 400;
-    left: 80px;
+    left: 53px;
     letter-spacing: -0.35px;
     line-height: 20px;
     position: absolute;
@@ -401,7 +401,7 @@
     font-family: "Pretendard-Regular", Helvetica;
     font-size: 14px;
     font-weight: 400;
-    left: 67px;
+    left: 53px;
     letter-spacing: -0.35px;
     line-height: 20px;
     position: absolute;
@@ -414,7 +414,7 @@
     font-family: "Pretendard-Regular", Helvetica;
     font-size: 14px;
     font-weight: 400;
-    left: 53px;
+    left: 79px;
     letter-spacing: -0.35px;
     line-height: 20px;
     position: absolute;

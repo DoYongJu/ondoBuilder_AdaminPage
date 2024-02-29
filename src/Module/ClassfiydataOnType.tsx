@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList} from '../Resources/Models';
 import { DataHub_sortIntheHub_module}from '../Module/Search_module';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, selectedF}: 
     { classfiyType: string, hubId: string, viewType: string, onClick: () => void, selected?:string, selectedF?:(item:File | null)=>void }) =>{
@@ -17,7 +18,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/${hubId}?type=${classfiyType}`})
                 .then((res) => {
                     setList(res.data);
-                    
+                    console.log(res.data);
                     switch (classfiyType) {
                         case 'doc':
                             setImageSrc('/doc.svg');
@@ -64,9 +65,16 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     if (viewType === 'true') {
         if(classfiyType === 'url'){
             return (
-                <>{}{list?.map((item, index) => (
-                    <div className='theActiveHub' key={index} onClick={onClick} > {item.file_description}
-                    <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
+                <>{list?.map((item, index) => (
+                    <div className='theActiveHub' key={index} onClick={onClick} > 
+                        <ul>
+                            <img style={{width:'62px', height:'86px' }} src={process.env.PUBLIC_URL +imageSrc}/>
+                        </ul>
+                        <ul><li>{item.url_description}</li></ul>
+                        <ul>
+                            <li>업로드일</li>
+                            <li>{item.url_regdate}</li>
+                        </ul>
                     </div>
                 ))}
                 </>
@@ -118,6 +126,17 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
         }else{
             return (
                 <>
+                  {/* <InfiniteScroll
+      dataLength={list.length}
+      next={list}
+      hasMore={true}
+      loader={<h4>Loading...</h4>}
+    >
+      {items.map((item, index) => (
+        <div key={index}>Item {index}</div>
+      ))}
+    </InfiniteScroll> */}
+
                 {list?.map((item, index) => (
                     <div className='list' key={index} onClick={onClick}>
                     <ul>

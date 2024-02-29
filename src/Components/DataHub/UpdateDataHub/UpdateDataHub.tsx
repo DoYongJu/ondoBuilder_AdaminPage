@@ -27,7 +27,8 @@ function UpdateDataHub() {
   const [infoText, setInfoText] = useState('');
   const [currentCount, setCurrentCount] = useState(0);
   const totalCount = 50;
-  console.log("type: "+type)
+  console.log("type: "+type);
+  console.log('hubId :'+data.hub_id);
 
 
   useEffect(() => {
