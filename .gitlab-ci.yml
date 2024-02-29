@@ -23,6 +23,10 @@ install:
     - nvm --version 
     - nvm use 20.3.1
     - npm ci
+  only:
+    refs:
+      - devbuild
+
 
 build-source:
   stage: build
@@ -34,6 +38,10 @@ build-source:
     policy: pull-push
   script:
     - CI=false npm run build
+  only:
+    refs:
+      - devbuild
+
 
 package:
   stage: package
@@ -57,6 +65,10 @@ deploy-login:
   stage: deploy
   script:
     - argocd login $ARGO_HOST --username $ARGO_ID --password $ARGO_PASS --insecure
+  only:
+    refs:
+      - devbuild
+
 
 deploy-imageup:
   stage: deploy
@@ -65,3 +77,6 @@ deploy-imageup:
     - argocd app sync ondo-gpt
   needs:
     - deploy-login
+  only:
+    refs:
+      - devbuild
