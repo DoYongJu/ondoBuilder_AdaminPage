@@ -17,12 +17,12 @@ install:
     key: dependencies
     paths:
       - node_modules/
-    policy: pull-push
+    policy: push
   script:
     - ". ~/.nvm/nvm.sh"
     - nvm --version 
     - nvm use 20.3.1
-    - npm i
+    - npm ci
 
 build-source:
   stage: build
