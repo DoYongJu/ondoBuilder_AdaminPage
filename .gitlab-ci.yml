@@ -82,10 +82,15 @@ deploy-imageup:
     - devbuild
 sast:
   stage: test
+  cache:
+    key: dependencies
+    paths:
+    - node_modules/
+    - build/
   tags:
     - docker
-  only:
-    refs:
-      - main
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
 include:
 - template: Security/SAST.gitlab-ci.yml
