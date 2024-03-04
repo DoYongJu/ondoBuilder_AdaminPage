@@ -84,5 +84,8 @@ sast:
   stage: test
   tags:
     - docker
+  only:
+    refs:
+      - main
 include:
 - template: Security/SAST.gitlab-ci.yml
