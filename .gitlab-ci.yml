@@ -84,11 +84,6 @@ sast:
   stage: test
   tags:
     - docker
-  cache:
-    key: dependencies
-    paths:
-    - node_modules/
-    - build/
   only:
     refs:
       - main
