@@ -82,5 +82,7 @@ deploy-imageup:
     - devbuild
 sast:
   stage: test
+  tags:
+    - docker
 include:
 - template: Security/SAST.gitlab-ci.yml
