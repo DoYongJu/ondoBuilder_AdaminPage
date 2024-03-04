@@ -1,82 +1,96 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-  - set
-  - build
-  - package
-  - deploy
-
+- set
+- build
+- package
+- deploy
+- test
 cache:
   key: dependencies
   policy: pull-push
   paths:
-    - node_modules/
-    - dist/
-
+  - node_modules/
+  - dist/
 install:
   stage: set
   cache:
     key: dependencies
     paths:
-      - node_modules/
+    - node_modules/
     policy: push
   script:
-    - ". ~/.nvm/nvm.sh"
-    - nvm --version 
-    - nvm use 20.3.1
-    - npm ci
+  - ". ~/.nvm/nvm.sh"
+  - nvm --version
+  - nvm use 20.3.1
+  - npm ci
   only:
     refs:
-      - devbuild
-
-
+    - devbuild
 build-source:
   stage: build
   cache:
     key: dependencies
     paths:
-      - node_modules/
-      - build/
+    - node_modules/
+    - build/
     policy: pull-push
   script:
-    - CI=false npm run build
+  - CI=false npm run build
   only:
     refs:
-      - devbuild
-
-
+    - devbuild
 package:
   stage: package
   cache:
     key: dependencies
     paths:
-      - node_modules/
+    - node_modules/
     policy: pull-push
   before_script:
-    - sudo docker login docker.jointree.kr -u $DOCKER_ID -p $DOCKER_PASS
+  - sudo docker login docker.jointree.kr -u $DOCKER_ID -p $DOCKER_PASS
   script:
-    - sudo docker build -t docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID .
-    - sudo docker push docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
+  - sudo docker build -t docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
+    .
+  - sudo docker push docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
   after_script:
-    - sudo docker logout
+  - sudo docker logout
   only:
     refs:
-      - devbuild
-
+    - devbuild
 deploy-login:
   stage: deploy
   script:
-    - argocd login $ARGO_HOST --username $ARGO_ID --password $ARGO_PASS --insecure
+  - argocd login $ARGO_HOST --username $ARGO_ID --password $ARGO_PASS --insecure
   only:
     refs:
-      - devbuild
-
-
+    - devbuild
 deploy-imageup:
   stage: deploy
   script:
-    - argocd app set ondo-gpt -p databuilderfe=docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
-    - argocd app sync ondo-gpt
+  - argocd app set ondo-gpt -p databuilderfe=docker.jointree.kr/dev-helm/ondo-data-builder-front:v$CI_PIPELINE_IID
+  - argocd app sync ondo-gpt
   needs:
-    - deploy-login
+  - deploy-login
   only:
     refs:
-      - devbuild
+    - devbuild
+sast:
+  stage: test
+  tags:
+    - docker
+  cache:
+    key: dependencies
+    paths:
+    - node_modules/
+    - build/
+  only:
+    refs:
+      - main
+include:
+- template: Security/SAST.gitlab-ci.yml
