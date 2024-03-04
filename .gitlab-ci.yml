@@ -89,5 +89,8 @@ sast:
     - build/
   tags:
     - docker
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
 include:
 - template: Security/SAST.gitlab-ci.yml
