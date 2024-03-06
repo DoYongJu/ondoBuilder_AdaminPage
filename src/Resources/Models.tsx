@@ -104,7 +104,7 @@ export interface userFullInfoType{
 }
 export interface imgInfoForCarsel{
   file_name: string;
-  file_url: string;
+  file_url?: string;
   turn: number;
   image_no: number;
   imageUrl: string;

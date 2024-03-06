@@ -1,7 +1,9 @@
 import React, {useState, useRef, useEffect} from 'react';
 import { BiX } from "react-icons/bi";
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import './UploadFile.css';
+import Cookies from 'js-cookie';
 
 import {MyObject} from '../../Resources/Models';
 import {tagsList, tag, UploadFileProps, imgInfoForCarselList, imgInfoForCarsel} from '../../Resources/Models';
@@ -32,17 +34,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [caroselNewView, setCaroselNewView] = useState(false); 
     const [draggedItem, setDraggedItem] = useState<imgInfoForCarsel |null>(null); 
     // const [listByCarosel, setListByCarosel] = useState<|>([]);
-    const [images, setImages] = useState<imgInfoForCarselList>(
-        [
-        // { id: 1,name: '온도로고',src: '/ondoIcon.png', order: 1 },
-        // { id: 2, name: '대쉬보드 아이콘',src: '/dataHub_List_Icon.png', order: 2 },
-        // { id: 3, name: '리액트로고fdjkshfjksdhfjsk',src: '/logo512.png', order: 3 },
-        // { id: 4, name: '온도로고22',src: '/ondoIcon.png', order: 6 },
-        // { id: 5, name: '대쉬보드 아이콘2',src: '/dataHub_List_Icon.png', order: 7 },
-        // { id: 6, name: '대쉬보드 아이콘33',src: '/promtBtn.svg', order: 8 },
-      ]
-      );
-  
+    const [images, setImages] = useState<imgInfoForCarselList>([]);
+    const token = Cookies.get('accessToken');
 
     //textArea 영역 글자수 제한
     const [currentCount, setCurrentCount] = useState(0);
@@ -124,9 +117,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                         updatedImages[0] = { // 기존 이미지를 덮어씌움
                             image_no: 0,
                             file_name: oneFile.name,
-                            file_url: reader.result as string,
-                            turn: 0,
-                            imageUrl:''
+                            imageUrl: reader.result as string,
+                            turn: 0
                         };
                         setImages(updatedImages); // 이미지 상태 업데이트
                     };
@@ -156,34 +148,45 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             //       "image_no": 1
             //     }
             //   ]
+            const originImgs:any = []
+            let updatedList = [...images];
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${selectedCaroselId}` })
             .then((res) => {
-                const data = res.data;
-                    let updatedList = [...images];
-                    // selectList 배열의 index 2부터 newList 배열을 추가
-                    updatedList = [...updatedList.slice(0, 2), ...data];
-                    setImages(updatedList);
-                    // images.map((index,img)=>{
-                    //     try {
-                    //             const response = await axios.get(img., {
-                    //               responseType: 'blob',
-                    //               headers: {
-                    //                 Authorization :`Bearer ${token}` ,
-                    //               },
-                    //             });
-                    //             console.log("window.URL.createObjectURL(response.data): "+ window.URL.createObjectURL(response.data));
-                    //             return window.URL.createObjectURL(response.data);
-                    //           } catch (error) {
-                    //             console.error('Error creating image:', error);
-                    //             return ''; // 에러가 발생하면 빈 문자열 반환
-                    //           } 
-                    // })
-                
-                //file_url로 미리보기 예정, 다만 undefind는 백엔드에서 선행처리과정 필요.
+                const data: imgInfoForCarselList = res.data;     
+                    data.map((img) => {
+                        if(img.file_url){
+                            try {
+                                console.log("axios start")
+                                return axios.get(img.file_url, {
+                                    responseType: 'blob',
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                    },
+                                }).then(response => {
+                                  
+                                    return window.URL.createObjectURL(response.data);
+                                }).then( result =>{
+                                    
+                                    img.imageUrl = result
+                                    originImgs.push(img)
+                                })
+                            } catch (error) {
+                                return ''; // 에러가 발생하면 빈 문자열 반환
+                            }
+                        }
+                        
+                    })
+                    
+                    
+                               
+            }).then( e =>{
+                // selectList 배열의 index 2부터 newList 배열을 추가
+                updatedList = [...updatedList.slice(0, 2), ...originImgs];
+                setImages(updatedList);    
             })
-            .catch((error) => {
-                console.error('getCaroselGroupApi/ Error occurred:', error);
-            });
+            // .catch((error) => {
+            //     console.error('getCaroselGroupApi/ Error occurred:', error);
+            // });
         };
         getImgListApi();
     

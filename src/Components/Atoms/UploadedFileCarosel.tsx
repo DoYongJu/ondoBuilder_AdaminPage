@@ -79,6 +79,18 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
     //     return ''; // 에러가 발생하면 빈 문자열 반환
     //   }
     // }
+        async function createImgURL ( url:string ) {
+            axios.get(url, {
+                responseType: 'blob',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }).then(response => {
+                console.log("window.URL.createObjectURL(response.data): " + window.URL.createObjectURL(response.data));
+                return window.URL.createObjectURL(response.data);
+            })
+        }
+
     return(
         <div className='caroselArea'>
         <div className='caroselTitle'>카로셀</div>
@@ -93,12 +105,12 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
               {(selected && selected!='선택하지 않음')&&
               <div className='moveCaroselArea'>
                   {images?.map((img, index) => (
-                     
+
                       <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
                           onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
                           onClick={imgClicked}>
-                          
-                               <div className='imgArea' >
+                        
+                            <div className='imgArea' >
                               <img style={{width:'102px', height:'102px' }} src={img.imageUrl} alt="File Preview"/> 
                                <div className="image-number">{(img.turn)}</div>
                                <ul >{img.file_name}</ul>
