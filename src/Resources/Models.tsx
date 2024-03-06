@@ -103,10 +103,11 @@ export interface userFullInfoType{
   user_regdate: string;
 }
 export interface imgInfoForCarsel{
-  file_name: string,
-  file_url: string,
-  turn: number,
-  image_no: number
+  file_name: string;
+  file_url: string;
+  turn: number;
+  image_no: number;
+  imageUrl: string;
 }
 export interface fileNoAndHubId{
   hub_id:number,

@@ -125,7 +125,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                             image_no: 0,
                             file_name: oneFile.name,
                             file_url: reader.result as string,
-                            turn: 0
+                            turn: 0,
+                            imageUrl:''
                         };
                         setImages(updatedImages); // 이미지 상태 업데이트
                     };
@@ -158,12 +159,25 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${selectedCaroselId}` })
             .then((res) => {
                 const data = res.data;
-                    // const newList = data.map((item:any) => ({ id: item.img_no, name: item.file_name }));
-                    // console.log("카로셀 별 이미지 리스트: "+newList);
                     let updatedList = [...images];
                     // selectList 배열의 index 2부터 newList 배열을 추가
                     updatedList = [...updatedList.slice(0, 2), ...data];
                     setImages(updatedList);
+                    // images.map((index,img)=>{
+                    //     try {
+                    //             const response = await axios.get(img., {
+                    //               responseType: 'blob',
+                    //               headers: {
+                    //                 Authorization :`Bearer ${token}` ,
+                    //               },
+                    //             });
+                    //             console.log("window.URL.createObjectURL(response.data): "+ window.URL.createObjectURL(response.data));
+                    //             return window.URL.createObjectURL(response.data);
+                    //           } catch (error) {
+                    //             console.error('Error creating image:', error);
+                    //             return ''; // 에러가 발생하면 빈 문자열 반환
+                    //           } 
+                    // })
                 
                 //file_url로 미리보기 예정, 다만 undefind는 백엔드에서 선행처리과정 필요.
             })

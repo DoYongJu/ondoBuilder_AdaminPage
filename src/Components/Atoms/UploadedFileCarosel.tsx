@@ -1,20 +1,21 @@
 import SelectBox from '../SelectBox/SelectBox';
+import Cookies from 'js-cookie';
 import { RefObject, useState,useEffect } from 'react';
 import {imgInfoForCarselList} from '../../Resources/Models';
 import axios from 'axios';
-interface ImageType {
+interface ImageInfo {
     id: number;
-    name:string;
-    src: string;
+    name: string;
+    file_url: string;
     order: number;
-};
+  }
 const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setCaroselNewView, images, handleDragStart, handleDrop, imgClicked, inputRef,
     onSubmitAddCarosel, addCaroselGroupApi}:
     {caroselNewView:boolean, selected:boolean|string, handleSelect:(e:any) => void, selectList:any[], setCaroselNewView:(caroselNewView: boolean)=>void,
     images?:imgInfoForCarselList, handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
     inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
-    const [previewimages, setPreviewimages] = useState<imgInfoForCarselList>([]);
-          
+    // const [previewimages, setPreviewimages] = useState<imgInfoForCarselList>([]);
+    const token = Cookies.get('accessToken');
     console.log(images);
     // useEffect(() => {
 
@@ -41,17 +42,43 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
       
     // }, []);
 
-// async const createImg(url:string):Promise<string>{
-//     const response = await axios.get(url, {
-//         responseType:'blob',
-//         headers: {
-//           someToken: 'TOKEN',
-//         }
-//       })
-//     const imageURL = window.URL.createObjectURL(response.data );
-//     return imageURL;
-// }
 
+
+
+    // const [previewImages, setPreviewImages] = useState<imgInfoForCarselList>([]);
+
+    // useEffect(() => {
+    //   const fetchPreviewImages = async () => {
+    //     try {
+    //         const imagesWithUrls = await Promise.all(images?.map(async (img) => {
+    //             const imageUrl = img ? await createImg(img.file_url) : ''; 
+    //             return { ...img, imageUrl };
+    //         }) ?? []);
+    //         setPreviewImages(imagesWithUrls);
+    //         console.log("imagesWithUrls: "+ imagesWithUrls[0].imageUrl);
+    //       } catch (error) {
+    //         console.error('Error fetching images:', error);
+    //       }
+    //   };
+  
+    //   fetchPreviewImages();
+    // }, [images]);
+  
+    // async function createImg(url:string) {
+    //   try {
+    //     const response = await axios.get(url, {
+    //       responseType: 'blob',
+    //       headers: {
+    //         Authorization :`Bearer ${token}` ,
+    //       },
+    //     });
+    //     console.log("window.URL.createObjectURL(response.data): "+ window.URL.createObjectURL(response.data));
+    //     return window.URL.createObjectURL(response.data);
+    //   } catch (error) {
+    //     console.error('Error creating image:', error);
+    //     return ''; // 에러가 발생하면 빈 문자열 반환
+    //   }
+    // }
     return(
         <div className='caroselArea'>
         <div className='caroselTitle'>카로셀</div>
@@ -72,7 +99,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
                           onClick={imgClicked}>
                           
                                <div className='imgArea' >
-                               <img style={{width:'102px', height:'102px' }} src={img.file_url} alt="File Preview"/>
+                              <img style={{width:'102px', height:'102px' }} src={img.imageUrl} alt="File Preview"/> 
                                <div className="image-number">{(img.turn)}</div>
                                <ul >{img.file_name}</ul>
                            </div>
