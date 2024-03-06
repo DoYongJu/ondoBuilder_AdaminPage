@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 
 
 
-function Login() {
+function Login(  {setUser}:any  ) {
   const navigate = useNavigate();
   
   const [errorMsgEmail, setErrorMsgEmail] = useState(''),
@@ -22,6 +22,7 @@ function Login() {
   
   useEffect(() => {
       setIsButtonDisabled(validateNullcheck());
+      
   }, [email, password]); 
 
   function loginApi() {
@@ -35,6 +36,8 @@ function Login() {
           setTokenRecoil(res.data.accessToken);
           Cookies.set('accessToken', res.data.accessToken);
           Cookies.set('username', res.data.user_name); 
+          setUser(Cookies.get('username'))
+          
           navigate('/dashBoard');
       }).catch(error =>{
         if (error.response && error.response.status === 400 && error.response.data.message === "user_verify value Error"){//미승인회원

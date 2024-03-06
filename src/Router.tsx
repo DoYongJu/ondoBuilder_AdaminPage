@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate  } from 'react-router-dom';
 import { usernameState } from './Resources/Recoil';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -22,20 +22,41 @@ const Router = () => {
  
   const setUserName = useSetRecoilState(usernameState);
   const username = useRecoilValue(usernameState);
-  
-  useEffect(() => {
+  let [user, setUser]:any = useState('')
+
+  const userLoginAction = () => {
     const storedUsername = Cookies.get('username');
+    user = Cookies.get('username');
+    console.log("user"+user)
     if (storedUsername) {
       setUserName(storedUsername);
     }
-  }, [setUserName]);
+  };
+  function userLoginAction_back(){
+    const storedUsername = Cookies.get('username');
+    user = Cookies.get('username');
+    console.log("user:"+user)
+    if (storedUsername) {
+      setUserName(storedUsername);
+    }
+  }
+  useEffect(() => {
+    // 매 렌더링마다 실행
+    console.log("나 매 렌더링!")
+    userLoginAction();
+  });
+  
+  useEffect(() => {
+    console.log("나 값 바뀔때만!")
+    userLoginAction();
+  }, [setUserName, user]);
   
   return (
     <BrowserRouter>
-     {username && <NavBar />}
+     {username  && <NavBar />}
       <Routes>
         {/* <Route path="/" element={<Login />} /> */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setUser={setUser}/>} />
         <Route  path="/dashBoard" element={<DashBoard />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/changePwd" element={<ChangePwd />} />
