@@ -1,8 +1,10 @@
 import {useState, useEffect} from 'react';
 import ConnectApi from '../Module/ConnectApi';
-import {dataByTypeList} from '../Resources/Models';
+import {dataByTypeList, dataByType} from '../Resources/Models';
 import { DataHub_sortIntheHub_module}from '../Module/Search_module';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import {  useSetRecoilState, useRecoilState} from 'recoil';
+import { fileNoState, fileNoSideBarState } from '../Resources/Recoil';
+
 
 const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, selectedF}: 
     { classfiyType: string, hubId: string, viewType: string, onClick: () => void, selected?:string, selectedF?:(item:File | null)=>void }) =>{
@@ -10,7 +12,11 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     // console.log(classfiyType);
     const [imageSrc, setImageSrc] = useState('');
     const [list, setList] = useState<dataByTypeList | null>(null);
-    const [delicatedlist, setDelicatedlist] = useState<dataByTypeList | null>(null);
+    const [delicatedlist, setDelicatedlist] = useState<dataByTypeList | null>(null),
+    [SideBarInfo] = useRecoilState (fileNoSideBarState),
+    [fileNo] = useRecoilState (fileNoState),
+    setSideBarInfoRecoil = useSetRecoilState(fileNoSideBarState),
+    setFileNoRecoil = useSetRecoilState(fileNoState);
 
     useEffect(() => {
         //데이터 허브의 종속된 파일을 타입별로 조회
@@ -61,12 +67,36 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     
     }, [selected]);
 
+    function handleClick (item:dataByType){
+        switch(classfiyType){
+            case 'doc':
+                setFileNoRecoil(item.doc_no);
+                setSideBarInfoRecoil({hub_id:Number(hubId), file_no: fileNo });
+                break;
+            case 'img':
+                // 따로 recoil
+                break;
+            case 'video':
+                setFileNoRecoil(item.video_no);
+                setSideBarInfoRecoil({hub_id:Number(hubId), file_no: fileNo });
+                break;
+            case 'url':
+                setFileNoRecoil(item.url_no);
+                setSideBarInfoRecoil({hub_id:Number(hubId), file_no: fileNo });
+                break;
+            default:
+                setFileNoRecoil(-1);
+                break;
+        }
+       
+        onClick();
+    };
 
     if (viewType === 'true') {
         if(classfiyType === 'url'){
             return (
                 <>{list?.map((item, index) => (
-                    <div className='theActiveHub' key={index} onClick={onClick} > 
+                    <div className='theActiveHub' key={index} onClick={()=>handleClick(item)} > 
                         <ul>
                             <img style={{width:'62px', height:'86px' }} src={process.env.PUBLIC_URL +imageSrc}/>
                         </ul>
@@ -82,7 +112,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
         }else{
             return (
                 <>{}{list?.map((item, index) => (
-                    <div className='theActiveHub' key={index} onClick={onClick} >
+                    <div className='theActiveHub' key={index} onClick={()=>handleClick(item)} >
                         <ul>
                             <img style={{width:'62px', height:'86px' }} src={process.env.PUBLIC_URL +imageSrc}/>
                         </ul>
@@ -107,7 +137,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
             return (
                 <>
                 {}{list?.map((item, index) => (
-                    <div className='list' key={index} onClick={onClick}>
+                    <div className='list' key={index} onClick={()=>handleClick(item)}>
                     <ul>
                         <li> 
                             <img style={{width:'36px', height:'36px' }} src={process.env.PUBLIC_URL +imageSrc}/>
@@ -138,7 +168,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     </InfiniteScroll> */}
 
                 {list?.map((item, index) => (
-                    <div className='list' key={index} onClick={onClick}>
+                    <div className='list' key={index} onClick={()=>handleClick(item)}>
                     <ul>
                         <li> 
                             <img style={{width:'36px', height:'36px' }} src={process.env.PUBLIC_URL +imageSrc}/>

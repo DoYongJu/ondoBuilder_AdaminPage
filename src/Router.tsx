@@ -1,6 +1,6 @@
-import React,{useEffect, useState} from 'react';
-import { BrowserRouter, Routes, Route, Navigate, RouteProps } from 'react-router-dom';
-import { usernameState, tokenState } from './Resources/Recoil';
+import {useEffect} from 'react';
+import { BrowserRouter, Routes, Route, Navigate  } from 'react-router-dom';
+import { usernameState } from './Resources/Recoil';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Login from './Components/User/Login/Login';
 import DashBoard from './Components/DashBoard/DashBoard';
@@ -22,8 +22,6 @@ const Router = () => {
  
   const setUserName = useSetRecoilState(usernameState);
   const username = useRecoilValue(usernameState);
-  const token= Cookies.get('accessToken');
-  const storedUsername = Cookies.get('username');
   
   useEffect(() => {
     const storedUsername = Cookies.get('username');
@@ -36,7 +34,7 @@ const Router = () => {
     <BrowserRouter>
      {username && <NavBar />}
       <Routes>
-        <Route path="/" element={<Login />} />
+        {/* <Route path="/" element={<Login />} /> */}
         <Route path="/login" element={<Login />} />
         <Route  path="/dashBoard" element={<DashBoard />} />
         <Route path="/signUp" element={<SignUp />} />
@@ -44,12 +42,13 @@ const Router = () => {
         <Route path="/signAccept" element={<SignAccept />} />
         <Route path="/infoDataHub" element={<InfoDataHub />} />
         <Route path="/updateDataHub" element={<UpdateDataHub />} />
+        {/* <Route path="/hubId" element={< Navigate replace to='/updateDataHub' />} /> */}
         <Route path="/activeHublist" element={<ActiveHublist />} />
         <Route path="/addHub" element={<AddHub />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/history" element={<History />} />
         <Route path="/adminUser" element={<AdminUser />} />
-      
+        <Route path="/" element={< Navigate replace to='/Login' />} />
         
       </Routes>
     </BrowserRouter>

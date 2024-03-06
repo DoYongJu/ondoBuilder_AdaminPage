@@ -49,7 +49,7 @@ export interface UploadFileProps {
 //   carousel_id: number;
 //   carousel_name: string;
 // }
-interface dataByType{ 
+export interface dataByType{ 
   doc_no: number;
   download_url: string;
   file_name:string;
@@ -61,6 +61,8 @@ interface dataByType{
   file_regdate: string;
   file_upddate: string;
   writer: string;
+  video_no:number;
+  url_no:number;
   url_link:string;
   url_description:string;
   url_regdate:string;
@@ -105,6 +107,10 @@ export interface imgInfoForCarsel{
   file_url: string,
   turn: number,
   image_no: number
+}
+export interface fileNoAndHubId{
+  hub_id:number,
+  file_no:number
 }
 export type imgInfoForCarselList = imgInfoForCarsel[];
 export type userFullInfoList = userFullInfoType[];

@@ -20,17 +20,17 @@ const AdminUser=()=>{
             setUserList(data);
         })
         .catch((error) => {
-            console.error('getCaroselGroupApi/ Error occurred:', error);
+            console.error('setUserListApi/ Error occurred:', error);
         });
     };
 
     function setUserWaitingListApi() {
-        ConnectApi({ method: 'GET', url: `/v1/api/` }) //02.26 url 삽입예정 승인대기 사용자get api
+        ConnectApi({ method: 'GET', url: `/v1/api/` }) //02.26 url 삽입예정 승인대기 사용자get api-> 태호씨에게 요청전달 완료.
             .then((res) => {
                 setUserWaitingList(res.data); //02.28 api 개발 미완성. 추후 확인 필요 일단 세팅완료.
             })
             .catch((error) => {
-                console.error('getCaroselGroupApi/ Error occurred:', error);
+                console.error('setUserWaitingListApi/ Error occurred:', error);
             });
     };
     

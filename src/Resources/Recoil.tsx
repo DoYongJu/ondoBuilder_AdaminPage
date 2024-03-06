@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { userInfoType, userPwdType, userFullInfoType  } from './Models';
+import { userInfoType, userPwdType, userFullInfoType,fileNoAndHubId  } from './Models';
 export const usernameState = atom({
   key: 'username',
   default: '',
@@ -50,6 +50,18 @@ export const userFullInfoState = atom<userFullInfoType>({
     username: '',
     user_regdate: '',
   },
+});
+export const fileNoSideBarState = atom<fileNoAndHubId>({
+  key:'no',
+  default:{
+    hub_id:-1,
+    file_no:-1
+  },
+});
+export const fileNoState = atom({
+  key:'file_no',
+  default: -1,
+  
 });
 
 

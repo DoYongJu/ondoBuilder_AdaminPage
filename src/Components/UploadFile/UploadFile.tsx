@@ -1,7 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
-import axios from 'axios';
 import { BiX } from "react-icons/bi";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import './UploadFile.css';
 
 import {MyObject} from '../../Resources/Models';
@@ -88,35 +87,55 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         };
         validNull();
     },[description, promtText, urlInfo, selectedCaroselId]);
-    
+
     useEffect(() => {
 
-        function setCaroselGroupApi() {  //카로셀 목록 조회.
+        function setCaroselGroupApi() {  //카로셀 목록(selectBox 내용) 조회.
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/${data.hub_id}` })
                 .then((res) => {
                     const data = res.data;
                     const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
-                    setSelectList(prevList => [...prevList, ...newList]);
+                    let updatedList = [...selectList];
+                   // selectList 배열의 index 2부터 newList 배열을 추가
+                   updatedList = [...updatedList.slice(0, 2), ...newList];
+
+                    setSelectList(updatedList); // 업데이트된 리스트 설정
+                                
                   
                 })
                 .catch((error) => {
-                    console.error('getCaroselGroupApi/ Error occurred:', error);
+                    console.error('setCaroselGroupApi/ Error occurred:', error);
                 });
         };
 
+        setCaroselGroupApi(); //카로셀 그룹 조회
+    
+    }, [caroselNewView]);
+    
+    useEffect(() => {
+
         function getFileInfo(){ //새로 올리려는 파일 미리보기
-            if (oneFile) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    images.push({ image_no: 0 ,file_name: oneFile.name,  file_url:reader.result as string, turn: images.length+1 },)
-                };
-                reader.readAsDataURL(oneFile);
-            }
+
+                if (oneFile) {
+                    const reader = new FileReader();
+                    
+                    reader.onloadend = () => {
+                        const updatedImages = [...images]; // 이미지 배열 복사
+                        updatedImages[0] = { // 기존 이미지를 덮어씌움
+                            image_no: 0,
+                            file_name: oneFile.name,
+                            file_url: reader.result as string,
+                            turn: 0
+                        };
+                        setImages(updatedImages); // 이미지 상태 업데이트
+                    };
+                    reader.readAsDataURL(oneFile);
+                }
         };
 
-        setCaroselGroupApi(); //카로셀 그룹 조회
         getFileInfo();  //파일 미리보기 기능
-    }, [caroselNewView,selectedCaroselId ]);
+      
+    }, [selectedCaroselId]);
 
     //카로셀 선택 후 해당 이미지를 api로 get ->2/29 개발 중, 추후 데이터 미리보기 및 전반적인 개발 필요. 
     useEffect(() => { 
@@ -139,9 +158,12 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${selectedCaroselId}` })
             .then((res) => {
                 const data = res.data;
-                    const newList = data.map((item:any) => ({ id: item.img_no, name: item.file_name }));
-                    console.log(newList);
-                    setImages(newList);
+                    // const newList = data.map((item:any) => ({ id: item.img_no, name: item.file_name }));
+                    // console.log("카로셀 별 이미지 리스트: "+newList);
+                    let updatedList = [...images];
+                    // selectList 배열의 index 2부터 newList 배열을 추가
+                    updatedList = [...updatedList.slice(0, 2), ...data];
+                    setImages(updatedList);
                 
                 //file_url로 미리보기 예정, 다만 undefind는 백엔드에서 선행처리과정 필요.
             })
@@ -242,8 +264,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         tags.forEach((item) => item.name && tagList.push(item.name));
     
         const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, 
-            content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem?.turn})
-        if(boolean === true){
+            content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem? (draggedItem.turn):(0)})
+        
+            if(boolean === true){
             const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
             onClose(fakeEvent);
         }else{
@@ -260,6 +283,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
       let addC = e.target.value;
       setAddCarosel(addC);   
     };
+    
     const handleUrlChange=(e:any)=>{
         const newText = e.target.value;
         setInfoUrl(newText);
@@ -290,7 +314,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                     <UploadedFileCarosel caroselNewView={caroselNewView} selected={selectedCaroselId} handleSelect={handleSelect}
                     selectList={selectList} setCaroselNewView={setCaroselNewView} images={images} handleDragStart={handleDragStart}
-                    handleDrop={handleDrop} imgClicked={imgClicked} inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel}
+                    handleDrop={handleDrop} imgClicked={imgClicked} inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel} 
                     addCaroselGroupApi={addCaroselGroupApi}/>
                 </>
             }

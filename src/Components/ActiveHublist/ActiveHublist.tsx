@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, DragEvent } from 'react';
 import ConnectApi from '../../Module/ConnectApi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
-import { useRecoilValue, useSetRecoilState} from 'recoil';
-import { hubClassfiyState } from '../../Resources/Recoil';
+import { useRecoilValue, useSetRecoilState, useRecoilState} from 'recoil';
+import { hubClassfiyState, fileNoSideBarState,fileNoState } from '../../Resources/Recoil';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
@@ -34,6 +34,9 @@ function ActiveHublist(){
       { id: -3, name: '수정일순' },
       { id: -4, name: '업로드순' },  
       ]),
+      [fimeNo] = useRecoilState (fileNoState),
+      setSideBarInfoRecoil = useSetRecoilState(fileNoSideBarState),
+      
 
       filterList = ['선택','PDF','DOC','PPT','CSV'],
       [isSideBarOpen, setIsSideBarOpen] = useState(false),
@@ -62,13 +65,13 @@ function ActiveHublist(){
               };
             })
             .catch((error) => {
-              console.error('Error occurred:', error);
+              console.error('Error occurred at ActiveHublist/selectDataByTypeApi:', error);
             });
       };
   
       selectDataByTypeApi();
   
-  }, [isFirst, viewWays, type]);
+  }, [isFirst, viewWays, type, selectedFile]);
     
 
     const buttons = [ //상단 탭 정보
@@ -88,10 +91,10 @@ function ActiveHublist(){
       setHubClassify(value);
       setActiveButton(value);
         switch(value){
-          case "doc" :   navigate('/ActiveHublist',{state:data}); break;
-          case "img" :  navigate('/ActiveHublist',{state:data}); break;
-          case "video" :  navigate('/ActiveHublist',{state: data}); break;
-          case "url" :  navigate('/ActiveHublist',{state:data}); break;
+          case "doc" :   navigate('/activeHublist',{state:data}); break;
+          case "img" :  navigate('/activeHublist',{state:data}); break;
+          case "video" :  navigate('/activeHublist',{state: data}); break;
+          case "url" :  navigate('/activeHublist',{state:data}); break;
           case "info" :  navigate('/updateDataHub',{state:data}); break;
           default : ;
         
@@ -277,7 +280,10 @@ function ActiveHublist(){
         {!isFirst && viewWays && (
           <div className='contbox'>
             <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
-            onClick={()=>{ setIsSideBarOpen(!isSideBarOpen)}} selectedF={()=>{setSelectedFile(null)}}/>
+            onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);  setSideBarInfoRecoil({
+              hub_id: data.hub_id,
+              file_no: fimeNo
+            });}} selectedF={()=>{setSelectedFile(null)}}/>
           </div>
         )}
         { !viewWays && ( 
@@ -295,7 +301,7 @@ function ActiveHublist(){
 
             {!isFirst && (
               <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
-              onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);}} selectedF={()=>{setSelectedFile(null)}}/>
+              onClick={()=>{ setIsSideBarOpen(!isSideBarOpen); }} selectedF={()=>{setSelectedFile(null)}}/>
             )}
           </div>
         )}

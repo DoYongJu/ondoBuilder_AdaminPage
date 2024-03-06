@@ -3,8 +3,8 @@ import './SideBar.css';
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
 import ConnectApi from '../../Module/ConnectApi';
-import { useRecoilValue} from 'recoil';
-import { hubClassfiyState } from '../../Resources/Recoil';
+import { useRecoilValue, useRecoilState} from 'recoil';
+import { hubClassfiyState, fileNoSideBarState } from '../../Resources/Recoil';
 interface SideBarProps {
     isOpen: boolean;
     onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -20,7 +20,8 @@ interface SideBarProps {
   const [longProm, setLongProm] = useState(tmp);
   const [shortProm, setShortProm] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
-  const selectList=[',','다운로드','수정','삭제'];
+  const selectList=[',','다운로드','수정','삭제'],
+  [fimeNoAndhubId] = useRecoilState (fileNoSideBarState);
 
   useEffect(() => { //파일을 하나 눌렀을때 해당 관련 정보를 가져오는 api=>02.26개발중, 태호씨 api 나오면 연결
     function selectInfoByOneFileApi() {
@@ -61,6 +62,52 @@ interface SideBarProps {
     setChangeProm(!changeProm)
   };
 
+  function delFile(){
+  
+    switch(type){
+      case 'doc':
+        reqDel(type,'doc_no');
+        break;
+      case 'img':
+      ///추가 작업 필요.
+        break;
+      case 'video':
+        reqDel(type,'video_no');
+        break;
+      case 'url':
+        reqDel('urlDelete','url_no');
+        break;
+      default:
+        break;
+    };
+
+   
+  };
+  function reqDel(type:string, fileName:string){
+      let sendParam={
+        hub_id: fimeNoAndhubId.hub_id,
+        [fileName]:  fimeNoAndhubId.file_no,
+      };
+
+      ConnectApi({ method: 'DELETE', url: `/v1/api/datahub/${type}`,sendParam:sendParam })
+      .then((res) => {
+        console.log("*******")
+        console.log(res.data)
+      })
+      .catch((error) => {
+          console.error('Error occurred at SideBar/delFile:', error);
+      });
+  };
+
+  function handleClickeditOrDel(option:string){
+    setSelectedOption(option)
+    if(option === '삭제'){
+      delFile();
+    }else{
+      //수정 요청 함수 호출예정.
+    }
+  };
+
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
      
@@ -73,7 +120,7 @@ interface SideBarProps {
           {selctedClick &&
               <ul className="options-list">
               {selectList.slice(1).map((option, index) => (
-                <li key={index} onClick={() => { setSelectedOption(option);}} value={option}>
+                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
                   {option}
                 </li>
               ))}

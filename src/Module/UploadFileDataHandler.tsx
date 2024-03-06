@@ -1,5 +1,4 @@
 import ConnectApi from './ConnectApi';
-import { tagsList } from '../Resources/Models';
 
 const UploadFileDataHandler = async ({
     classfiyType, hubId, file_description, file_tag, carousel_id, turn, content, url_tag, url_description, prompt, urlInfo
@@ -10,6 +9,9 @@ const UploadFileDataHandler = async ({
 
     let apiUrl = '';
     let sendParam: any = {};
+    let formData = new FormData();
+
+
 
     switch(classfiyType) {
         case 'img':
@@ -30,7 +32,6 @@ const UploadFileDataHandler = async ({
                             img:content
                             }
             };
-
             break;
         case 'video':
             apiUrl = `/v1/api/datahub/video`;
@@ -40,8 +41,10 @@ const UploadFileDataHandler = async ({
                         video:content};
             break;
         case 'doc':
-            apiUrl = `/v1/api/datahub/doc`; 
-            sendParam = { hub_id: hubId, 
+            apiUrl = `/v1/api/datahub/doc`;
+
+            sendParam = {
+                        hub_id: hubId,
                         file_description: file_description, 
                         doc:content, prompt:prompt};
             break;
