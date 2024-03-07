@@ -88,10 +88,10 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
 
     function requestChangeUserInfoApi(){
         let sendParam={
-            username:infoDetails?.username,
-            company: infoDetails?.company,
-            division:infoDetails?.division,
-            tel:infoDetails?.tel,
+            username:userInfo?.username,
+            company: userInfo?.company,
+            division:userInfo?.division,
+            tel:userInfo?.tel,
         }
 
         ConnectApi({ method: 'PATCH', url: `/v1/api/auth/user`, sendParam:sendParam })

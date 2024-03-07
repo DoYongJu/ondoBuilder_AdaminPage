@@ -30,7 +30,7 @@ const AdminUser=()=>{
                 setUserWaitingList(res.data); //02.28 api 개발 미완성. 추후 확인 필요 일단 세팅완료.
             })
             .catch((error) => {
-                console.error('setUserWaitingListApi/ Error occurred:', error);
+                console.error('api완성 대기중.. ', error);
             });
     };
     

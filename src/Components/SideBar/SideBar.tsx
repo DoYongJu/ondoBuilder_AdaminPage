@@ -69,7 +69,7 @@ interface SideBarProps {
         reqDel(type,'doc_no');
         break;
       case 'img':
-      ///추가 작업 필요.
+        reqDel(type,'image_no');
         break;
       case 'video':
         reqDel(type,'video_no');
@@ -84,10 +84,19 @@ interface SideBarProps {
    
   };
   function reqDel(type:string, fileName:string){
-      let sendParam={
-        hub_id: fimeNoAndhubId.hub_id,
-        [fileName]:  fimeNoAndhubId.file_no,
-      };
+    let sendParam={}
+      if(type !== 'img'){
+        sendParam={
+          hub_id: fimeNoAndhubId.hub_id,
+          [fileName]:  fimeNoAndhubId.file_no,
+        };
+      }else{
+        sendParam={
+          hub_id: fimeNoAndhubId.hub_id,
+          carousel_id: -100,//api필요.
+          [fileName]:  fimeNoAndhubId.file_no,
+      }
+    };//end if
 
       ConnectApi({ method: 'DELETE', url: `/v1/api/datahub/${type}`,sendParam:sendParam })
       .then((res) => {
