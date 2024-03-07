@@ -2,6 +2,7 @@ import SelectBox from '../SelectBox/SelectBox';
 import Cookies from 'js-cookie';
 import { RefObject, useState,useEffect } from 'react';
 import {imgInfoForCarselList} from '../../Resources/Models';
+import { LuDownload } from "react-icons/lu";
 import axios from 'axios';
 interface ImageInfo {
     id: number;
@@ -18,7 +19,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
     const token = Cookies.get('accessToken');
     console.log("at UploadedFileCarosel: ");
     console.log(images);
-    
+  
     return(
         <div className='caroselArea'>
         <div className='caroselTitle'>카로셀</div>
@@ -39,9 +40,22 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
                           onClick={imgClicked}>
                         
                             <div className='imgArea' >
-                              <img style={{width:'102px', height:'102px' }} src={img.imageUrl} alt="File Preview"/> 
-                               <div className="image-number">{(img.turn)}</div>
-                               <ul >{img.file_name}</ul>
+                            
+                            {img.image_no === 0 && 
+                                <> 
+                                <img style={{width:'102px', height:'102px' ,borderRadius:'6px'}} src={img.imageUrl} alt="File Preview"/> 
+                                <div className="image-number" style={{border:'1px solid #FFFFFFA3'}}>{(img.turn)}</div>
+                                <span ><LuDownload size={30}/></span>
+                                <ul >{img.file_name}</ul>
+                                </>}
+                            {img.image_no !== 0 && 
+                                <>
+                                <img style={{width:'102px', height:'102px' ,borderRadius:'6px'}} src={img.imageUrl} alt="File Preview"/> 
+                                <div className="image-number">{(img.turn)}</div>
+                                <ul >{img.file_name}</ul>
+                                </>
+                            }
+                      
                            </div>
                            
                       </div>
