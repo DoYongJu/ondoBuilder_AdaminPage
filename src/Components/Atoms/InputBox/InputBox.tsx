@@ -49,7 +49,7 @@ const InputBox: React.FC<InputBoxProps>=({handleTheTextChange,title,placeholder,
           
           {type === 'password' &&
             <>
-            <input type={type}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} />
+            <input  type={showPassword ? 'password':'text'}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} />
             <span className='eyesIcon' onClick={togglePasswordVisibility}>
               {showPassword ? <FaRegEye  size={20}/> : <RiEyeCloseLine size={20} />}
             </span>

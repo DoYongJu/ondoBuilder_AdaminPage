@@ -34,9 +34,12 @@ function DataHub_module({data}:{data:MyObjects}, searchText:string) {
 //   if (/[ㄱ-ㅎ가-힣]/.test(char)) return 3;
 //   return 4; // 특수문자
 // };
-export function DataHub_sortIntheHub_module({data}:{ data: dataByTypeList | undefined; }, classify?:string){
+
+export function DataHub_sortIntheHub_module({data}:{ data: dataByTypeList }, classify?:string){
   if(data){
-    let resultList: dataByTypeList =data;
+    let resultList: dataByTypeList = [...data]; 
+    console.log("DataHub_sortIntheHub_module start!!!");
+    console.log(classify);
     switch (classify) {
       case '이름순':
         resultList.sort((a,b) => {
@@ -47,27 +50,30 @@ export function DataHub_sortIntheHub_module({data}:{ data: dataByTypeList | unde
         break;
       case '수정일순':
         resultList.sort((a, b) => {
-          let aDate = a.file_upddate ? new Date(a.file_upddate).getTime() : new Date(a.file_upddate).getTime();
-          let bDate = b.file_upddate ? new Date(b.file_upddate).getTime() : new Date(b.file_upddate).getTime();
+          let aDate = a.file_upddate ? new Date(a.file_upddate).getTime() : new Date().getTime();
+          let bDate = b.file_upddate ? new Date(b.file_upddate).getTime() : new Date().getTime();
           return aDate - bDate;
         });
         break;
       case '업로드순':
-      resultList.sort((a, b) => {
-        let aDate = a.file_regdate ? new Date(a.file_regdate).getTime() : new Date(a.file_regdate).getTime();
-        let bDate = b.file_regdate ? new Date(b.file_regdate).getTime() : new Date(b.file_regdate).getTime();
-        return aDate - bDate;
-      });
-      break;
-      
+        resultList.sort((a, b) => {
+          let aDate = a.file_regdate ? new Date(a.file_regdate).getTime() : new Date().getTime();
+          let bDate = b.file_regdate ? new Date(b.file_regdate).getTime() : new Date().getTime();
+          return aDate - bDate;
+        });
+        break;
       default:
-      break;
-       
+        break;
     };
-    return resultList;
+    console.log("resultList");
+    console.log(resultList);
+    return resultList; 
+  }else{
+    return [];
   }
-
+ 
 };
+
 export function DataHub_listOfType_module({data}:{data:MyObjects}, orderByType:string){
   let resultList: MyObjects = [...data];
   console.log(resultList);

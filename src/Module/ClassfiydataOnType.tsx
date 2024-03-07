@@ -11,8 +11,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     // console.log(selected);
     // console.log(classfiyType);
     const [imageSrc, setImageSrc] = useState('');
-    const [list, setList] = useState<dataByTypeList | null>(null);
-    const [delicatedlist, setDelicatedlist] = useState<dataByTypeList | null>(null),
+    const [originlist, setOriginList] = useState<dataByTypeList>([]);
+    const [listByselc, setListBySelc] = useState<dataByTypeList>([]),
     [SideBarInfo] = useRecoilState (fileNoSideBarState),
     [fileNo] = useRecoilState (fileNoState),
     setSideBarInfoRecoil = useSetRecoilState(fileNoSideBarState),
@@ -23,8 +23,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
         function selectDataByTypeApi() {
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/${hubId}?type=${classfiyType}`})
                 .then((res) => {
-                    setList(res.data);
-                    console.log(res.data);
+                    setOriginList(res.data);
                     switch (classfiyType) {
                         case 'doc':
                             setImageSrc('/doc.svg');
@@ -55,16 +54,11 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     }, [classfiyType, selectedF]);
 
     useEffect(() => {
-       function getContentBySelect(){
-        console.log("selected"+selected);
-        const datass = selected ? DataHub_sortIntheHub_module({ data: list ?? undefined }, selected) : undefined;
-          if(datass){
-            setList(datass);
-          };
-         
-       };
-       getContentBySelect();
-    
+        function getContentBySelect() {
+            let datass = DataHub_sortIntheHub_module({ data: originlist }, selected);
+            setListBySelc(datass); 
+        };
+        getContentBySelect();
     }, [selected]);
 
     function handleClick (item:dataByType){
@@ -95,7 +89,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     if (viewType === 'true') {
         if(classfiyType === 'url'){
             return (
-                <>{list?.map((item, index) => (
+                <>{listByselc.map((item, index) => (
                     <div className='theActiveHub' key={index} onClick={()=>handleClick(item)} > 
                         <ul>
                             <img style={{width:'62px', height:'86px' }} src={process.env.PUBLIC_URL +imageSrc}/>
@@ -111,7 +105,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
             );
         }else{
             return (
-                <>{}{list?.map((item, index) => (
+                <>{listByselc.map((item, index) => (
                     <div className='theActiveHub' key={index} onClick={()=>handleClick(item)} >
                         <ul>
                             <img style={{width:'62px', height:'86px' }} src={process.env.PUBLIC_URL +imageSrc}/>
@@ -136,7 +130,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
         if(classfiyType === 'url'){
             return (
                 <>
-                {}{list?.map((item, index) => (
+                {}{listByselc.map((item, index) => (
                     <div className='list' key={index} onClick={()=>handleClick(item)}>
                     <ul>
                         <li> 
@@ -167,7 +161,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
       ))}
     </InfiniteScroll> */}
 
-                {list?.map((item, index) => (
+                {listByselc.map((item, index) => (
                     <div className='list' key={index} onClick={()=>handleClick(item)}>
                     <ul>
                         <li> 

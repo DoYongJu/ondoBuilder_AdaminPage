@@ -16,7 +16,11 @@ import { FiUpload } from "react-icons/fi";
 import { FiGrid } from "react-icons/fi";
 import './ActiveHublist.css';
 
-
+interface ClassifyType {
+  id: number,
+  name: string;
+ 
+}
 function ActiveHublist(){
     const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
       location = useLocation(),
@@ -28,7 +32,7 @@ function ActiveHublist(){
       [selectedOption, setSelectedOption] = useState(''),
       // data:MyObject= location.state,//허브 정보 
       [activeButton, setActiveButton] = useState(type),
-      [selectList, setSelectList] = useState([
+      [selectList, setSelectList] = useState<ClassifyType[]>([
       { id: -1, name: '조회' },
       { id: -2, name: '이름순' },
       { id: -3, name: '수정일순' },
@@ -73,7 +77,7 @@ function ActiveHublist(){
       selectDataByTypeApi();
   
   }, [isFirst, viewWays, type, selectedFile]);
-    
+ 
 
     const buttons = [ //상단 탭 정보
         { label: '정보', value: 'info' },
@@ -83,9 +87,9 @@ function ActiveHublist(){
         { label: '링크', value: 'url' },
     ];
 
-    function handleSelect (selectedValue:any){
+    function handleSelect (selectedValue:ClassifyType){
         setSearchText('');
-        setSearchType(selectedValue);
+        setSearchType(selectedValue.name);
     };
 
     const handleButtonClick = (value:string) => {
