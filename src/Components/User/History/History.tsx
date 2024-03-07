@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import ConnectApi from '../../../Module/ConnectApi';
 import { userFullInfoList } from '../../../Resources/Models';
-import { userInfoState } from '../../../Resources/Recoil'
-import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import './History.css';
 import TabBar from '../../TabBar/TabBar';
 

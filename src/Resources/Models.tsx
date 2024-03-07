@@ -108,6 +108,7 @@ export interface imgInfoForCarsel{
   turn: number;
   image_no: number;
   imageUrl: string;
+
 }
 export interface fileNoAndHubId{
   hub_id:number,

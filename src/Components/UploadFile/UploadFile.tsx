@@ -16,15 +16,6 @@ import UploadedFileCarosel from '../Atoms/UploadedFileCarosel';
 import InputBox from '../Atoms/InputBox/InputBox';
 import Alert from '../Modal.components/Alert/Alert';
 
-
-
-interface ImageType {
-    id: number;
-    name:string;
-    src: string;
-    order: number;
-};
-type ImageTypeList=ImageType[];
 const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [urlInfo, setInfoUrl] = useState(''); //url 입력 input
@@ -48,7 +39,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         { id: -1, name: '선택' },
         { id: -2, name: '선택하지 않음' }
     ]);
-    const [selectedCaroselId, setSelectedCaroselId] = useState('');
+    const [selectedCaroselId, setSelectedCaroselId] = useState('-10');
     const [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
     const [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
     const location = useLocation();
@@ -90,11 +81,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
                     let updatedList = [...selectList];
                    // selectList 배열의 index 2부터 newList 배열을 추가
-                   updatedList = [...updatedList.slice(0, 2), ...newList];
-
+                    updatedList = [...updatedList.slice(0, 2), ...newList];
                     setSelectList(updatedList); // 업데이트된 리스트 설정
-                                
-                  
                 })
                 .catch((error) => {
                     console.error('setCaroselGroupApi/ Error occurred:', error);
@@ -104,93 +92,92 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         setCaroselGroupApi(); //카로셀 그룹 조회
     
     }, [caroselNewView]);
-    
-    useEffect(() => {
 
+    //카로셀 선택 후 해당 이미지를 api로 get
+    useEffect(() => { 
         function getFileInfo(){ //새로 올리려는 파일 미리보기
-
-                if (oneFile) {
-                    const reader = new FileReader();
-                    
-                    reader.onloadend = () => {
-                        const updatedImages = [...images]; // 이미지 배열 복사
-                        updatedImages[0] = { // 기존 이미지를 덮어씌움
-                            image_no: 0,
-                            file_name: oneFile.name,
-                            imageUrl: reader.result as string,
-                            turn: 0
-                        };
-                        setImages(updatedImages); // 이미지 상태 업데이트
+            setImages([]);
+            if (oneFile) {
+                const reader = new FileReader();
+                
+                reader.onloadend = () => {
+                    const updatedImages = []; // 이미지 배열 복사
+                    updatedImages[0] = { // 기존 이미지를 덮어씌움
+                        image_no: 0,
+                        file_name: oneFile.name,
+                        imageUrl: reader.result as string,
+                        turn: 1
                     };
-                    reader.readAsDataURL(oneFile);
-                }
+                     // 기존 이미지 이후의 이미지들의 turn 값을 1씩 증가시킴
+                    for (let i = 1; i < updatedImages.length; i++) {
+                        console.log("===========");
+                        console.log(updatedImages);
+                        updatedImages[i].turn += 1;
+                        console.log(updatedImages);
+                    }
+                    setImages(updatedImages); // 이미지 상태 업데이트
+                    console.log("*****");
+                    console.log(updatedImages);
+                    console.log(images);
+                };
+                reader.readAsDataURL(oneFile);
+            }
         };
 
-        getFileInfo();  //파일 미리보기 기능
-      
-    }, [selectedCaroselId]);
-
-    //카로셀 선택 후 해당 이미지를 api로 get ->2/29 개발 중, 추후 데이터 미리보기 및 전반적인 개발 필요. 
-    useEffect(() => { 
-        function getImgListApi(){
-            // 실제 res Dto
-            // [ case caroselId:15
-            //     {
-            //       "file_name": "dog1.jpg",
-            //       "file_url": "undefined/datahub/file/1709189492268-dog1.jpg",
-            //       "turn": 1,
-            //       "image_no": 2
-            //     },
-            //     {
-            //       "file_name": "dog1.jpg",
-            //       "file_url": "undefined/datahub/file/1709188839566-dog1.jpg",
-            //       "turn": 2,
-            //       "image_no": 1
-            //     }
-            //   ]
-            const originImgs:any = []
+        function getImgListApi() {
+            
+            const originImgs:any = [];
             let updatedList = [...images];
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${selectedCaroselId}` })
+        
             .then((res) => {
-                const data: imgInfoForCarselList = res.data;     
-                    data.map((img) => {
-                        if(img.file_url){
-                            try {
-                                console.log("axios start")
-                                return axios.get(img.file_url, {
-                                    responseType: 'blob',
-                                    headers: {
-                                        Authorization: `Bearer ${token}`,
-                                    },
-                                }).then(response => {
-                                  
-                                    return window.URL.createObjectURL(response.data);
-                                }).then( result =>{
-                                    
-                                    img.imageUrl = result
-                                    originImgs.push(img)
-                                })
-                            } catch (error) {
-                                return ''; // 에러가 발생하면 빈 문자열 반환
-                            }
-                        }
-                        
-                    })
-                    
-                    
-                               
-            }).then( e =>{
-                // selectList 배열의 index 2부터 newList 배열을 추가
-                updatedList = [...updatedList.slice(0, 2), ...originImgs];
-                setImages(updatedList);    
-            })
-            // .catch((error) => {
-            //     console.error('getCaroselGroupApi/ Error occurred:', error);
-            // });
+                const data: imgInfoForCarselList = res.data;
+                // 이미지 다운로드 작업을 Promise 배열로 저장
+                let requests = data.map((img) => {
+                
+                    let sum =data.length+2
+                    img.turn =sum- img.turn;
+                   
+          
+                    if (img.file_url) {
+                        return axios.get(img.file_url, {
+                            responseType: 'blob',
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }).then(response => {
+                            // 이미지 URL을 생성하여 반환
+                            return window.URL.createObjectURL(response.data);
+                        }).then(result => {
+                            // 이미지 정보에 URL 추가
+                            img.imageUrl = result;
+                            originImgs.push(img);
+                        }).catch(error => {
+                            console.error("에러 발생:", error);
+                        });
+                    }
+                });
+    
+                // 모든 이미지 다운로드 작업이 완료될 때까지 기다림
+                Promise.all(requests).then(() => {
+                    if(requests.length !== 0){
+                        updatedList = [...updatedList.slice(0, 1), ...originImgs];
+                        updatedList.sort((a, b) => a.turn - b.turn);
+                        setImages(updatedList);
+                   
+                    }
+                    console.log("getImgListApi:");
+                    console.log(images);
+                });
+                
+            }).catch((error) => {
+                console.error('getCaroselGroupApi/ Error occurred:', error);
+            });
         };
         getImgListApi();
-    
+        getFileInfo();  //파일 미리보기 기능
     }, [selectedCaroselId]);
+    
 
     //카로셀 그룹 추가
     function addCaroselGroupApi() {
@@ -233,6 +220,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             });
             
             setImages(updatedImages);
+            console.log(images);
             setDraggedItem(null);
         };
     };

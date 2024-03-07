@@ -3,12 +3,12 @@ import ConnectApi from '../../Module/ConnectApi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
 import { useRecoilValue, useSetRecoilState, useRecoilState} from 'recoil';
-import { hubClassfiyState, fileNoSideBarState,fileNoState } from '../../Resources/Recoil';
+import { hubClassfiyState, fileNoSideBarState,fileNoState, MyObjectsState} from '../../Resources/Recoil';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
 import UploadFile from '../UploadFile/UploadFile';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import {MyObject} from '../../Resources/Models';
 import ClassfiydataOnType from '../../Module/ClassfiydataOnType';
 
 import { LuListFilter } from "react-icons/lu";
@@ -26,7 +26,7 @@ function ActiveHublist(){
       [searchType, setSearchType] = useState(''), //왼쪽상단 select에따른 정렬
       [, setSearchText] = useState(''),
       [selectedOption, setSelectedOption] = useState(''),
-      [data, setData] = useState(location.state),//허브 정보 
+      // data:MyObject= location.state,//허브 정보 
       [activeButton, setActiveButton] = useState(type),
       [selectList, setSelectList] = useState([
       { id: -1, name: '조회' },
@@ -36,6 +36,7 @@ function ActiveHublist(){
       ]),
       [fimeNo] = useRecoilState (fileNoState),
       setSideBarInfoRecoil = useSetRecoilState(fileNoSideBarState),
+      [theHubInfo] = useRecoilState (MyObjectsState),
       
 
       filterList = ['선택','PDF','DOC','PPT','CSV'],
@@ -55,8 +56,8 @@ function ActiveHublist(){
   useEffect(() => {
       //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
       function selectDataByTypeApi() {
-        console.log('hub_id: '+data.hub_id);
-        ConnectApi({ method: 'GET', url: `/v1/api/datahub/${data.hub_id}?type=${type}`})
+        console.log('hub_id: '+theHubInfo.hub_id);
+        ConnectApi({ method: 'GET', url: `/v1/api/datahub/${theHubInfo.hub_id}?type=${type}`})
             .then((res) => {
               if (res.data.length !== 0) {
                 setIsFirst(false);
@@ -91,11 +92,11 @@ function ActiveHublist(){
       setHubClassify(value);
       setActiveButton(value);
         switch(value){
-          case "doc" :   navigate('/activeHublist',{state:data}); break;
-          case "img" :  navigate('/activeHublist',{state:data}); break;
-          case "video" :  navigate('/activeHublist',{state: data}); break;
-          case "url" :  navigate('/activeHublist',{state:data}); break;
-          case "info" :  navigate('/updateDataHub',{state:data}); break;
+          case "doc" :   navigate('/activeHublist',{state:theHubInfo}); break;
+          case "img" :  navigate('/activeHublist',{state:theHubInfo}); break;
+          case "video" :  navigate('/activeHublist',{state: theHubInfo}); break;
+          case "url" :  navigate('/activeHublist',{state:theHubInfo}); break;
+          case "info" :  navigate('/updateDataHub',{state:theHubInfo}); break;
           default : ;
         
         };
@@ -194,9 +195,9 @@ function ActiveHublist(){
 
       <div className={`activeHublist ${isSideBarOpen ? 'sidebarOpen' : ''}`}>
 
-        <div className="title"><span>{data.hub_name}</span></div>
+        <div className="title"><span>{theHubInfo.hub_name}</span></div>
         <div className="sub_title">
-          <div className='text' ><span>{data.hub_description}</span></div> 
+          <div className='text' ><span>{theHubInfo.hub_description}</span></div> 
           <div className='btnArea'>
               <button className={`leftbtn ${viewWays ? 'active' : ''}`} onClick={()=>{setViewWays(true)}}><FiGrid size={24} /></button>
               <button className={`rightbtn ${viewWays ? '' : 'active'}`} onClick={()=>{setViewWays(false)}}><FiList size={25}/></button>
@@ -279,9 +280,9 @@ function ActiveHublist(){
 
         {!isFirst && viewWays && (
           <div className='contbox'>
-            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
+            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
             onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);  setSideBarInfoRecoil({
-              hub_id: data.hub_id,
+              hub_id: theHubInfo.hub_id,
               file_no: fimeNo
             });}} selectedF={()=>{setSelectedFile(null)}}/>
           </div>
@@ -300,7 +301,7 @@ function ActiveHublist(){
             </div>
 
             {!isFirst && (
-              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${data.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
+              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
               onClick={()=>{ setIsSideBarOpen(!isSideBarOpen); }} selectedF={()=>{setSelectedFile(null)}}/>
             )}
           </div>

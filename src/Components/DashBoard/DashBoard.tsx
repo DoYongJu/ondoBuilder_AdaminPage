@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './DashBoard.css';
-import NavBar from '../NavBar/NavBar';
-import {useRecoilValue} from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue} from 'recoil';
+import { MyObjectsState } from '../../Resources/Recoil'
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar'
 import { FaPlus } from "react-icons/fa";
@@ -26,12 +26,15 @@ function DashBoard() {
     searchText = useRecoilValue(searchState),
     [originDatas, setOriginDatas] = useState<MyObjects>([]),
     [datas, setDatas] = useState<MyObjects>([]),
-    navigate = useNavigate();
+    navigate = useNavigate(),
+   
+    setTheHubInfoRecoil = useSetRecoilState(MyObjectsState);
 
   useEffect(() => {
     ConnectApi({ method: 'GET', url: `/v1/api/datahub` })
     .then((res) => {
-      setOriginDatas(res.data);
+     
+      setOriginDatas(res.data); //DataHub_listOfType_module을 위한 원시데이터,
       setDatas(res.data);
     })
     .catch((error) => {
@@ -69,7 +72,7 @@ function handleSelect (item:Option){
     </div>
     <div className='dataHubTemplate'>
         {datas.map((data) => (    
-        <div key={data.hub_name} className='theDataHub' onClick={()=>navigate('/updateDataHub',{state:data})}>
+        <div key={data.hub_name} className='theDataHub' onClick={()=>{navigate('/updateDataHub',{state:data}); setTheHubInfoRecoil(data);}}>
           <div className='icon'><img style={{width:'35px', height:'35px'}} src={process.env.PUBLIC_URL + '/dataHub_List_Icon.png'} alt="온도 로고"/></div>
           <div className='headArea'>
             <div className='titleArea'>

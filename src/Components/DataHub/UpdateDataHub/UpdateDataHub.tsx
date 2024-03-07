@@ -3,11 +3,11 @@ import './UpdateDataHub.css';
 import Cookies from 'js-cookie';
 import { hubClassfiyState } from '../../../Resources/Recoil';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState} from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {MyObject} from '../../../Resources/Models';
 import ConnectApi from '../../../Module/ConnectApi';
 import Alert from '../../Modal.components/Alert/Alert';
-
+import { MyObjectsState } from '../../../Resources/Recoil'
 
 
 
@@ -18,7 +18,8 @@ function UpdateDataHub() {
 
   const writer = Cookies.get('username');
   const location = useLocation();
-  const data:MyObject= location.state;
+  // const data:MyObject= location.state;
+  const  [theHubInfo] = useRecoilState (MyObjectsState);
 
   const [activeButton, setActiveButton] = useState('info')|| type;
   const [nametext, sethubNameText] = useState('');
@@ -28,12 +29,13 @@ function UpdateDataHub() {
   const [currentCount, setCurrentCount] = useState(0);
   const totalCount = 50;
   console.log("type: "+type);
-  console.log('hubId :'+data.hub_id);
+  console.log('hubId :'+theHubInfo.hub_id);
 
 
   useEffect(() => {
-    sethubNameText(data.hub_name);
-    setInfoText(data.hub_description);
+    console.log(theHubInfo);
+    sethubNameText(theHubInfo.hub_name);
+    setInfoText(theHubInfo.hub_description);
   }, []);
 
 
@@ -53,7 +55,7 @@ function UpdateDataHub() {
     setChangeInfo(!changeInfo);
 
     const sendParam = {
-      hub_id: Number(data.hub_id),
+      hub_id: Number(theHubInfo.hub_id),
       hub_name:nametext,
       hub_description: infoText,
     };
@@ -71,18 +73,18 @@ function UpdateDataHub() {
   const handleButtonClick = (value:string) => {
     setHubClassify(value);
     switch(value){
-      case "doc" :   navigate('/activeHublist',{state:data}); break;
-      case "img" :  navigate('/activeHublist',{state:data}); break;
-      case "video" :  navigate('/activeHublist',{state:data}); break;
-      case "link" :  navigate('/activeHublist',{state:data}); break;
-      default :   navigate('/updateDataHub',{state:data}); 
+      case "doc" :   navigate('/activeHublist',{state:theHubInfo}); break;
+      case "img" :  navigate('/activeHublist',{state:theHubInfo}); break;
+      case "video" :  navigate('/activeHublist',{state:theHubInfo}); break;
+      case "link" :  navigate('/activeHublist',{state:theHubInfo}); break;
+      default :   navigate('/updateDataHub',{state:theHubInfo}); 
     };
     setActiveButton(value);
   };
 
   async function handleDeleteHub(){
     const sendParam = {
-      hub_id: data.hub_id
+      hub_id: theHubInfo.hub_id
     };
 
     ConnectApi({ method: 'DELETE', url: '/v1/api/datahub', sendParam: sendParam })
@@ -107,8 +109,8 @@ function UpdateDataHub() {
   return (
     
     <div className="UpdateDataHub">
-      <div className="title"><span>{data.hub_name}</span></div>
-      <div className="sub_title"><span>{data.hub_description}</span></div>
+      <div className="title"><span>{theHubInfo.hub_name}</span></div>
+      <div className="sub_title"><span>{theHubInfo.hub_description}</span></div>
       <div className='dataHubBtnArea'>
       <ul>
         {buttons.map((button, index) => (
@@ -131,7 +133,7 @@ function UpdateDataHub() {
       <div className="hubInfoBody">
         <div className="first">
           <div className='hubnameArea'><span>허브 이름</span></div> 
-          {!changeInfo &&<div className='hubnameSpace'><span>{data.hub_name}</span></div>}
+          {!changeInfo &&<div className='hubnameSpace'><span>{theHubInfo.hub_name}</span></div>}
           {changeInfo && 
           <div className='hubnameSpace'> 
             <input type="text" value={nametext}  onChange={(e)=>{sethubNameText(e.target.value.replace(/^\s+/, ''))}}></input>
@@ -139,7 +141,7 @@ function UpdateDataHub() {
         </div>
         <div className='second'>
           <div className='hubnameArea'><span>허브 설명</span></div>
-          {!changeInfo && <div className='hubnameSpace'><span>{data.hub_description}</span></div>}
+          {!changeInfo && <div className='hubnameSpace'><span>{theHubInfo.hub_description}</span></div>}
           {changeInfo &&  
             <div className='hubnameSpace'>
               
@@ -169,7 +171,7 @@ function UpdateDataHub() {
 
       <div className="hubInfoDetailsBody">
         <div className="key1"><span>생성자</span> <span>생성일</span> <span>수정일</span></div>
-        <div className="value"><span>{writer}</span> <span>{data.datahub_regdate}</span> <span>{data.datahub_upddate}</span></div>
+        <div className="value"><span>{writer}</span> <span>{theHubInfo.datahub_regdate}</span> <span>{theHubInfo.datahub_upddate}</span></div>
       </div>
       
       <div className="hubInfoDetailsFooter">

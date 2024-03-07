@@ -16,81 +16,9 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
     inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
     // const [previewimages, setPreviewimages] = useState<imgInfoForCarselList>([]);
     const token = Cookies.get('accessToken');
+    console.log("at UploadedFileCarosel: ");
     console.log(images);
-    // useEffect(() => {
-
-    //     function getFileInfo(){ //미리보기파일 포함 시키기
-
-    //             if (oneFile) {
-    //                 const reader = new FileReader();
-                    
-    //                 reader.onloadend = () => {
-    //                     const updatedImages = [...images]; // 이미지 배열 복사
-    //                     updatedImages[0] = { // 기존 이미지를 덮어씌움
-    //                         image_no: 0,
-    //                         file_name: oneFile.name,
-    //                         file_url: reader.result as string,
-    //                         turn: 0
-    //                     };
-    //                     setImages(updatedImages); // 이미지 상태 업데이트
-    //                 };
-    //                 reader.readAsDataURL(oneFile);
-    //             }
-    //     };
-
-    //     getFileInfo();  //파일 미리보기 기능
-      
-    // }, []);
-
-
-
-
-    // const [previewImages, setPreviewImages] = useState<imgInfoForCarselList>([]);
-
-    // useEffect(() => {
-    //   const fetchPreviewImages = async () => {
-    //     try {
-    //         const imagesWithUrls = await Promise.all(images?.map(async (img) => {
-    //             const imageUrl = img ? await createImg(img.file_url) : ''; 
-    //             return { ...img, imageUrl };
-    //         }) ?? []);
-    //         setPreviewImages(imagesWithUrls);
-    //         console.log("imagesWithUrls: "+ imagesWithUrls[0].imageUrl);
-    //       } catch (error) {
-    //         console.error('Error fetching images:', error);
-    //       }
-    //   };
-  
-    //   fetchPreviewImages();
-    // }, [images]);
-  
-    // async function createImg(url:string) {
-    //   try {
-    //     const response = await axios.get(url, {
-    //       responseType: 'blob',
-    //       headers: {
-    //         Authorization :`Bearer ${token}` ,
-    //       },
-    //     });
-    //     console.log("window.URL.createObjectURL(response.data): "+ window.URL.createObjectURL(response.data));
-    //     return window.URL.createObjectURL(response.data);
-    //   } catch (error) {
-    //     console.error('Error creating image:', error);
-    //     return ''; // 에러가 발생하면 빈 문자열 반환
-    //   }
-    // }
-        async function createImgURL ( url:string ) {
-            axios.get(url, {
-                responseType: 'blob',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }).then(response => {
-                console.log("window.URL.createObjectURL(response.data): " + window.URL.createObjectURL(response.data));
-                return window.URL.createObjectURL(response.data);
-            })
-        }
-
+    
     return(
         <div className='caroselArea'>
         <div className='caroselTitle'>카로셀</div>

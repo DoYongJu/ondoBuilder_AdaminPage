@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { userInfoType, userPwdType, userFullInfoType,fileNoAndHubId  } from './Models';
+import { userInfoType, userPwdType, MyObject, userFullInfoType,fileNoAndHubId  } from './Models';
 export const usernameState = atom({
   key: 'username',
   default: '',
@@ -64,4 +64,19 @@ export const fileNoState = atom({
   
 });
 
+//대쉬보드에서 set-> 이후 step에서 get
+export const MyObjectsState = atom<MyObject>({
+  key: 'MyObjectsState',
+  default: {
+    hub_id:-1,
+    hub_name: '',
+    datahub_regdate: '',
+    datahub_upddate: '',
+    hub_description: '',
+    doc_count: -1,
+    image_count: -1,
+    video_count: -1,
+    url_count: -1,
+  },
+});
 

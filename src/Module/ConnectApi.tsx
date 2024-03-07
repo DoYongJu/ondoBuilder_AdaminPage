@@ -12,7 +12,7 @@ async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMet
                 'Accept': 'application/json',
                 'Content-Type': 'application/json; charset=utf-8',
                 },
-        data: formData ? sendParam : JSON.stringify(sendParam)
+        data: formData ? sendParam: JSON.stringify(sendParam)
         };
 
         if (token) {
@@ -25,21 +25,21 @@ async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMet
             config.headers['Content-Type'] = `multipart/form-data;`;// charset=utf-8;`;
             config.headers.Authorization = `Bearer ${token}`
             config.headers.Charset = `utf-8`;
-            // config.headers = {
-                // 'Content-Type': 'multipart/form-data; charset=UTF-8;',
-                // 'Authorization':  `Bearer ${token}`,
-                // charset: 'UTF-8'
-            // }
+
         };
 
-        try {
-            const response = await axios(config);
-            return response;
+        let result = await axios(config);
+        return result;
+        
+       
+        // try {
+        //     const response = await axios(config);
+        //     return response;
            
-        } catch (error) {
-            console.log('error at ConnectionApi.tsx:', error);
-            throw error;
-        }; 
+        // } catch (error) {
+        //     console.log('error at ConnectionApi.tsx:', error);
+        //     throw error;
+        // }; 
     
         
 };
