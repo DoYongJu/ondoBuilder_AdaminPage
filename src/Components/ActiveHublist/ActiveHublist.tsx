@@ -3,7 +3,7 @@ import ConnectApi from '../../Module/ConnectApi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
 import { useRecoilValue, useSetRecoilState, useRecoilState} from 'recoil';
-import { hubClassfiyState, fileNoSideBarState,fileNoState, MyObjectsState} from '../../Resources/Recoil';
+import { hubClassfiyState, MyObjectsState} from '../../Resources/Recoil';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
@@ -38,8 +38,7 @@ function ActiveHublist(){
       { id: -3, name: '수정일순' },
       { id: -4, name: '업로드순' },  
       ]),
-      [fimeNo] = useRecoilState (fileNoState),
-      setSideBarInfoRecoil = useSetRecoilState(fileNoSideBarState),
+
       [theHubInfo] = useRecoilState (MyObjectsState),
       
 
@@ -285,10 +284,7 @@ function ActiveHublist(){
         {!isFirst && viewWays && (
           <div className='contbox'>
             <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
-            onClick={()=>{ setIsSideBarOpen(!isSideBarOpen);  setSideBarInfoRecoil({
-              hub_id: theHubInfo.hub_id,
-              file_no: fimeNo
-            });}} selectedF={()=>{setSelectedFile(null)}}/>
+            onClick={()=>{setIsSideBarOpen(!isSideBarOpen);}} selectedF={()=>{setSelectedFile(null)}}/>
           </div>
         )}
         { !viewWays && ( 

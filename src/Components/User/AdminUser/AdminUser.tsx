@@ -10,34 +10,73 @@ const AdminUser=()=>{
     const [viewInputModal, setViewInputModal] = useState<string>(''),
         [userWaitingList, setUserWaitingList] = useState<userFullInfoList>([]),
         [userList, setUserList] = useState<userFullInfoList>([]),
+        [originUserData, setOriginUserData] = useState<userFullInfoList>([]),
         [userInfo] = useRecoilState (userFullInfoState),
         setUserInfoRecoil = useSetRecoilState(userFullInfoState);
-
+        let updatedUserList:userFullInfoList=[];
+        let updatedWaitingUserList:userFullInfoList=[];
+    
+    useEffect(() => {  
+        
+        setUserListApi(); // 유저정보 get. 
+    
+    }, []);
     function setUserListApi(){
         ConnectApi({ method: 'GET', url: `/v1/api/auth/users` }) 
         .then((res) => {
             let data = res.data; 
-            setUserList(data);
+            setOriginUserData(data);
+            
+            data.map((user:any)=>{
+                if(user.isVerified === true){ //승인된 회원
+                    updatedUserList.push(user);
+                   
+                   
+                }else{ //미승인된 회원
+                    updatedWaitingUserList.push(user);
+                   
+                }     
+                
+            })
+         
         })
         .catch((error) => {
             console.error('setUserListApi/ Error occurred:', error);
         });
+        console.log("ssssss"); 
+        console.log(updatedUserList); 
+        setUserList(updatedUserList);
+        setUserWaitingList(updatedWaitingUserList);
+      
+
     };
 
-    function setUserWaitingListApi() {
-        ConnectApi({ method: 'GET', url: `/v1/api/` }) //02.26 url 삽입예정 승인대기 사용자get api-> 태호씨에게 요청전달 완료.
-            .then((res) => {
-                setUserWaitingList(res.data); //02.28 api 개발 미완성. 추후 확인 필요 일단 세팅완료.
-            })
-            .catch((error) => {
-                console.error('api완성 대기중.. ', error);
-            });
-    };
     
-    useEffect(() => {   
-        setUserWaitingListApi(); //승인대기유저정보get.
-        setUserListApi(); // 기존유저정보 get. 
-    }, [viewInputModal]);
+    // useEffect(() => {  
+    //     ConnectApi({ method: 'GET', url: `/v1/api/auth/users` }) 
+    //     .then((res) => {
+    //         let data = res.data; 
+    //         setOriginUserData(data);
+    //     })
+    //     .catch((error) => {
+    //         console.error('setUserListApi/ Error occurred:', error);
+    //     });
+
+    //     let updatedUserList:userFullInfoList=[];
+    //     let updatedWaitingUserList:userFullInfoList=[];
+
+    //         originUserData.map((user)=>{
+    //         if(user.isVerified === true){ //승인된 회원
+    //             updatedUserList.push(user);
+               
+    //         }else{ //미승인된 회원
+    //             updatedWaitingUserList.push(user);
+    //         }
+    //         setUserList(updatedUserList);
+    //         setUserWaitingList(updatedWaitingUserList);
+    //     }) 
+    //     setUserListApi(); // 기존유저정보 get. 
+    // }, [viewInputModal]);
 
     function handleDelBtn(id:number){
         ConnectApi({ method: 'DELETE', url: `/v1/api/auth/revoke/${id}`})
@@ -94,7 +133,7 @@ const AdminUser=()=>{
                             <li>{item.division}</li> 
                             <li>{item.company}</li>
                             <li>{item.username}</li>
-                            <li>가입일 데이터 필요</li>
+                            <li>{item.user_regdate}</li>
                             <li>
                                 <button className='ok'>승인</button>
                                 <button className='refuse'>거절</button>
@@ -123,7 +162,7 @@ const AdminUser=()=>{
                             <li>{item.division}</li> 
                             <li>{item.company}</li>
                             <li>{item.username}</li>
-                            <li>생성일 데이터</li>
+                            <li>{item.user_regdate}</li>
                             <li>
                                 <button className='resetpwd'  onClick={()=>{setUserInfoRecoil(item); handleResetPwd(item.uid)}}>비밀번호 초기화</button>
                                 <button className='edit' onClick={()=>{setViewInputModal('changeInfo'); setUserInfoRecoil(item); }}>수정</button> 

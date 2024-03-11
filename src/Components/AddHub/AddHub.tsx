@@ -14,6 +14,7 @@ const AddHub=()=>{
     const handleTextChange = (e:any) => {
         const newText = e.target.value;
         setInfoText(newText);
+        console.log(newText.length);
         setCurrentCount(newText.length);     
     };   
 
@@ -30,8 +31,6 @@ const AddHub=()=>{
       data: sendParam
       
     }).then(response => {
-      // setusername(response.data.user_name);
-      console.log(response.data);
       navigate('/DashBoard');
    
       
@@ -64,7 +63,7 @@ const AddHub=()=>{
                         <div className='hubInfoArea'>
                             <span>허브 설명</span>
                             <textarea  maxLength={totalCount} onChange={handleTextChange} > </textarea>
-                            <span className='count'>{currentCount-1}/{totalCount}(글자수)</span>     
+                            <span className='count'>{currentCount}/{totalCount}(글자수)</span>     
                         </div>
                     </div>
                     <div className='footerArea'>

@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SideBar.css';
+import axios from "axios"
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
-import ConnectApi from '../../Module/ConnectApi';
+import {dataByType} from '../../Resources/Models';
+import Cookies from 'js-cookie';
 import { useRecoilValue, useRecoilState} from 'recoil';
-import { hubClassfiyState, fileNoSideBarState } from '../../Resources/Recoil';
+import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
+  dataByImgState, docDetailsState} from '../../Resources/Recoil';
 interface SideBarProps {
     isOpen: boolean;
     onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -21,42 +24,65 @@ interface SideBarProps {
   const [shortProm, setShortProm] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const selectList=[',','다운로드','수정','삭제'],
-  [fimeNoAndhubId] = useRecoilState (fileNoSideBarState);
+  token = Cookies.get('accessToken');
 
-  useEffect(() => { //파일을 하나 눌렀을때 해당 관련 정보를 가져오는 api=>02.26개발중, 태호씨 api 나오면 연결
-    function selectInfoByOneFileApi() {
-      ConnectApi({ method: 'GET', url: `/v1/api/datahub/`})
-          .then((res) => {
-            const truncatedText = longProm.length > 300 ? longProm.slice(0, 300) + '...' : longProm;
-            setShortProm(truncatedText);  
-          })
-          .catch((error) => {
-              console.error('Error occurred:', error);
-          });
-    };
-    function chooseImgByType(){
-      switch(type){
+  const docInfo = useRecoilValue(docDetailsState);
+  const urlInfo = useRecoilValue(urlDetailsState);
+  const videoInfo = useRecoilValue(videoDetailsState);
+  const imgInfo = useRecoilValue(imgDetailsState);
+
+   useEffect(() => {
+    function chooseImgByType() {
+      console.log(imgInfo);
+      console.log('fileType: '+type);
+      
+      switch(type) {
         case 'doc':
           setImageSrc('/doc.svg');
           break;
-      case 'img':
+        case 'img':
+          // console.log(extractPatterns(imgInfo.file_tag));
           setImageSrc('/img.svg');
           break;
-      case 'video':
+        case 'video':
           setImageSrc('/video.svg');
           break;
-      case 'url':
+        case 'url':
           setImageSrc('/link.svg');
           break;
-      default:
+        default:
           setImageSrc(''); 
           break;
       }
     };
+    
+    chooseImgByType();   
+  }, [docInfo, urlInfo, imgInfo, videoInfo]); 
 
-  selectInfoByOneFileApi();
-  chooseImgByType();      
-  }, []);
+  function extractPatterns(inputString: string): string {
+    const patterns: string[] = [];
+    let currentPattern: string = "";
+
+    for (let i = 0; i < inputString.length; i++) {
+        if (inputString[i] === '"' && inputString[i + 1] === "," && inputString[i + 2] === '"') {
+            i += 2; // 이 경우 {" 패턴을 건너뜁니다.
+        } else if (inputString[i] === '"') {
+            currentPattern += inputString[i]; // 문자열의 시작 또는 끝인 경우 현재 패턴에 추가하지 않고 건너뜁니다.
+        } else if (inputString[i] === "," && inputString[i + 1] === '"') {
+            patterns.push(currentPattern); // 패턴이 완료되면 배열에 추가합니다.
+            currentPattern = ""; // 현재 패턴을 초기화합니다.
+            i += 1; // , 뒤에 따옴표가 오는 경우 건너뜁니다.
+        } else {
+            currentPattern += inputString[i]; // 문자열을 현재 패턴에 추가합니다.
+        }
+    }
+
+    if (currentPattern !== "") {
+        patterns.push(currentPattern); // 마지막 패턴을 배열에 추가합니다.
+    }
+
+    return patterns.join(",");
+}
 
   function openProm(){
     setChangeProm(!changeProm)
@@ -66,16 +92,17 @@ interface SideBarProps {
   
     switch(type){
       case 'doc':
-        reqDel(type,'doc_no');
+        deleteDocFile();
+        // reqDel(type,'doc_no');
         break;
       case 'img':
-        reqDel(type,'image_no');
+        deleteImgFile();
         break;
       case 'video':
-        reqDel(type,'video_no');
+        deleteVideoFile();
         break;
       case 'url':
-        reqDel('urlDelete','url_no');
+        deleteUrlFile();
         break;
       default:
         break;
@@ -83,29 +110,59 @@ interface SideBarProps {
 
    
   };
-  function reqDel(type:string, fileName:string){
-    let sendParam={}
-      if(type !== 'img'){
-        sendParam={
-          hub_id: fimeNoAndhubId.hub_id,
-          [fileName]:  fimeNoAndhubId.file_no,
-        };
-      }else{
-        sendParam={
-          hub_id: fimeNoAndhubId.hub_id,
-          carousel_id: -100,//api필요.
-          [fileName]:  fimeNoAndhubId.file_no,
-      }
-    };//end if
+  function deleteImgFile(){
+    axios({
+      headers: { 'Authorization': `Bearer ${token}` },
+      method: 'delete',
+      url: `/v1/api/datahub/${type}`,
+      data: {
+        hub_id: imgInfo.hub_id,
+        url_no: imgInfo.image_no,
+        "carousel_id": 0, // 데이터 없음. 태호씨가 res에 추가하면 수정예정 
 
-      ConnectApi({ method: 'DELETE', url: `/v1/api/datahub/${type}`,sendParam:sendParam })
-      .then((res) => {
-        console.log("*******")
-        console.log(res.data)
-      })
-      .catch((error) => {
-          console.error('Error occurred at SideBar/delFile:', error);
-      });
+      }
+    }).then(function (res){
+      console.log(res.data);
+    });
+  };
+  function deleteUrlFile(){
+    axios({
+      headers: { 'Authorization': `Bearer ${token}` },
+      method: 'delete',
+      url: `/v1/api/datahub/urlDelete`,
+      data: {
+        carousel_id: urlInfo.hub_id,
+        image_no:  urlInfo.url_no
+      }
+    }).then(function (res){
+      console.log(res.data);
+    });
+  };
+  function deleteVideoFile(){
+    axios({
+      headers: { 'Authorization': `Bearer ${token}` },
+      method: 'delete',
+      url: `/v1/api/datahub/${type}`,
+      data: {
+        hub_id: videoInfo.hub_id,
+        video_no:  videoInfo.video_no
+      }
+    }).then(function (res){
+      console.log(res.data);
+    });
+  };
+  function deleteDocFile(){
+    axios({
+      headers: { 'Authorization': `Bearer ${token}` },
+      method: 'delete',
+      url: `/v1/api/datahub/${type}`,
+      data: {
+        hub_id: docInfo.hub_id,
+        doc_no:  docInfo.doc_no
+      }
+    }).then(function (res){
+      console.log(res.data);
+    });
   };
 
   function handleClickeditOrDel(option:string){
@@ -118,9 +175,9 @@ interface SideBarProps {
   };
 
   return (
-    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-     
-      <div className='nav'>
+  
+      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className='nav'>
         <ul>
           <span>파일정보</span>
         </ul>
@@ -141,8 +198,12 @@ interface SideBarProps {
           <span onClick={onClose} ><BiX size={20}  /></span>
         </ul>
       </div>
+
+
+     {type === 'doc' && //doc일때의 사이드바
+     <>
       <div className='title'>
-          <span>조인트리 디오스 냉장고 2018 모델 수리방법 종합 정리본</span>
+          <span>{docInfo.file_name}</span>
       </div>
       <div className='docsImgArea'>
           <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
@@ -155,29 +216,132 @@ interface SideBarProps {
           <ul>최근 수정일</ul>
         </div>
         <div className='value'>
-          <ul>조인트리</ul>
-          <ul>120MB</ul>
-          <ul>2024.01.31</ul>
-          <ul>2024.01.31</ul> 
+          <ul>{docInfo.writer}</ul>
+          <ul>{docInfo.file_size}</ul>
+          <ul>{docInfo.file_regdate}</ul>
+          <ul>{docInfo.file_upddate}</ul>  
         </div>
       </div>
       <div className='fileDescription'>
         <ul>파일 설명</ul>
-        <span> 대통령은 제3항과 제4항의 사유를 지체없이 공포하여야 한다. 정부는 회계연도마다 예산안을 편성하여 회계연도 개시 90일전까지 국회에 제출하고, 국회는 회계연도 개시 30일전까지이다</span>
+        <span> {docInfo.file_description}</span>
       </div>
       <div className='fileDescription'>
-        <ul>파일 프롬프트</ul>
-        <span> {changeProm?(longProm):(shortProm)}
-        </span>
+        <ul>파일 프롬프트</ul> 
+        <div className='promtArea'> {changeProm? docInfo.file_prompt.slice(0, 300)+'...' :  docInfo.file_prompt}</div>
         <button onClick={openProm}> 
-        {!changeProm ? '프롬프트 열기' : '프롬프트 접기'}
-        {changeProm && <img src={process.env.PUBLIC_URL + '/promtBtn.svg'} alt="버튼svg." />}
-        {!changeProm && <img src={process.env.PUBLIC_URL + '/promtBtnDown.svg'} alt="버튼svg." />}
+          {changeProm ? '프롬프트 열기' : '프롬프트 접기'}
+          {!changeProm && <img src={process.env.PUBLIC_URL + '/promtBtn.svg'} alt="버튼svg." />}
+          {changeProm && <img src={process.env.PUBLIC_URL + '/promtBtnDown.svg'} alt="버튼svg." />}
         </button>
       </div>
-   
+     </>}
+
+     {type === 'img' &&
+     <>
+      <div className='title'>
+          <span>{imgInfo.file_name}</span>
+      </div>
+      <div className='docsImgArea'>
+          <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
+      </div>
+      <div className='shortInfo'>
+        <div className='key'>
+          <ul>업로더</ul>
+          <ul>파일용량</ul>
+          <ul>업로드일</ul>
+          <ul>최근 수정일</ul>
+          <ul>카로셀 그룹</ul>
+          <ul>카로셀 순번</ul>
+        </div>
+        <div className='value'>
+          <ul>{imgInfo.writer}</ul>
+          <ul>{imgInfo.file_size}</ul>
+          <ul>{imgInfo.file_regdate}</ul>
+          <ul>{imgInfo.file_upddate}</ul>
+          <ul>카로셀 그룹 추후 데이터 포함 예정 {imgInfo.casosel_name} </ul>
+          <ul>카로셀 순번에 대한 정보는 api에 없음. 추후 데이터 포함 예정 </ul>    
+        </div>
+      </div>
+      <div className='fileDescription'>
+        <ul>파일 설명</ul>
+        <span> {imgInfo.file_description}</span>
+      </div>
+      <div className='fileDescription'>
+        <ul>파일 태그</ul> 
+        <div className='promtArea'>{imgInfo.file_tag.replace(/[\\"{}]/g, " ")}</div>
+      </div>
+     </>}    
+
+
+     {type === 'video' &&
+     <>
+      <div className='title'>
+          <span>{videoInfo.file_name}</span>
+      </div>
+      <div className='docsImgArea'>
+          <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
+      </div>
+      <div className='shortInfo'>
+        <div className='key'>
+          <ul>업로더</ul>
+          <ul>파일용량</ul>
+          <ul>업로드일</ul>
+          <ul>최근 수정일</ul>
+        </div>
+        <div className='value'>
+          <ul>{videoInfo.writer}</ul>
+          <ul>{videoInfo.file_size}</ul>
+          <ul>{videoInfo.file_regdate}</ul>
+          <ul>{videoInfo.file_upddate}</ul>  
+        </div>
+      </div>
+      <div className='fileDescription'>
+        <ul>파일 설명</ul>
+        <span> {videoInfo.file_description}</span>
+      </div>
+      <div className='fileDescription'>
+        <ul>파일 태그</ul> 
+        <div className='promtArea'> {videoInfo.file_tag?.replace(/[\\"{}]/g, " ")}</div>
+      </div>
+     </>} 
+
+
+    {type === 'url' &&
+     <>
+      <div className='title'>
+          <span>{urlInfo.url_description}</span>
+      </div>
+      <div className='docsImgArea'>
+          <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
+      </div>
+      <div className='shortInfo'>
+        <div className='key'>
+          <ul>업로더</ul>
+          <ul>파일용량</ul>
+          <ul>업로드일</ul>
+          <ul>최근 수정일</ul>
+        </div>
+        <div className='value'>
+          <ul>{urlInfo.writer}</ul>
+          <ul>--</ul>
+          <ul>{urlInfo.url_regdate}</ul>
+          <ul>{urlInfo.url_upddate}</ul>  
+        </div>
+      </div>
+      <div className='fileDescription'>
+        <ul>파일 설명</ul>
+        <span> {urlInfo.url_description}</span>
+      </div>
+      <div className='fileDescription'>
+        <ul>파일 태그</ul> 
+        <div className='promtArea'> 데이터없음. url의 태그가 넘어온다면 들어오게 될 자리.{urlInfo.url_tags}</div>
+      </div>
+     </>}    
     </div>
+       
   );
+        
 };
 
 export default SideBar;

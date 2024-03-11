@@ -67,18 +67,14 @@ export interface dataByType{
   url_description:string;
   url_regdate:string;
   url_upddate:string;
+  file_prompt:string;
+  file_tag:string;
+  turn:number;
+  casosel_name:string;
+ 
+  
 
 }
-// export interface dataForUploadType{
-//   hub_id: number,
-//   file_tag: tagsList,
-//   file_description: string,
-//   carousel_id: number,
-//   turn: number,
-//   url_tag: string,
-//   url_description: string,
-//   doc:string
-// }
 export interface userInfoType{
   email: string;
   company: string;
@@ -101,6 +97,7 @@ export interface userFullInfoType{
   division: string;
   username: string;
   user_regdate: string;
+  isVerified: boolean,
 }
 export interface imgInfoForCarsel{
   file_name: string;
@@ -113,6 +110,54 @@ export interface imgInfoForCarsel{
 export interface fileNoAndHubId{
   hub_id:number,
   file_no:number
+}
+export interface dataByDoc{
+  hub_id:number,
+  doc_no:number,
+  file_name:string,
+  file_description:string,
+  file_regdate:string,
+  file_upddate:string,
+  file_size:string,
+  file_prompt:string,
+  download_url:string,
+  writer:string,
+}
+export interface dataByVideo{
+  hub_id:number,
+  video_no:number,
+  file_name:string,
+  file_description:string,
+  file_regdate:string,
+  file_upddate:string,
+  file_tag:string, 
+  file_size:string,
+  download_url:string,
+  writer:string,
+}
+export interface dataByImg{
+  hub_id:number,
+  image_no:number,
+  file_name:string,
+  file_description:string,
+  file_regdate:string,
+  file_upddate:string,
+  file_tag:string, 
+  file_size:string,
+  download_url:string,
+  writer:string,
+  turn:number,
+  casosel_name:string;
+ 
+}
+export interface dataByUrl{
+  hub_id:number,
+  url_no:number,
+  url_description:string,
+  url_regdate:string,
+  url_upddate:string,
+  url_tags:string,
+  writer:string,
 }
 export type imgInfoForCarselList = imgInfoForCarsel[];
 export type userFullInfoList = userFullInfoType[];

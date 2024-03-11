@@ -10,7 +10,7 @@
 
 
 /* 이름 및 로그아웃 selectBox */
-.topGNB .topMenu .custom-select-box {position: relative;  display: flex; z-index:100; width:114px;}
+.topGNB .topMenu .custom-select-box {position: relative;  display: flex; z-index:100; min-width:114px;}
 .topGNB .topMenu .custom-select-box .select-header {border-radius: 8px;border: 1px solid #BDBDBD;padding:14px 16px 14px 16px;
     cursor: pointer; width:90%;display: flex; justify-content: space-between; }
 

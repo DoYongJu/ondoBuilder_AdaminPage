@@ -1,22 +1,26 @@
 import {useState, useEffect} from 'react';
 import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList, dataByType} from '../Resources/Models';
-import { DataHub_sortIntheHub_module}from '../Module/Search_module';
-import {  useSetRecoilState, useRecoilState} from 'recoil';
-import { fileNoState, fileNoSideBarState } from '../Resources/Recoil';
+import {  useSetRecoilState, useRecoilValue} from 'recoil';
+import {  dataByDocState, dataByVideoState,dataByUrlState,dataByImgState, searchState, syncSearchTextState } from '../Resources/Recoil';
+import {DataHub_searchWordIntheHub_module}from '../Module/Search_module';
 
 
 const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, selectedF}: 
     { classfiyType: string, hubId: string, viewType: string, onClick: () => void, selected?:string, selectedF?:(item:File | null)=>void }) =>{
-    // console.log(selected);
-    // console.log(classfiyType);
+
     const [imageSrc, setImageSrc] = useState('');
     const [originlist, setOriginList] = useState<dataByTypeList>([]);
-    const [listByselc, setListBySelc] = useState<dataByTypeList>([]),
-    [SideBarInfo] = useRecoilState (fileNoSideBarState),
-    [fileNo] = useRecoilState (fileNoState),
-    setSideBarInfoRecoil = useSetRecoilState(fileNoSideBarState),
-    setFileNoRecoil = useSetRecoilState(fileNoState);
+    const searchText = useRecoilValue(syncSearchTextState);
+    const [listByselc, setListBySelc] = useState<dataByTypeList>(originlist),
+  
+
+
+    //file recoil
+    setDocInfoRecoil = useSetRecoilState(dataByDocState),
+    setUrlInfoRecoil = useSetRecoilState(dataByUrlState),
+    setImageInfoRecoil = useSetRecoilState(dataByImgState),
+    setVideoInfoRecoil = useSetRecoilState(dataByVideoState);
 
     useEffect(() => {
         //데이터 허브의 종속된 파일을 타입별로 조회
@@ -41,45 +45,93 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
                             setImageSrc(''); 
                             break;
                     }; 
-            
 
                 })
                 .catch((error) => {
                     console.error('Error occurred:', error);
                 });
+                  console.log("at firstApi");
+                   console.log(originlist);
+                   console.log(listByselc);
         };
-    
         selectDataByTypeApi();
     
-    }, [classfiyType, selectedF]);
+    }, [classfiyType]); //selectedF가 있었으나 뺌. 파일이 업로드 된후, 업로드한 파일이 포함된 케이스 고려때문에 잇엇지만, 정렬기능 만들며 충돌
 
     useEffect(() => {
+        setListBySelc(originlist);
+    }, [originlist]);
+    
+    useEffect(() => {
+       
+    }, [listByselc]);
+
+    useEffect(() => {
+        console.log("aaaaaaaar검색기능 useRffect aaaaaaaaaaaaaa");
+        console.log(searchText);
         function getContentBySelect() {
-            let datass = DataHub_sortIntheHub_module({ data: originlist }, selected);
+            let datass = DataHub_searchWordIntheHub_module({ data: originlist },searchText, selected );
+        //    if(datass.length === 0){
+        //     alert('원하시는 검색 결과가 없습니다.')
+        //    }
             setListBySelc(datass); 
+            // setSearchState('');
         };
+        
         getContentBySelect();
-    }, [selected]);
+    }, [selected, searchText]);
 
     function handleClick (item:dataByType){
+        console.log(item);
         switch(classfiyType){
             case 'doc':
-                setFileNoRecoil(item.doc_no);
-                setSideBarInfoRecoil({hub_id:Number(hubId), file_no: fileNo });
+                setDocInfoRecoil({hub_id:Number(hubId), 
+                    doc_no:item.doc_no, 
+                    file_name:item.file_name,
+                    file_description:item.file_description,
+                    file_regdate:item.file_regdate,
+                    file_upddate:item.file_upddate,
+                    file_size:item.file_size,
+                    file_prompt:item.file_prompt,
+                    download_url:item.download_url,
+                    writer:item.writer})
                 break;
             case 'img':
-                // 따로 recoil
+                setImageInfoRecoil({hub_id:Number(hubId), 
+                    image_no:item.video_no, 
+                    file_name:item.file_name,
+                    file_description:item.file_description,
+                    file_regdate:item.file_regdate,
+                    file_upddate:item.file_upddate,
+                    file_size:item.file_size,
+                    file_tag:item.file_tag,
+                    download_url:item.download_url,
+                    writer:item.writer,
+                    turn: item.turn,
+                    casosel_name:item.casosel_name
+                    })
                 break;
             case 'video':
-                setFileNoRecoil(item.video_no);
-                setSideBarInfoRecoil({hub_id:Number(hubId), file_no: fileNo });
+                setVideoInfoRecoil({hub_id:Number(hubId), 
+                    video_no:item.video_no, 
+                    file_name:item.file_name,
+                    file_description:item.file_description,
+                    file_regdate:item.file_regdate,
+                    file_upddate:item.file_upddate,
+                    file_size:item.file_size,
+                    file_tag:item.file_tag,
+                    download_url:item.download_url,
+                    writer:item.writer})
                 break;
             case 'url':
-                setFileNoRecoil(item.url_no);
-                setSideBarInfoRecoil({hub_id:Number(hubId), file_no: fileNo });
+                setUrlInfoRecoil({hub_id:Number(hubId), 
+                    url_no:item.url_no, 
+                    url_description:item.url_description,
+                    url_regdate:item.url_regdate,
+                    url_upddate:item.url_upddate,
+                    writer:item.writer, url_tags:item.file_tag})
                 break;
             default:
-                setFileNoRecoil(-1);
                 break;
         }
        
@@ -137,8 +189,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
                             <img style={{width:'36px', height:'36px' }} src={process.env.PUBLIC_URL +imageSrc}/>
                             {item.url_link}
                         </li>
-                        <li>{item.url_description}</li>
-                        <li>{item.writer}</li>
+                        <li><span>{item.url_description}</span></li>
+                        <li><span>{item.writer}</span></li>
                         <li>{item.url_regdate}</li>
                         {item.url_upddate ? <li>{item.url_upddate}</li> : <li>&nbsp;</li>}
                         <li> -- </li>
@@ -150,17 +202,6 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
         }else{
             return (
                 <>
-                  {/* <InfiniteScroll
-      dataLength={list.length}
-      next={list}
-      hasMore={true}
-      loader={<h4>Loading...</h4>}
-    >
-      {items.map((item, index) => (
-        <div key={index}>Item {index}</div>
-      ))}
-    </InfiniteScroll> */}
-
                 {listByselc.map((item, index) => (
                     <div className='list' key={index} onClick={()=>handleClick(item)}>
                     <ul>
@@ -168,8 +209,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
                             <img style={{width:'36px', height:'36px' }} src={process.env.PUBLIC_URL +imageSrc}/>
                             {item.file_name}
                         </li>
-                        <li>{item.file_description}</li>
-                        <li>{item.writer}</li>
+                        <li><span>{item.file_description}</span></li>
+                        <li><span>{item.writer}</span></li>
                         <li>{item.file_regdate}</li>
                         {item.file_upddate ? <li>{item.file_upddate}</li> : <li>&nbsp;</li>}
                         <li>{item.file_size}</li>

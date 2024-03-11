@@ -23,9 +23,8 @@ async function ConnectApi({ method, url, sendParam,formData }: { method: HttpMet
         if(formData===true){
             config.headers = config.headers ?? {};
             config.headers['Content-Type'] = `multipart/form-data;`;// charset=utf-8;`;
-            config.headers.Authorization = `Bearer ${token}`
+            config.headers.Authorization = `Bearer ${token}`;
             config.headers.Charset = `utf-8`;
-
         };
 
         let result = await axios(config);

@@ -14,7 +14,7 @@
 .AdminUser .content .waitingListArea ul:first-child {border-bottom: 1px solid #E1E1E1 ; padding-bottom:8px}
 .AdminUser .content .waitingListArea ul:first-child +ul{height: 20px; background-color: #FCFCFC; padding: 17px 32px 19px 32px; 
     border:solid 1px #CCC; filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.10)); border-radius: 5px; margin-top: 20px;}
-.AdminUser .content  .waitingListArea ul:first-child +ul> li{width:15%; float: left;text-align: left;}
+.AdminUser .content  .waitingListArea ul:first-child +ul> li{width:18%; float: left;text-align: left;}
 .AdminUser .content  .waitingListArea ul:first-child +ul> li+li{width:15%}
 .AdminUser .content  .waitingListArea ul:first-child +ul> li+li+li{width:12%}
 .AdminUser .content  .waitingListArea ul:first-child +ul> li+li+li+li{width:12%}
@@ -24,7 +24,7 @@
 .AdminUser .content .waitingListArea .userInfoWaitingList ul:first-child{height: 20px; background-color: #FCFCFC; padding: 17px 32px 19px 32px; 
     filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.10)); border-radius: 5px; margin-top: 6px; font-size: 14px;
     font-style: normal; font-weight: 300;line-height: 20px; letter-spacing: -0.35px; display: flex; align-items: center;}
-.AdminUser .content  .waitingListArea .userInfoWaitingList ul:first-child > li{width:15%; float: left;text-align: left;}
+.AdminUser .content  .waitingListArea .userInfoWaitingList ul:first-child > li{width:18%; float: left;text-align: left;}
 .AdminUser .content  .waitingListArea .userInfoWaitingList ul:first-child > li+li{width:15%}
 .AdminUser .content  .waitingListArea .userInfoWaitingList ul:first-child > li+li+li{width:12%}
 .AdminUser .content  .waitingListArea .userInfoWaitingList ul:first-child > li+li+li+li{width:12%}
@@ -40,7 +40,7 @@
 .AdminUser .content .userList ul:first-child {margin-top: 42px;font-size: 20px;font-weight: 500; line-height: 20px;letter-spacing: -0.5px;padding-bottom:8px; border-bottom: 1px solid #E1E1E1 ;}
 .AdminUser .content .userList ul:first-child +ul{height: 20px; background-color: #FCFCFC; padding: 17px 32px 19px 32px; 
     border:solid 1px #CCC; filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.10)); border-radius: 5px; margin-top: 20px;}
-.AdminUser .content .userList ul:first-child +ul >li{width:15%; float: left;text-align: left;}
+.AdminUser .content .userList ul:first-child +ul >li{width:18%; float: left;text-align: left;}
 .AdminUser .content .userList ul:first-child +ul> li+li{width:15%}
 .AdminUser .content .userList ul:first-child +ul> li+li+li{width:12%}
 .AdminUser .content .userList ul:first-child +ul> li+li+li+li{width:12%}
@@ -50,7 +50,7 @@
 .AdminUser .content .userList .userInfohistoryList ul:first-child{height: 20px; background-color: #FCFCFC; padding: 17px 32px 19px 32px; 
     filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.10)); border-radius: 5px; margin-top: 6px; font-size: 14px;
     font-style: normal; font-weight: 300;line-height: 20px; letter-spacing: -0.35px; display: flex; align-items: center;}
-.AdminUser .content .userList .userInfohistoryList ul:first-child > li{width:15%; float: left;text-align: left; }
+.AdminUser .content .userList .userInfohistoryList ul:first-child > li{width:18%; float: left;text-align: left; }
 .AdminUser .content .userList .userInfohistoryList ul:first-child > li+li{width:15%}
 .AdminUser .content .userList .userInfohistoryList ul:first-child > li+li+li{width:12%}
 .AdminUser .content .userList .userInfohistoryList ul:first-child > li+li+li+li{width:12%}

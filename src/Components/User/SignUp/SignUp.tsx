@@ -89,7 +89,7 @@ function SignUp() {
   return (
     <div className="screen">
     <div className="div">
-    <img className="logo-ondo"  onClick={()=>{ navigate('/SignAccept');}} style={{width:'132px', height:'73px'}} src={process.env.PUBLIC_URL + '/ondoIcon.png'} alt="온도 로고"/>
+    <img className="logo-ondo"  onClick={()=>{ navigate('/login');}} style={{width:'132px', height:'73px'}} src={process.env.PUBLIC_URL + '/ondoIcon.png'} alt="온도 로고"/>
     
       <div className="overlap">
         <div className="text-wrapper">회원등록</div>
