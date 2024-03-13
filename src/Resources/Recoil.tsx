@@ -153,8 +153,7 @@ export const dataByUrlState = atom<dataByUrl>({
     url_regdate:'',
     url_upddate:'',
     writer:'',
-    url_tag:'',
-    url_name:'',
+    url_tags:'',
     }
 });
 export const urlDetailsState = selector({
