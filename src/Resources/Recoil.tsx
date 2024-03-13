@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { userInfoType, userPwdType, MyObject, userFullInfoType,
-  fileNoAndHubId,dataByDoc,dataByVideo,dataByUrl,dataByImg } from './Models';
+  Options,dataByDoc,dataByVideo,dataByUrl,dataByImg } from './Models';
 
 const { persistAtom } = recoilPersist();
 
@@ -24,7 +24,10 @@ export const hubClassfiyState = atom({
   key:'type',
   default:'',
 });
-
+export const ActiveHubFileListState = atom({
+  key:'list',
+  default:false,
+});
 export const userInfoState = atom<userInfoType>({
   key: 'userInfoState',
   default: {
@@ -135,6 +138,7 @@ export const dataByImgState = atom<dataByImg>({
     writer:'',
     turn:-1,
     casosel_name:'',
+    carosel_id:-1,
 
   }
 });
@@ -170,3 +174,4 @@ export const syncSearchTextState = selector({
     return get(searchState);
   },
 });
+

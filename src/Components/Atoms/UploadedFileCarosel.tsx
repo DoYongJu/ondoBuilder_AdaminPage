@@ -10,10 +10,10 @@ interface ImageInfo {
     file_url: string;
     order: number;
   }
-const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setCaroselNewView, images, handleDragStart, handleDrop, imgClicked, inputRef,
+const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setCaroselNewView, images, handleDragStart, handleDrop, inputRef,
     onSubmitAddCarosel, addCaroselGroupApi}:
     {caroselNewView:boolean, selected:boolean|string, handleSelect:(e:any) => void, selectList:any[], setCaroselNewView:(caroselNewView: boolean)=>void,
-    images?:imgInfoForCarselList, handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,imgClicked:()=>void,
+    images?:imgInfoForCarselList, handleDragStart:(e:any, index:number)=>void, handleDrop:(e:any, index:number)=>void,
     inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
     // const [previewimages, setPreviewimages] = useState<imgInfoForCarselList>([]);
     const token = Cookies.get('accessToken');
@@ -36,8 +36,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
                   {images?.map((img, index) => (
 
                       <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
-                          onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}
-                          onClick={imgClicked}>
+                          onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}>
                         
                             <div className='imgArea' >
                             

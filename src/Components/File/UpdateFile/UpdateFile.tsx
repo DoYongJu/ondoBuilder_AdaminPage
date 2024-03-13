@@ -2,24 +2,24 @@ import React, {useState, useRef, useEffect} from 'react';
 import { BiX } from "react-icons/bi";
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import './UploadFile.css';
+import './UpdateFile.css'; //안만들었는데 잘됨. id가 같아서 물려 들어가는듯. 추가 css 파일 작성 예정
 import Cookies from 'js-cookie';
 
-import {MyObject} from '../../Resources/Models';
-import {tagsList, tag, UploadFileProps, imgInfoForCarselList, imgInfoForCarsel} from '../../Resources/Models';
-import ConnectApi from '../../Module/ConnectApi';
-import UploadFileDataHandler from '../../Module/UploadFileDataHandler';
-import UploadedFileName from '../Atoms/UploadedFileName';
-import UploadedFileTextArea from '../Atoms/UploadedFileTextArea';
-import UploadedFileTag from '../Atoms/UploadedFileTag';
-import UploadedFileCarosel from '../Atoms/UploadedFileCarosel';
-import InputBox from '../Atoms/InputBox/InputBox';
-import Alert from '../Modal.components/Alert/Alert';
-import { useRecoilValue, useRecoilState} from 'recoil';
-import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
-  dataByImgState, docDetailsState} from '../../Resources/Recoil';
+import {MyObject} from '../../../Resources/Models';
+import {tagsList, tag, UploadFileProps, imgInfoForCarselList, imgInfoForCarsel,Options, Option} from '../../../Resources/Models';
+import ConnectApi from '../../../Module/ConnectApi';
+import UploadFileDataHandler from '../../../Module/UploadFileDataHandler';
+import UploadedFileName from '../../Atoms/UploadedFileName';
+import UploadedFileTextArea from '../../Atoms/UploadedFileTextArea';
+import UploadedFileTag from '../../Atoms/UploadedFileTag';
+import UploadedFileCarosel from '../../Atoms/UploadedFileCarosel';
+import InputBox from '../../Atoms/InputBox/InputBox';
+import Alert from '../../Modal.components/Alert/Alert';
+import { useRecoilValue, useSetRecoilState, } from 'recoil';
+import { videoDetailsState, urlDetailsState, imgDetailsState,
+     docDetailsState, ActiveHubFileListState} from '../../../Resources/Recoil';
 
-const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
+const UpdateFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType}) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [urlInfo, setInfoUrl] = useState(''); //url 입력 input
     const [description, setInfoText] = useState(''); //파일설명 input
@@ -38,10 +38,10 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false); //파일 비활성화 여부
    
-      const [selectList, setSelectList] = useState([
+      const [selectList, setSelectList] = useState<Options>([
         { id: -1, name: '선택' },
         { id: -2, name: '선택하지 않음' }
-    ]);
+      ]);
     const [selectedCaroselId, setSelectedCaroselId] = useState('-10');
     const [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
     const [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
@@ -53,6 +53,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const urlRecoilInfo = useRecoilValue(urlDetailsState);
     const videoRecoilInfo = useRecoilValue(videoDetailsState);
     const imgRecoilInfo = useRecoilValue(imgDetailsState);
+
+    const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
+    const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
 
     useEffect(() => {
         function validNull(){
@@ -88,10 +91,13 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                 .then((res) => {
                     const data = res.data;
                     const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
-                    let updatedList = [...selectList];
+                    let updatedList:Options = [...selectList];
                    // selectList 배열의 index 2부터 newList 배열을 추가
                     updatedList = [...updatedList.slice(0, 2), ...newList];
                     setSelectList(updatedList); // 업데이트된 리스트 설정
+                    // caroselRecoilInfo(updatedList); //리코일로 관리, 추후 사이드바에서 필요
+                   
+                    
                 })
                 .catch((error) => {
                     console.error('setCaroselGroupApi/ Error occurred:', error);
@@ -175,8 +181,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                         setImages(updatedList);
                    
                     }
-                    console.log("getImgListApi:");
-                    console.log(images);
                 });
                 
             }).catch((error) => {
@@ -188,7 +192,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     }, [selectedCaroselId]);
     
 
-    //카로셀 그룹 추가
+ //카로셀 그룹 추가
     function addCaroselGroupApi() {
        
         let sendParam={
@@ -204,14 +208,14 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             console.error('addCaroselGroupApi/ Error occurred:', error);
           });
     };
-
+//이미지 잡기
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         
         setDraggedItem(images[index]);
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', index.toString());
     };   
-
+//이미지 드롭
     const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         e.preventDefault();
         if (draggedItem) {
@@ -233,14 +237,13 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             setDraggedItem(null);
         };
     };
-    
-    
+     
     const handleTextChange = (e:any) => {
         const newText = e.target.value;
         setInfoText(newText);
         setCurrentCount(newText.length);     
     };
-
+//태그 추가
     const onSubmitSearch = (e:any) => {
 
         if (e.key === 'Enter'){
@@ -264,35 +267,94 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         };
 
     };
-
+//태그 삭제
     const deleteTag = (index: number) =>{
         setTags((prevTags) => prevTags.filter((_, i) => i !== index));
     };
-
+//캐로셀 리스트 클릭 이벤트
     function handleSelect (selectedValue:any){
         setSelectedCaroselId(selectedValue.id);
     };
+//파일 수정 요청
+    function saveFile(){
+        patchVideoFile();
+        // let object:File|null= await makeVideoObjectFile();
+        // if(object !== null){
+        //     patchVideoFile(object);
+        // }
+        
+        
+    };
+    //비디오 파일 생성
+    // async function makeVideoObjectFile(){
+    //     const fileName = videoRecoilInfo.download_url.substring(videoRecoilInfo.download_url.lastIndexOf('/') + 1); 
+    //     let theFileType=fileName.substring(fileName.lastIndexOf('.') + 1);
+        
+    //     console.log('theFileType: '+ theFileType);
+    // let data= '';
+    // await axios({
+    //         headers: { 'Authorization': `Bearer ${token}`, 'Content-type': 'application/json; charset=utf-8', },
+    //         method: 'GET',
+    //         url: `/v1/api/datahub/file/${fileName}`,
+    //         responseType: 'blob',
+      
+    //         }).then(function (res) {
+    //         data= res.data;
+    //         console.log(res.data);
+    //         let fileType: string | undefined = res.headers['content-type']; 
+        
+    //         if (!fileType || fileType === 'null') {
+    //           fileType = 'application/octet-stream'; 
+    //         }
+    //         return new File([res.data], videoRecoilInfo.file_name, { type: 'video/mp4' });
+    //         }).catch((err)=>{alert(err);  });
 
-    async function saveFile(){
+    //     return new File([data], videoRecoilInfo.file_name, { type: 'video/mp4' });
+    // };
+    //비디오파일 수정 api
+    function patchVideoFile(){
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
-    
-        const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, 
-            content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem? (draggedItem.turn):(0)})
-        
-            if(boolean === true){
+        axios({
+            headers: { 'Authorization': `Bearer ${token}`},
+            method: 'patch',
+            url: `/v1/api/datahub/video`,
+            data:  {
+                hub_id:videoRecoilInfo.hub_id,
+                video_no:videoRecoilInfo.video_no,
+                file_tag:tagList,
+                file_description: description,
+            }
+          }
+          ).then(function (res){
+
             const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
             onClose(fakeEvent);
-        }else{
-            alert('업로드 실패');
-        }
-        
-    };
+            setActiveHubFileListRecoil(!relanderingActiveHubFileList)
+          }).catch(err =>{alert(err)});
+    }
+    // function patchVideoFile(file:File){ //doc에서 사용 예정
+    //     console.log(file);
+    //     const formData = new FormData();
+    //     formData.append('hub_id', String(videoRecoilInfo.hub_id));
+    //     formData.append('video_no', String(videoRecoilInfo.video_no));
+    //     formData.append('file_tag', String(videoRecoilInfo.file_tag));
+    //     formData.append('file_description', String(videoRecoilInfo.file_description));
+    //     formData.append('video', file);
 
-    const imgClicked =()=>{
-        // setDraggedItem('Clicked');
-    };
+    //     axios({
+    //         headers: { 'Authorization': `Bearer ${token}` , 'Content-Type':`multipart/form-data`},
+    //         method: 'patch',
+    //         url: `/v1/api/datahub/video`,
+    //         data:  formData,
+    //       }
+    //       ).then(function (res){
 
+    //         const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+    //         onClose(fakeEvent);
+    //       }).catch(err =>{alert(err)});
+    // }
+//파일 추가 버튼 이벤트
     const onSubmitAddCarosel = (e:any) => {
       let addC = e.target.value;
       setAddCarosel(addC);   
@@ -302,16 +364,16 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         const newText = e.target.value;
         setInfoUrl(newText);
     };
-
+//aleat 노출 유무
     const openAlart=()=>{
         setViewAlart(true);
-      };
+    };
 
     return(
         
-    <div className="FileUpload">
+    <div className="FileUpdate">
         <div className="header">
-            <ul>파일 업로드</ul>
+            {fileType === 'link'? <ul>링크 수정</ul>: <ul>파일 수정</ul>}
             <button  onClick={openAlart}><BiX size={20}  /></button>
         </div>
         <div className='body'>
@@ -329,15 +391,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                     <UploadedFileCarosel caroselNewView={caroselNewView} selected={selectedCaroselId} handleSelect={handleSelect}
                     selectList={selectList} setCaroselNewView={setCaroselNewView} images={images} handleDragStart={handleDragStart}
-                    handleDrop={handleDrop} imgClicked={imgClicked} inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel} 
+                    handleDrop={handleDrop}  inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel} 
                     addCaroselGroupApi={addCaroselGroupApi}/>
-                </>
-            }
-            {fileType === 'video' &&oneFile && 
-                <>
-                    <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/> 
-                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
-                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>
             }
             {fileType === 'link' && 
@@ -357,11 +412,11 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                 </>
             }
         </div>
-        <div className='footer'> 
-            <button className={`btn ${isButtonDisabled ? '' : 'disabled'}`} onClick={isButtonDisabled ?  saveFile : undefined }>파일 저장 </button>
+        <div className='footerUpdate'> 
+            <button className={`btn ${isButtonDisabled ? '' : 'disabled'}`} onClick={isButtonDisabled ?  saveFile : undefined }>파일 수정 </button>
         </div> 
        {viewAlart && <Alert onClose={()=>{setViewAlart(false);}} action='uploadFile' onCustomBtn={onClose}/>}
     </div>
     );
 };
-export default UploadFile;
+export default UpdateFile;

@@ -7,8 +7,7 @@ import { hubClassfiyState, MyObjectsState} from '../../Resources/Recoil';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
-import UploadFile from '../UploadFile/UploadFile';
-import {MyObject} from '../../Resources/Models';
+import UploadFile from '../File/UploadFile/UploadFile';
 import ClassfiydataOnType from '../../Module/ClassfiydataOnType';
 
 import { LuListFilter } from "react-icons/lu";
@@ -56,42 +55,48 @@ function ActiveHublist(){
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
 
+  //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
   useEffect(() => {
-      //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
+      
       function selectDataByTypeApi() {
         console.log('hub_id: '+theHubInfo.hub_id);
-        ConnectApi({ method: 'GET', url: `/v1/api/datahub/${theHubInfo.hub_id}?type=${type}`})
-            .then((res) => {
-              if (res.data.length !== 0) {
-                setIsFirst(false);
-              } else {
-                setIsFirst(true);
-              };
-            })
-            .catch((error) => {
-              console.error('Error occurred at ActiveHublist/selectDataByTypeApi:', error);
-            });
+        
+        if(theHubInfo.hub_id !== -1){ //default가 -1, 허브를 클릭했을때만 api호출
+          ConnectApi({ method: 'GET', url: `/v1/api/datahub/${theHubInfo.hub_id}?type=${type}`})
+          .then((res) => {
+            if (res.data.length !== 0) {
+              setIsFirst(false);
+            } else {
+              setIsFirst(true);
+            };
+          })
+          .catch((error) => {
+            console.error('Error occurred at ActiveHublist/selectDataByTypeApi:', error);
+          });
+        };
       };
   
       selectDataByTypeApi();
   
   }, [isFirst, viewWays, type, selectedFile]);
  
-
-    const buttons = [ //상단 탭 정보
+  //상단 탭 정보
+  const buttons = [ 
         { label: '정보', value: 'info' },
         { label: '문서', value: 'doc' },
         { label: '이미지', value: 'img' },
         { label: '동영상', value: 'video' },
         { label: '링크', value: 'url' },
-    ];
+  ];
 
-    function handleSelect (selectedValue:ClassifyType){
+  //상단 select박스 클릭 이벤트
+  function handleSelect (selectedValue:ClassifyType){
         setSearchText('');
         setSearchType(selectedValue.name);
-    };
+  };
 
-    const handleButtonClick = (value:string) => {
+  //상단 탭 클릭 이벤트 
+  const handleButtonClick = (value:string) => {
       setHubClassify(value);
       setActiveButton(value);
         switch(value){
@@ -103,8 +108,9 @@ function ActiveHublist(){
           default : ;
         
         };
-    };
-  
+  };
+
+  //이미지 드롭
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
@@ -112,12 +118,14 @@ function ActiveHublist(){
     setActive(false);
   };
 
+  //파일업로드버튼 클릭 이벤트
   const handleFileuploadButtonClick =()=>{
     if (fileInputRef.current) {
         fileInputRef.current.click();
       }
   };
 
+//img 파일 타입 검사: image/jpeg', 'image/png', 'image/jpg' 허용.
   function isImageFileType(fileType:string) {
     let allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!allowedTypes.includes(fileType)) {
@@ -128,6 +136,7 @@ function ActiveHublist(){
     return true;
   };
 
+//video 파일 타입 검사:'video/mp4', 'video/avi', 'video/wmv', 'video/mov' 허용.
   function isVideoFileType(fileType:string) {
     let allowedTypes = ['video/mp4', 'video/avi', 'video/wmv', 'video/mov'];
       if (!allowedTypes.includes(fileType)) {
@@ -138,6 +147,7 @@ function ActiveHublist(){
     return true;
   };
 
+//video 파일 타입 검사: 하기의 내용 확인.
   function isDocFileType(fileType:string){
     let allowedTypes = [
       'application/vnd.ms-powerpoint', // ppt
@@ -157,6 +167,7 @@ function ActiveHublist(){
   return true;
   };
 
+//file type에 따른 size 검사.
   const validateFile = (file:File)=>{
       const fileType = file.type;
       const fileSize = file.size;
@@ -188,6 +199,7 @@ function ActiveHublist(){
       };
   };
 
+//선택된 파일을 사이즈 검사를 시키며 value초기화
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     validateFile(file);
@@ -306,19 +318,23 @@ function ActiveHublist(){
             )}
           </div>
         )}
-
-        
+        {/* 사이드바 나올때 다른 버튼들 못 건드리게 임시로 막음. */}
+        {isSideBarOpen &&
+         <div className="overlay"> 
         <SideBar isOpen={isSideBarOpen} onClose={()=>{ setIsSideBarOpen(false);}} /> 
+        </div>  
+        }
+        
 
         {/* 모달 띄우는 코드 */}
         {(selectedFile)&& (  
           <div className="overlay"> 
-            <UploadFile onClose={()=>{setSelectedFile(null);}} oneFile={selectedFile} fileType={type}/> 
+            <UploadFile onClose={()=>{setSelectedFile(null);}} oneFile={selectedFile} fileType={type} /> 
           </div>  
         )}
         {(openInputModal)&& (  
           <div className="overlay"> 
-            <UploadFile onClose={()=>{setOpenInputModal(false);}}  fileType={'link'}/> 
+            <UploadFile onClose={()=>{setOpenInputModal(!isSideBarOpen);}}  fileType={'link'} /> 
           </div>  
         )}
         

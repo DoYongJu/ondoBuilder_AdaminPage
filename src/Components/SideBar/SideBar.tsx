@@ -5,15 +5,15 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
 import {dataByType} from '../../Resources/Models';
 import Cookies from 'js-cookie';
-import UploadFile from '../UploadFile/UploadFile';
+import UpdateFile from '../File/UpdateFile/UpdateFile';
 import { useRecoilValue, useRecoilState} from 'recoil';
 import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
-  dataByImgState, docDetailsState} from '../../Resources/Recoil';
+  docDetailsState} from '../../Resources/Recoil';
 interface SideBarProps {
     isOpen: boolean;
     onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
   }
-  let tmp ='국무회의는 대통령·국무총리와 15인 이상 30인 이하의 국무위원으로 구성한다. 행정권은 대통령을 수반으로 하는 정부에 속한다. 비상계엄하의 군사재판은 군인·군무원의 범죄나 군사에 관한 간첩죄의 경우와 초병·초소·유독음식물공급·포로에 관한 죄중 법률이 정한 경우에 한하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여 다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여 다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여 다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국가는 국민 모두의 생산 및 생활의 기반이 되는 국토의 효율적이고 균형있는 이용·개발과 보전을 위하여 법률이 정하는 바에 의하여다음과 같은 판결을 내린 사례가 다수 존재 하여 이를 참고하기 바라므로국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. ssss';
+
 
   const SideBar: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
   const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
@@ -21,9 +21,6 @@ interface SideBarProps {
 
   const [changeProm, setChangeProm] = useState(false);
   const [selctedClick, setSelctedClick] = useState(false);
-  const [longProm, setLongProm] = useState(tmp);
-  const [shortProm, setShortProm] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
   const selectList=[',','다운로드','수정','삭제'],
   token = Cookies.get('accessToken');
   const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
@@ -32,8 +29,11 @@ interface SideBarProps {
   const videoInfo = useRecoilValue(videoDetailsState);
   const imgInfo = useRecoilValue(imgDetailsState);
 
+
+
    useEffect(() => {
     console.log(urlInfo);
+
     function chooseImgByType() {
       console.log(imgInfo);
       console.log('fileType: '+type);
@@ -43,7 +43,6 @@ interface SideBarProps {
           setImageSrc('/doc.svg');
           break;
         case 'img':
-          // console.log(extractPatterns(imgInfo.file_tag));
           setImageSrc('/img.svg');
           break;
         case 'video':
@@ -61,35 +60,9 @@ interface SideBarProps {
     chooseImgByType();   
   }, [docInfo, urlInfo, imgInfo, videoInfo]); 
 
-  function extractPatterns(inputString: string): string {
-    const patterns: string[] = [];
-    let currentPattern: string = "";
-
-    for (let i = 0; i < inputString.length; i++) {
-        if (inputString[i] === '"' && inputString[i + 1] === "," && inputString[i + 2] === '"') {
-            i += 2; // 이 경우 {" 패턴을 건너뜁니다.
-        } else if (inputString[i] === '"') {
-            currentPattern += inputString[i]; // 문자열의 시작 또는 끝인 경우 현재 패턴에 추가하지 않고 건너뜁니다.
-        } else if (inputString[i] === "," && inputString[i + 1] === '"') {
-            patterns.push(currentPattern); // 패턴이 완료되면 배열에 추가합니다.
-            currentPattern = ""; // 현재 패턴을 초기화합니다.
-            i += 1; // , 뒤에 따옴표가 오는 경우 건너뜁니다.
-        } else {
-            currentPattern += inputString[i]; // 문자열을 현재 패턴에 추가합니다.
-        }
-    }
-
-    if (currentPattern !== "") {
-        patterns.push(currentPattern); // 마지막 패턴을 배열에 추가합니다.
-    }
-
-    return patterns.join(",");
-}
-
   function openProm(){
     setChangeProm(!changeProm)
   };
-
   function delFile(){
   
     switch(type){
@@ -116,11 +89,11 @@ interface SideBarProps {
     axios({
       headers: { 'Authorization': `Bearer ${token}` },
       method: 'delete',
-      url: `/v1/api/datahub/${type}`,
+      url: `/v1/api/datahub/img`,
       data: {
         hub_id: imgInfo.hub_id,
-        url_no: imgInfo.image_no,
-        "carousel_id": 0, // 데이터 없음. 태호씨가 res에 추가하면 수정예정 
+        image_no: imgInfo.image_no,
+        carousel_id: imgInfo.carosel_id
 
       }
     }).then(function (res){
@@ -133,8 +106,8 @@ interface SideBarProps {
       method: 'delete',
       url: `/v1/api/datahub/urlDelete`,
       data: {
-        carousel_id: urlInfo.hub_id,
-        image_no:  urlInfo.url_no
+        hub_id: urlInfo.hub_id,
+        url_no:  urlInfo.url_no
       }
     }).then(function (res){
       console.log(res.data);
@@ -209,10 +182,8 @@ interface SideBarProps {
         break;
     }
   };
-  
+  //사이드 바 오른쪽 상단 드롭다운 버튼 이벤트
   function handleClickeditOrDel(option:string){
-    setSelectedOption(option)
-  
     if(option === '삭제'){
       delFile();
       alert("삭제버튼이 눌림");
@@ -327,8 +298,8 @@ interface SideBarProps {
           <ul>{imgInfo.file_size}</ul>
           <ul>{imgInfo.file_regdate}</ul>
           <ul>{imgInfo.file_upddate? <>{imgInfo.file_regdate}</>: <>&nbsp;</>}</ul>
-          <ul>카로셀 그룹 추후 데이터 포함 예정 {imgInfo.casosel_name} </ul>
-          <ul>카로셀 순번에 대한 정보는 api에 없음. 추후 데이터 포함 예정 </ul>    
+          <ul>{imgInfo.casosel_name}</ul>
+          <ul>{imgInfo.turn} </ul>    
         </div>
       </div>
       <div className='fileDescription'>
@@ -432,8 +403,8 @@ interface SideBarProps {
         </div>
       </div>
       <div className='fileDescription'>
-        <ul>link 전체</ul>
-        <span> {urlInfo.url_description}</span>
+        <ul>링크 주소</ul>
+        <span> {urlInfo.url_name}</span>
       </div>
       <div className='fileDescription'>
         <ul>파일 설명</ul>
@@ -441,12 +412,12 @@ interface SideBarProps {
       </div>
       <div className='fileDescription'>
         <ul>파일 태그</ul> 
-        <div className='promtArea'>{urlInfo.url_tag}</div>
+        <div className='promtArea'>{urlInfo.url_tag.replace(/[\\"{}]/g, " ")}</div>
       </div>
      </>} 
      {(openInputModal)&& (  
           <div className="overlay"> 
-            <UploadFile onClose={()=>{setOpenInputModal(false);}}  fileType={'video'}/> 
+            <UpdateFile onClose={()=>{setOpenInputModal(false);}}  fileType={'video'}/> 
           </div>  
         )}  
     </div>

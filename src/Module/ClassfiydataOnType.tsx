@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList, dataByType} from '../Resources/Models';
 import {  useSetRecoilState, useRecoilValue} from 'recoil';
-import {  dataByDocState, dataByVideoState,dataByUrlState,dataByImgState, searchState, syncSearchTextState } from '../Resources/Recoil';
+import {  dataByDocState, dataByVideoState,dataByUrlState,dataByImgState, ActiveHubFileListState, syncSearchTextState } from '../Resources/Recoil';
 import {DataHub_searchWordIntheHub_module}from '../Module/Search_module';
 
 
@@ -21,6 +21,9 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     setUrlInfoRecoil = useSetRecoilState(dataByUrlState),
     setImageInfoRecoil = useSetRecoilState(dataByImgState),
     setVideoInfoRecoil = useSetRecoilState(dataByVideoState);
+    //랜더링
+    const relanderingActiveHub = useRecoilValue(ActiveHubFileListState);
+    
 
     useEffect(() => {
         //데이터 허브의 종속된 파일을 타입별로 조회
@@ -57,7 +60,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
         };
         selectDataByTypeApi();
     
-    }, [classfiyType]); //selectedF가 있었으나 뺌. 파일이 업로드 된후, 업로드한 파일이 포함된 케이스 고려때문에 잇엇지만, 정렬기능 만들며 충돌
+    }, [classfiyType, relanderingActiveHub]); //selectedF가 있었으나 뺌. 파일이 업로드 된후, 업로드한 파일이 포함된 케이스 고려때문에 잇엇지만, 정렬기능 만들며 충돌
 
     useEffect(() => {
         setListBySelc(originlist);
@@ -99,7 +102,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
                 break;
             case 'img':
                 setImageInfoRecoil({hub_id:Number(hubId), 
-                    image_no:item.video_no, 
+                    image_no:item.image_no, 
                     file_name:item.file_name,
                     file_description:item.file_description,
                     file_regdate:item.file_regdate,
@@ -109,7 +112,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
                     download_url:item.download_url,
                     writer:item.writer,
                     turn: item.turn,
-                    casosel_name:item.casosel_name
+                    casosel_name:item.carousel_name,
+                    carosel_id:item.carousel_id, 
                     })
                 break;
             case 'video':

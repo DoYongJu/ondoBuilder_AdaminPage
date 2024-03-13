@@ -44,6 +44,7 @@ export interface UploadFileProps {
   onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
   oneFile?:File;
   fileType:string;
+  // isSideBarOpen:(isOpen:boolean) => boolean;
 };
 // interface selCaroselGroup{
 //   carousel_id: number;
@@ -72,11 +73,9 @@ export interface dataByType{
   file_prompt:string;
   file_tag:string;
   turn:number;
-  casosel_name:string;
-  
- 
-  
-
+  carousel_name:string;
+  carousel_id:number;
+  image_no:number;
 }
 export interface userInfoType{
   email: string;
@@ -151,6 +150,7 @@ export interface dataByImg{
   writer:string,
   turn:number,
   casosel_name:string;
+  carosel_id:number;
  
 }
 export interface dataByUrl{
@@ -166,7 +166,7 @@ export interface dataByUrl{
 export type imgInfoForCarselList = imgInfoForCarsel[];
 export type userFullInfoList = userFullInfoType[];
 export type dataByTypeList = dataByType[];
-// export type selCaroselGroupList = selCaroselGroup[];
 export type tagsList= tag[];
 export type contentList = content[];
 export type MyObjects = MyObject[];
+export type Options = Option[];
