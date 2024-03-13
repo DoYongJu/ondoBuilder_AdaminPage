@@ -47,10 +47,10 @@ export function DataHub_searchWordIntheHub_module({data}:{ data: dataByTypeList 
     for (let i = 0; i < data.length; i++) {
       var nowData = data[i];
   
-      if ((nowData.file_upddate && nowData.file_upddate.includes(searchText)) ||
+      if ((nowData.file_upddate && nowData.file_upddate.match(searchText)) ||
           (!nowData.file_upddate && searchText === "") ||
-          nowData.file_name.includes(searchText) || 
-          nowData.file_regdate.includes(searchText)) {
+          nowData.file_name.match(searchText) || 
+          nowData.file_regdate.match(searchText)) {
   
           isSearchTextlist.push(nowData);
           if(classify){ //검색어도 있고 분류도 있는경우

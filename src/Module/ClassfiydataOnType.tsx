@@ -78,7 +78,9 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
         //    if(datass.length === 0){
         //     alert('원하시는 검색 결과가 없습니다.')
         //    }
-            setListBySelc(datass); 
+            setListBySelc(datass);
+            console.log("모듈이후 데이터") 
+            console.log(datass);
             // setSearchState('');
         };
         
