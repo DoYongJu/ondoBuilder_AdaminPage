@@ -15,6 +15,9 @@ import UploadedFileTag from '../Atoms/UploadedFileTag';
 import UploadedFileCarosel from '../Atoms/UploadedFileCarosel';
 import InputBox from '../Atoms/InputBox/InputBox';
 import Alert from '../Modal.components/Alert/Alert';
+import { useRecoilValue, useRecoilState} from 'recoil';
+import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
+  dataByImgState, docDetailsState} from '../../Resources/Recoil';
 
 const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +47,12 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
+
+    //파일 업데이트 관련
+    const docRecoilInfo = useRecoilValue(docDetailsState);
+    const urlRecoilInfo = useRecoilValue(urlDetailsState);
+    const videoRecoilInfo = useRecoilValue(videoDetailsState);
+    const imgRecoilInfo = useRecoilValue(imgDetailsState);
 
     useEffect(() => {
         function validNull(){
@@ -306,6 +315,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             <button  onClick={openAlart}><BiX size={20}  /></button>
         </div>
         <div className='body'>
+           {/* 파일 create */}
             {fileType === 'doc' &&oneFile &&
                 <>  <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/>
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
@@ -333,6 +343,15 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             {fileType === 'link' && 
                 <>
                     <InputBox type='text' title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                </>
+            }
+
+            {/* 파일 update */}
+            {fileType === 'video' &&
+                <>
+                    <UploadedFileName filename={videoRecoilInfo.file_name} fileType={videoRecoilInfo.download_url}/> 
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>

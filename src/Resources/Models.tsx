@@ -63,7 +63,9 @@ export interface dataByType{
   writer: string;
   video_no:number;
   url_no:number;
+  url_name:string;
   url_link:string;
+  url_tag:string;
   url_description:string;
   url_regdate:string;
   url_upddate:string;
@@ -71,6 +73,7 @@ export interface dataByType{
   file_tag:string;
   turn:number;
   casosel_name:string;
+  
  
   
 
@@ -156,8 +159,9 @@ export interface dataByUrl{
   url_description:string,
   url_regdate:string,
   url_upddate:string,
-  url_tags:string,
+  url_tag:string,
   writer:string,
+  url_name:string,
 }
 export type imgInfoForCarselList = imgInfoForCarsel[];
 export type userFullInfoList = userFullInfoType[];

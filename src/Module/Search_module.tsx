@@ -43,24 +43,24 @@ export function DataHub_searchWordIntheHub_module({data}:{ data: dataByTypeList 
   let isSearchTextlist: dataByTypeList = []; 
   console.log("ddddddddddddddddddd");
   if(searchText !== ''){ //검색어가 있는 경우
-    searchText = searchText.toLowerCase();
-    for (let i = 0; i < data.length; i++) {
-      var nowData = data[i];
+    // searchText = searchText.toLowerCase();
+    // for (let i = 0; i < data.length; i++) {
+    //   var nowData = data[i];
   
-      if ((nowData.file_upddate && nowData.file_upddate.match(searchText)) ||
-          (!nowData.file_upddate && searchText === "") ||
-          nowData.file_name.match(searchText) || 
-          nowData.file_regdate.match(searchText)) {
+    //   if ((nowData.file_upddate && nowData.file_upddate.includes(searchText)) ||
+    //       (!nowData.file_upddate && searchText === "") ||
+    //       nowData.file_name.includes(searchText) || 
+    //       nowData.file_regdate.includes(searchText)) {
   
-          isSearchTextlist.push(nowData);
-          if(classify){ //검색어도 있고 분류도 있는경우
-            isSearchTextlist = DataHub_sortIntheHub_module({data:isSearchTextlist},classify );
-          }
-      }
+    //       isSearchTextlist.push(nowData);
+    //       if(classify){ //검색어도 있고 분류도 있는경우
+    //         isSearchTextlist = DataHub_sortIntheHub_module({data:isSearchTextlist},classify );
+    //       }
+    //   }
     
     
-    };
-    // setSearchState('default');
+    // };
+    // // setSearchState('default');
     return isSearchTextlist;
   }else{
     isSearchTextlist = DataHub_sortIntheHub_module({data:data},classify);

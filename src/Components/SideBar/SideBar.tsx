@@ -5,6 +5,7 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
 import {dataByType} from '../../Resources/Models';
 import Cookies from 'js-cookie';
+import UploadFile from '../UploadFile/UploadFile';
 import { useRecoilValue, useRecoilState} from 'recoil';
 import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
   dataByImgState, docDetailsState} from '../../Resources/Recoil';
@@ -25,13 +26,14 @@ interface SideBarProps {
   const [selectedOption, setSelectedOption] = useState('');
   const selectList=[',','다운로드','수정','삭제'],
   token = Cookies.get('accessToken');
-
+  const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
   const docInfo = useRecoilValue(docDetailsState);
   const urlInfo = useRecoilValue(urlDetailsState);
   const videoInfo = useRecoilValue(videoDetailsState);
   const imgInfo = useRecoilValue(imgDetailsState);
 
    useEffect(() => {
+    console.log(urlInfo);
     function chooseImgByType() {
       console.log(imgInfo);
       console.log('fileType: '+type);
@@ -164,20 +166,69 @@ interface SideBarProps {
       console.log(res.data);
     });
   };
+  function getDownloadFile(fileName: string) {
+    console.log(fileName);
+    axios({
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-type': 'application/json; charset=utf-8', },
+      method: 'GET',
+      url: `/v1/api/datahub/file/${fileName}`,
+      responseType: 'blob',
 
-  function handleClickeditOrDel(option:string){
-    setSelectedOption(option)
-    if(option === '삭제'){
-      delFile();
-    }else{
-      //수정 요청 함수 호출예정.
+    }).then(function (res) {
+      let fileType: string | undefined = res.headers['content-type']; 
+  
+      if (!fileType || fileType === 'null') {
+        fileType = 'application/octet-stream'; 
+      }
+      const downloadUrl = window.URL.createObjectURL(new Blob([res.data],{type:fileType}));
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = fileName;
+      link.setAttribute('download',fileName);
+      link.click();
+    
+    }).catch((err)=>{alert(err)});;
+  };
+  
+  function downloadFileBytype(){
+    let fileName=''
+    switch(type){
+      case 'doc':
+        fileName = docInfo.download_url.substring(docInfo.download_url.lastIndexOf('/') + 1);
+        getDownloadFile(fileName);
+        break;
+      case 'img':
+        fileName = imgInfo.download_url.substring(imgInfo.download_url.lastIndexOf('/') + 1);
+        getDownloadFile(fileName)
+        break;
+      case 'video':
+        fileName = videoInfo.download_url.substring(videoInfo.download_url.lastIndexOf('/') + 1);
+        getDownloadFile(fileName)
+        break;
+      default: //url case
+        break;
     }
   };
-
+  
+  function handleClickeditOrDel(option:string){
+    setSelectedOption(option)
+  
+    if(option === '삭제'){
+      delFile();
+      alert("삭제버튼이 눌림");
+    }else if(option === '다운로드'){
+      downloadFileBytype();
+    }else{
+      alert("수정버튼이 눌림");
+      setOpenInputModal(true);
+    };
+  };
   return (
   
-      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <div className='nav'>
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+     {type === 'doc' && //doc일때의 사이드바
+     <>
+      <div className='nav'>
         <ul>
           <span>파일정보</span>
         </ul>
@@ -198,10 +249,6 @@ interface SideBarProps {
           <span onClick={onClose} ><BiX size={20}  /></span>
         </ul>
       </div>
-
-
-     {type === 'doc' && //doc일때의 사이드바
-     <>
       <div className='title'>
           <span>{docInfo.file_name}</span>
       </div>
@@ -219,7 +266,7 @@ interface SideBarProps {
           <ul>{docInfo.writer}</ul>
           <ul>{docInfo.file_size}</ul>
           <ul>{docInfo.file_regdate}</ul>
-          <ul>{docInfo.file_upddate}</ul>  
+          <ul>{docInfo.file_upddate? <>{imgInfo.file_regdate}</>: <>&nbsp;</>}</ul> 
         </div>
       </div>
       <div className='fileDescription'>
@@ -239,6 +286,27 @@ interface SideBarProps {
 
      {type === 'img' &&
      <>
+      <div className='nav'>
+        <ul>
+          <span>파일정보</span>
+        </ul>
+        <ul>
+          <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
+          {selctedClick &&
+              <ul className="options-list">
+              {selectList.slice(1).map((option, index) => (
+                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
+                  {option}
+                </li>
+              ))}
+            </ul>
+          }
+          </span>
+        </ul>
+        <ul>
+          <span onClick={onClose} ><BiX size={20}  /></span>
+        </ul>
+      </div>
       <div className='title'>
           <span>{imgInfo.file_name}</span>
       </div>
@@ -258,7 +326,7 @@ interface SideBarProps {
           <ul>{imgInfo.writer}</ul>
           <ul>{imgInfo.file_size}</ul>
           <ul>{imgInfo.file_regdate}</ul>
-          <ul>{imgInfo.file_upddate}</ul>
+          <ul>{imgInfo.file_upddate? <>{imgInfo.file_regdate}</>: <>&nbsp;</>}</ul>
           <ul>카로셀 그룹 추후 데이터 포함 예정 {imgInfo.casosel_name} </ul>
           <ul>카로셀 순번에 대한 정보는 api에 없음. 추후 데이터 포함 예정 </ul>    
         </div>
@@ -276,6 +344,23 @@ interface SideBarProps {
 
      {type === 'video' &&
      <>
+      <div className='nav'>
+        <ul><span>파일정보</span></ul>
+        <ul>
+          <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
+          {selctedClick &&
+              <ul className="options-list">
+              {selectList.slice(1).map((option, index) => (
+                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
+                  {option}
+                </li>
+              ))}
+            </ul>
+          }
+          </span>
+        </ul>
+        <ul><span onClick={onClose} ><BiX size={20}/></span></ul>
+      </div>
       <div className='title'>
           <span>{videoInfo.file_name}</span>
       </div>
@@ -293,7 +378,7 @@ interface SideBarProps {
           <ul>{videoInfo.writer}</ul>
           <ul>{videoInfo.file_size}</ul>
           <ul>{videoInfo.file_regdate}</ul>
-          <ul>{videoInfo.file_upddate}</ul>  
+          <ul>{videoInfo.file_upddate? <>{imgInfo.file_regdate}</>: <>&nbsp;</>}</ul>
         </div>
       </div>
       <div className='fileDescription'>
@@ -307,10 +392,27 @@ interface SideBarProps {
      </>} 
 
 
-    {type === 'url' &&
+      {type === 'url' &&
      <>
+      <div className='nav'>
+        <ul> <span>파일정보</span> </ul>
+        <ul>
+          <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
+          {selctedClick &&
+              <ul className="options-list">
+              {selectList.slice(2).map((option, index) => (
+                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
+                  {option}
+                </li>
+              ))}
+            </ul>
+          }
+          </span>
+        </ul>
+        <ul><span onClick={onClose} ><BiX size={20}/></span> </ul>
+      </div>
       <div className='title'>
-          <span>{urlInfo.url_description}</span>
+          <span>{urlInfo.url_name}</span>
       </div>
       <div className='docsImgArea'>
           <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
@@ -326,8 +428,12 @@ interface SideBarProps {
           <ul>{urlInfo.writer}</ul>
           <ul>--</ul>
           <ul>{urlInfo.url_regdate}</ul>
-          <ul>{urlInfo.url_upddate}</ul>  
+          <ul>{urlInfo.url_upddate? <>{urlInfo.url_upddate}</>: <>&nbsp;</>}</ul>
         </div>
+      </div>
+      <div className='fileDescription'>
+        <ul>link 전체</ul>
+        <span> {urlInfo.url_description}</span>
       </div>
       <div className='fileDescription'>
         <ul>파일 설명</ul>
@@ -335,9 +441,14 @@ interface SideBarProps {
       </div>
       <div className='fileDescription'>
         <ul>파일 태그</ul> 
-        <div className='promtArea'> 데이터없음. url의 태그가 넘어온다면 들어오게 될 자리.{urlInfo.url_tags}</div>
+        <div className='promtArea'>{urlInfo.url_tag}</div>
       </div>
-     </>}    
+     </>} 
+     {(openInputModal)&& (  
+          <div className="overlay"> 
+            <UploadFile onClose={()=>{setOpenInputModal(false);}}  fileType={'video'}/> 
+          </div>  
+        )}  
     </div>
        
   );
