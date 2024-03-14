@@ -31,7 +31,6 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/${hubId}?type=${classfiyType}`})
                 .then((res) => {
                     setOriginList(res.data);
-                    
                     switch (classfiyType) {
                         case 'doc':
                             setImageSrc('/doc.svg');
@@ -136,8 +135,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
                     url_description:item.url_description,
                     url_regdate:item.url_regdate,
                     url_upddate:item.url_upddate,
-                    writer:item.writer, url_tag:item.url_tag,
-                    url_name:item.url_name})
+                    writer:item.writer, url_tags:item.file_tag})
                 break;
             default:
                 break;

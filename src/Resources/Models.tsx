@@ -64,9 +64,7 @@ export interface dataByType{
   writer: string;
   video_no:number;
   url_no:number;
-  url_name:string;
   url_link:string;
-  url_tag:string;
   url_description:string;
   url_regdate:string;
   url_upddate:string;

@@ -18,12 +18,12 @@ interface SideBarProps {
   const SideBar: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
   const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
   const [imageSrc, setImageSrc] = useState('');
-
+  const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
   const [changeProm, setChangeProm] = useState(false);
   const [selctedClick, setSelctedClick] = useState(false);
   const selectList=[',','다운로드','수정','삭제'],
   token = Cookies.get('accessToken');
-  const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
+
   const docInfo = useRecoilValue(docDetailsState);
   const urlInfo = useRecoilValue(urlDetailsState);
   const videoInfo = useRecoilValue(videoDetailsState);
@@ -182,7 +182,7 @@ interface SideBarProps {
         break;
     }
   };
-  //사이드 바 오른쪽 상단 드롭다운 버튼 이벤트
+//사이드 바 오른쪽 상단 드롭다운 버튼 이벤트
   function handleClickeditOrDel(option:string){
     if(option === '삭제'){
       delFile();
@@ -194,12 +194,11 @@ interface SideBarProps {
       setOpenInputModal(true);
     };
   };
+
   return (
   
-    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-     {type === 'doc' && //doc일때의 사이드바
-     <>
-      <div className='nav'>
+      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className='nav'>
         <ul>
           <span>파일정보</span>
         </ul>
@@ -220,6 +219,10 @@ interface SideBarProps {
           <span onClick={onClose} ><BiX size={20}  /></span>
         </ul>
       </div>
+
+
+     {type === 'doc' && //doc일때의 사이드바
+     <>
       <div className='title'>
           <span>{docInfo.file_name}</span>
       </div>
@@ -237,7 +240,7 @@ interface SideBarProps {
           <ul>{docInfo.writer}</ul>
           <ul>{docInfo.file_size}</ul>
           <ul>{docInfo.file_regdate}</ul>
-          <ul>{docInfo.file_upddate? <>{imgInfo.file_regdate}</>: <>&nbsp;</>}</ul> 
+          <ul>{docInfo.file_upddate}</ul>  
         </div>
       </div>
       <div className='fileDescription'>
@@ -257,27 +260,6 @@ interface SideBarProps {
 
      {type === 'img' &&
      <>
-      <div className='nav'>
-        <ul>
-          <span>파일정보</span>
-        </ul>
-        <ul>
-          <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
-          {selctedClick &&
-              <ul className="options-list">
-              {selectList.slice(1).map((option, index) => (
-                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
-                  {option}
-                </li>
-              ))}
-            </ul>
-          }
-          </span>
-        </ul>
-        <ul>
-          <span onClick={onClose} ><BiX size={20}  /></span>
-        </ul>
-      </div>
       <div className='title'>
           <span>{imgInfo.file_name}</span>
       </div>
@@ -315,23 +297,6 @@ interface SideBarProps {
 
      {type === 'video' &&
      <>
-      <div className='nav'>
-        <ul><span>파일정보</span></ul>
-        <ul>
-          <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
-          {selctedClick &&
-              <ul className="options-list">
-              {selectList.slice(1).map((option, index) => (
-                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
-                  {option}
-                </li>
-              ))}
-            </ul>
-          }
-          </span>
-        </ul>
-        <ul><span onClick={onClose} ><BiX size={20}/></span></ul>
-      </div>
       <div className='title'>
           <span>{videoInfo.file_name}</span>
       </div>
@@ -349,7 +314,7 @@ interface SideBarProps {
           <ul>{videoInfo.writer}</ul>
           <ul>{videoInfo.file_size}</ul>
           <ul>{videoInfo.file_regdate}</ul>
-          <ul>{videoInfo.file_upddate? <>{imgInfo.file_regdate}</>: <>&nbsp;</>}</ul>
+          <ul>{videoInfo.file_upddate}</ul>  
         </div>
       </div>
       <div className='fileDescription'>
@@ -363,27 +328,10 @@ interface SideBarProps {
      </>} 
 
 
-      {type === 'url' &&
+    {type === 'url' &&
      <>
-      <div className='nav'>
-        <ul> <span>파일정보</span> </ul>
-        <ul>
-          <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
-          {selctedClick &&
-              <ul className="options-list">
-              {selectList.slice(2).map((option, index) => (
-                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
-                  {option}
-                </li>
-              ))}
-            </ul>
-          }
-          </span>
-        </ul>
-        <ul><span onClick={onClose} ><BiX size={20}/></span> </ul>
-      </div>
       <div className='title'>
-          <span>{urlInfo.url_name}</span>
+          <span>{urlInfo.url_description}</span>
       </div>
       <div className='docsImgArea'>
           <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
@@ -399,7 +347,7 @@ interface SideBarProps {
           <ul>{urlInfo.writer}</ul>
           <ul>--</ul>
           <ul>{urlInfo.url_regdate}</ul>
-          <ul>{urlInfo.url_upddate? <>{urlInfo.url_upddate}</>: <>&nbsp;</>}</ul>
+          <ul>{urlInfo.url_upddate}</ul>  
         </div>
       </div>
       <div className='fileDescription'>
