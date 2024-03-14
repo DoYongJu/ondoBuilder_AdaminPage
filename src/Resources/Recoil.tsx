@@ -16,7 +16,7 @@ export const tokenState = atom({
 });
 
 export const searchState = atom({
-  key:'search',
+  key:'searchWord',
   default:'default',
 });
 
@@ -117,7 +117,7 @@ export const dataByVideoState = atom<dataByVideo>({
     }
 });
 export const videoDetailsState = selector({
-  key: 'urlDetailsState',
+  key: 'videoDetailsState',
   get: ({get}) => {
     return get(dataByVideoState);
   },

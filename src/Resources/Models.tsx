@@ -68,12 +68,14 @@ export interface dataByType{
   url_description:string;
   url_regdate:string;
   url_upddate:string;
+  url_tag:string;
   file_prompt:string;
   file_tag:string;
   turn:number;
   carousel_name:string;
   carousel_id:number;
   image_no:number;
+  url_name:string,
 }
 export interface userInfoType{
   email: string;
