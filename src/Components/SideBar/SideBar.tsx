@@ -190,7 +190,6 @@ interface SideBarProps {
     }else if(option === '다운로드'){
       downloadFileBytype();
     }else{
-      alert("수정버튼이 눌림");
       setOpenInputModal(true);
     };
   };
@@ -365,7 +364,7 @@ interface SideBarProps {
      </>} 
      {(openInputModal)&& (  
           <div className="overlay"> 
-            <UpdateFile onClose={()=>{setOpenInputModal(false);}}  fileType={'video'}/> 
+            <UpdateFile onClose={()=>{setOpenInputModal(false);}}  fileType={type} /> 
           </div>  
         )}  
     </div>

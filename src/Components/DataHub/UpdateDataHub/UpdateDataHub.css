@@ -57,7 +57,7 @@
 .UpdateDataHub .hubInfoDetailsFooter{  width: 40%; height:192px; padding-right: 739px; }
 .UpdateDataHub .hubInfoDetailsFooter .title { margin-top: 32px;}
 .UpdateDataHub .hubInfoDetailsFooter .title span{color: #FF2F2F;text-align: left;font-size: 20px;font-weight: 500;line-height: 28px; letter-spacing: -0.5px;}
-.UpdateDataHub .hubInfoDetailsFooter .buttonArea{text-align: right; }
+.UpdateDataHub .hubInfoDetailsFooter .buttonArea{text-align: right; padding-bottom:126px }
 .UpdateDataHub .hubInfoDetailsFooter .buttonArea button{color: #FF2F2F; cursor: pointer;border-radius: 6px;border: 1px solid #FF2F2F;height: 48px;padding: 10px 14px;justify-content: center;align-items: center;
     background-color:#F7F7F7 ;}
 

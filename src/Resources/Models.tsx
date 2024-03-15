@@ -23,6 +23,13 @@ export interface MyObject {
   video_count: number,
   url_count: number,
 };
+export interface hubInfo extends Omit<MyObject, 'doc_count' | 'image_count' | 'video_count' |'url_count'>{
+  hub_id:number;
+  hub_name: string;
+  datahub_regdate: string;
+  datahub_upddate: string;
+  hub_description: string;
+}
 
 interface content{
   name: string,
@@ -44,12 +51,11 @@ export interface UploadFileProps {
   onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
   oneFile?:File;
   fileType:string;
-  // isSideBarOpen:(isOpen:boolean) => boolean;
 };
-// interface selCaroselGroup{
-//   carousel_id: number;
-//   carousel_name: string;
-// }
+export interface UpdateFileProps {
+  onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  fileType:string;
+};
 export interface dataByType{ 
   doc_no: number;
   download_url: string;
@@ -163,6 +169,7 @@ export interface dataByUrl{
   writer:string,
   url_name:string,
 }
+
 export type imgInfoForCarselList = imgInfoForCarsel[];
 export type userFullInfoList = userFullInfoType[];
 export type dataByTypeList = dataByType[];

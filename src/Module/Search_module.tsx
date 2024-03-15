@@ -42,7 +42,7 @@ export function DataHub_searchWordIntheHub_module({data}:{ data: dataByTypeList 
 
   let isSearchTextlist: dataByTypeList = []; 
   console.log("dddddddddd 검색 모듈 start!! ddddddddd");
-  if(searchText !== ''){ //검색어가 있는 경우
+  if(searchText !== 'default'){ //검색어가 있는 경우
     searchText = searchText.toLowerCase();
     for (let i = 0; i < data.length; i++) {
       var nowData = data[i];
@@ -57,12 +57,10 @@ export function DataHub_searchWordIntheHub_module({data}:{ data: dataByTypeList 
             isSearchTextlist = DataHub_sortIntheHub_module({data:isSearchTextlist},classify );
           }
       }
-    
-    
     };
     // setSearchState('default');
     return isSearchTextlist;
-  }else{
+  }else{//검색어가 없는 경우.
     isSearchTextlist = DataHub_sortIntheHub_module({data:data},classify);
     // setSearchState('');
     return isSearchTextlist;

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios"
+import Cookies from 'js-cookie';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { userFullInfoList } from '../../../Resources/Models';
-import { userFullInfoState } from '../../../Resources/Recoil'
+import { userInfoState } from '../../../Resources/Recoil'
 import MypageInfoModal from '../../Atoms/MyPageInfoModal/MypageInfoModal';
 import ConnectApi from '../../../Module/ConnectApi';
 import TabBar from '../../TabBar/TabBar';
@@ -10,17 +12,20 @@ const AdminUser=()=>{
     const [viewInputModal, setViewInputModal] = useState<string>(''),
         [userWaitingList, setUserWaitingList] = useState<userFullInfoList>([]),
         [userList, setUserList] = useState<userFullInfoList>([]),
-        [originUserData, setOriginUserData] = useState<userFullInfoList>([]),
-        [userInfo] = useRecoilState (userFullInfoState),
-        setUserInfoRecoil = useSetRecoilState(userFullInfoState);
+        [, setOriginUserData] = useState<userFullInfoList>([]),
+        [userInfo] = useRecoilState (userInfoState),
+        token = Cookies.get('accessToken'),
+        setUserInfoRecoil = useSetRecoilState(userInfoState),
+        [Isrendering, setIsrendering] = useState(false);
         let updatedUserList:userFullInfoList=[];
         let updatedWaitingUserList:userFullInfoList=[];
     
     useEffect(() => {  
         
-        setUserListApi(); // 유저정보 get. 
+        setUserListApi(); 
     
-    }, []);
+    }, [Isrendering]);
+// 유저정보 get. 
     function setUserListApi(){
         ConnectApi({ method: 'GET', url: `/v1/api/auth/users` }) 
         .then((res) => {
@@ -29,83 +34,62 @@ const AdminUser=()=>{
             
             data.map((user:any)=>{
                 if(user.isVerified === true){ //승인된 회원
-                    updatedUserList.push(user);
-                   
+                    updatedUserList.push(user);  
                    
                 }else{ //미승인된 회원
                     updatedWaitingUserList.push(user);
                    
-                }     
-                
-            })
+                };   
+            });
          
         })
         .catch((error) => {
             console.error('setUserListApi/ Error occurred:', error);
         });
-        console.log("ssssss"); 
-        console.log(updatedUserList); 
         setUserList(updatedUserList);
         setUserWaitingList(updatedWaitingUserList);
       
 
     };
-
-    
-    // useEffect(() => {  
-    //     ConnectApi({ method: 'GET', url: `/v1/api/auth/users` }) 
-    //     .then((res) => {
-    //         let data = res.data; 
-    //         setOriginUserData(data);
-    //     })
-    //     .catch((error) => {
-    //         console.error('setUserListApi/ Error occurred:', error);
-    //     });
-
-    //     let updatedUserList:userFullInfoList=[];
-    //     let updatedWaitingUserList:userFullInfoList=[];
-
-    //         originUserData.map((user)=>{
-    //         if(user.isVerified === true){ //승인된 회원
-    //             updatedUserList.push(user);
-               
-    //         }else{ //미승인된 회원
-    //             updatedWaitingUserList.push(user);
-    //         }
-    //         setUserList(updatedUserList);
-    //         setUserWaitingList(updatedWaitingUserList);
-    //     }) 
-    //     setUserListApi(); // 기존유저정보 get. 
-    // }, [viewInputModal]);
-
-    function handleDelBtn(id:number){
-        ConnectApi({ method: 'DELETE', url: `/v1/api/auth/revoke/${id}`})
-        .then((res) => {
-            let data =  res.data;
-            if(data.result === true){
-                setUserListApi();
+//승인거절 및 기존회원 탈퇴
+    function handleDelBtn(userId:number){
+        axios({
+            headers: { 'Authorization': `Bearer ${token}` },
+            method: 'DELETE',
+            url: `/v1/api/auth/revoke/${userId}`,
+            data: {
+              id: userId
             }
-
-        })
-        .catch((error) => {
-            console.error('Error occurred:', error);
-        });
+          }).then(function (res){
+            setIsrendering(!Isrendering);
+          });
     };
-
-    function handleResetPwd(id:number){
-        ConnectApi({ method: 'PATCH', url: `/v1/api/auth/reset/${id}`})
-            .then((res) => {
-                let data =  res.data;
-                if(data.result === true){
-                    setUserListApi();
-                    alert('비밀번호가 초기화 되었습니다.')// 사용자 알람이 필요하지 않을까..
-                };
-            })
-            .catch((error) => {
-                console.error('Error occurred:', error);
-            }); 
+//비밀번호 리셋
+    function handleResetPwd(userId:number){
+        axios({
+            headers: { 'Authorization': `Bearer ${token}` },
+            method: 'patch',
+            url: `/v1/api/auth/reset/${userId}`,
+            data: {
+              id: userId
+            }
+          }).then(function (res){
+            setIsrendering(!Isrendering);
+          });
     };
-
+//가입 승인 클릭 이벤트 및 patch호출
+    function patchAdminUser(userId:number){
+    axios({
+        headers: { 'Authorization': `Bearer ${token}` },
+        method: 'patch',
+        url: `/v1/api/auth/approval/${userId}`,
+        data: {
+          id: userId
+        }
+      }).then(function (res){
+        setIsrendering(!Isrendering);
+      });
+    };
  return( 
     <div className="AdminUser">
         <div className='tabBar'>
@@ -135,8 +119,8 @@ const AdminUser=()=>{
                             <li>{item.username}</li>
                             <li>{item.user_regdate}</li>
                             <li>
-                                <button className='ok'>승인</button>
-                                <button className='refuse'>거절</button>
+                                <button className='ok' onClick={()=>patchAdminUser(item.uid)}>승인</button>
+                                <button className='refuse' onClick={()=>handleDelBtn(item.uid)}>거절</button>
                             </li>
                         </ul>
                         
@@ -165,7 +149,7 @@ const AdminUser=()=>{
                             <li>{item.user_regdate}</li>
                             <li>
                                 <button className='resetpwd'  onClick={()=>{setUserInfoRecoil(item); handleResetPwd(item.uid)}}>비밀번호 초기화</button>
-                                <button className='edit' onClick={()=>{setViewInputModal('changeInfo'); setUserInfoRecoil(item); }}>수정</button> 
+                                <button className='edit' onClick={()=>{setViewInputModal('changeOtherUserInfo'); setUserInfoRecoil(item); }}>수정</button> 
                                 <button className='delete'onClick={()=>handleDelBtn(item.uid)}>삭제</button>
                             </li>
                         </ul>
@@ -176,9 +160,9 @@ const AdminUser=()=>{
                 ))}
             </div>
         </div>
-        {viewInputModal === 'changeInfo' &&
+        {viewInputModal === 'changeOtherUserInfo' &&
             <div className="overlay"> 
-                <MypageInfoModal onClose={()=>{setViewInputModal('');}} action={viewInputModal} infoDetails={userInfo} /> 
+                <MypageInfoModal onClose={()=>{setViewInputModal(''); setIsrendering(!Isrendering)}} action={viewInputModal} infoDetails={userInfo} /> 
             </div>  
         }
     </div>

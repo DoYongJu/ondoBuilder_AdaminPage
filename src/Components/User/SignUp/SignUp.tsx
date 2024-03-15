@@ -16,9 +16,9 @@ function SignUp() {
   const [isEmailValid, setEmailValid] = useState<boolean>(true);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   
-  // useEffect(() => {
-  //   setIsPasswordValid(validate());
-  // }, [password]);
+  useEffect(() => {
+    setIsPasswordValid(validate());
+  }, [password]);
 
   useEffect(() => {
     setIsButtonDisabled(!validateNullcheck());

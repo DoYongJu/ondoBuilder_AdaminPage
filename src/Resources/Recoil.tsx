@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { userInfoType, userPwdType, MyObject, userFullInfoType,
-  Options,dataByDoc,dataByVideo,dataByUrl,dataByImg } from './Models';
+  hubInfo,dataByDoc,dataByVideo,dataByUrl,dataByImg } from './Models';
 
 const { persistAtom } = recoilPersist();
 
@@ -47,19 +47,19 @@ export const userPwdState = atom<userPwdType>({
     checkPwd:'',
   },
 });
-export const userFullInfoState = atom<userFullInfoType>({
-  key: 'userFullInfoState',
-  default: {
-    uid: -1,
-    email:  '',
-    tel:  '',
-    company: '',
-    division:'',
-    username: '',
-    user_regdate: '',
-    isVerified: false,
-  },
-});
+// export const userFullInfoState = atom<userFullInfoType>({
+//   key: 'userFullInfoState',
+//   default: {
+//     uid: -1,
+//     email:  '',
+//     tel:  '',
+//     company: '',
+//     division:'',
+//     username: '',
+//     user_regdate: '',
+//     isVerified: false,
+//   },
+// });
 
 
 //대쉬보드에서 set-> 이후 step에서 get
@@ -79,6 +79,24 @@ export const MyObjectsState = atom<MyObject>({
   },
   effects_UNSTABLE: [persistAtom],
 });
+export const hubInfoState = atom<hubInfo>({
+  key: 'hubInfoState',
+  default: {
+    hub_id:-1,
+    hub_name: '',
+    datahub_regdate: '',
+    datahub_upddate: '',
+    hub_description: '',
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+export const syncHubInfoState = selector({
+  key: 'syncHubInfoState',
+  get: ({get}) => {
+    return get(hubInfoState);
+  },
+});
+
 export const dataByDocState = atom<dataByDoc>({ 
   key: 'dataByDocState',
   default: {

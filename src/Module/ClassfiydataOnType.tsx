@@ -72,8 +72,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, s
     useEffect(() => {
         console.log("aaaaaaaar검색기능 useRffect aaaaaaaaaaaaaa");
         console.log(searchText);
-        function getContentBySelect() {
-            let datass = DataHub_searchWordIntheHub_module({ data: originlist },searchText, selected );
+    async function getContentBySelect() {
+            let datass =await DataHub_searchWordIntheHub_module({ data: originlist },searchText, selected );
         //    if(datass.length === 0){
         //     alert('원하시는 검색 결과가 없습니다.')
         //    }

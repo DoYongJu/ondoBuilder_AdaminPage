@@ -1,7 +1,9 @@
 import SelectBox from '../SelectBox/SelectBox';
 import Cookies from 'js-cookie';
 import { RefObject, useState,useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState, } from 'recoil';
 import {imgInfoForCarselList} from '../../Resources/Models';
+import { imgDetailsState} from '../../Resources/Recoil';
 import { LuDownload } from "react-icons/lu";
 import axios from 'axios';
 interface ImageInfo {
@@ -17,8 +19,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
     inputRef:RefObject<HTMLInputElement>, onSubmitAddCarosel:(event:any) => void, addCaroselGroupApi:()=>void})=>{
     // const [previewimages, setPreviewimages] = useState<imgInfoForCarselList>([]);
     const token = Cookies.get('accessToken');
-    console.log("at UploadedFileCarosel: ");
-    console.log(images);
+    const imgRecoilInfo = useRecoilValue(imgDetailsState);
   
     return(
         <div className='caroselArea'>
@@ -33,10 +34,11 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
               </div>
               {(selected && selected!='선택하지 않음')&&
               <div className='moveCaroselArea'>
-                  {images?.map((img, index) => (
-
-                      <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
-                          onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}>
+                  {images?.map((img, index:number) => {
+                    return(
+                        // <></>
+                        <div className='img' key={index} draggable onDragStart={(e) => handleDragStart(e, index)}
+                        onDragOver={(e)=>{ e.preventDefault()}} onDrop={(e) => handleDrop(e, index)}>
                         
                             <div className='imgArea' >
                             
@@ -46,6 +48,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
                                 <div className="image-number" style={{border:'1px solid #FFFFFFA3'}}>{(img.turn)}</div>
                                 <span ><LuDownload size={30}/></span>
                                 <ul >{img.file_name}</ul>
+
                                 </>}
                             {img.image_no !== 0 && 
                                 <>
@@ -54,12 +57,10 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
                                 <ul >{img.file_name}</ul>
                                 </>
                             }
-                      
-                           </div>
-                           
-                      </div>
-          
-                  ))}                                     
+                            </div>
+                    </div>
+                    );          
+                })}                                     
               </div>}
           </div>
           }

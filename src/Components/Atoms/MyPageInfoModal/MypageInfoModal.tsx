@@ -29,6 +29,7 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
     switch(action){
         case 'changepwd': title='비밀번호 변경'; saveBtn='비밀번호 변경하기'; break;
         case 'changeInfo': title='내 정보 변경'; saveBtn='저장'; break;
+        case 'changeOtherUserInfo': title='사용자 정보 변경'; saveBtn='저장'; break;
         default: title= '내 정보 변경';saveBtn='저장'; break; 
     };
 
@@ -142,6 +143,14 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
                 </>
                 }
                 {action === 'changeInfo' &&  infoDetails &&
+                <>
+                    <div><InputBox className='username' type='text' title='이름'  value={userInfo.username} handleTheTextChange={handleSetUserInfo}/></div>
+                    <div><InputBox className='tel' type='tel' title='전화번호' value={userInfo.tel} handleTheTextChange={handleSetUserInfo}/></div>
+                    <div><InputBox className='company'type='text' title='회사명' value={userInfo.company} handleTheTextChange={handleSetUserInfo}/></div>
+                    <div><InputBox className='division' type='text' title='소속' value={userInfo.division} handleTheTextChange={handleSetUserInfo}/></div>
+                </>
+                }
+                 {action === 'changeOtherUserInfo' &&  infoDetails &&
                 <>
                     <div><InputBox className='username' type='text' title='이름'  value={userInfo.username} handleTheTextChange={handleSetUserInfo}/></div>
                     <div><InputBox className='tel' type='tel' title='전화번호' value={userInfo.tel} handleTheTextChange={handleSetUserInfo}/></div>

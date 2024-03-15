@@ -78,7 +78,7 @@ function ActiveHublist(){
   
       selectDataByTypeApi();
   
-  }, [isFirst, viewWays, type, selectedFile, openInputModal]);
+  }, [isFirst, type, selectedFile, openInputModal]);
  
   //상단 탭 정보
   const buttons = [ 

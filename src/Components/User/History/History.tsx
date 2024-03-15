@@ -61,7 +61,7 @@ const History =() =>{
                 ))}
             </div>
             <div className="pagination">
-                {currentPage && 
+                {currentPage >15 && 
                  <Pagination count={10} page={currentPage} onChange={handleChange} size='medium' />
                 }
                
