@@ -6,7 +6,7 @@ import './UpdateFile.css'; //안만들었는데 잘됨. id가 같아서 물려 �
 import Cookies from 'js-cookie';
 
 import {MyObject} from '../../../Resources/Models';
-import {tagsList, tag, UpdateFileProps, imgInfoForCarselList, imgInfoForCarsel,Options, Option} from '../../../Resources/Models';
+import {tagsList, tag, UpdateFileProps, imgInfoForCarselList, imgInfoForCarsel,Options, dataByImg} from '../../../Resources/Models';
 import ConnectApi from '../../../Module/ConnectApi';
 import UploadFileDataHandler from '../../../Module/UploadFileDataHandler';
 import UploadedFileName from '../../Atoms/UploadedFileName';
@@ -15,7 +15,7 @@ import UploadedFileTag from '../../Atoms/UploadedFileTag';
 import UploadedFileCarosel from '../../Atoms/UploadedFileCarosel';
 import InputBox from '../../Atoms/InputBox/InputBox';
 import Alert from '../../Modal.components/Alert/Alert';
-import { useRecoilValue, useSetRecoilState, } from 'recoil';
+import { useRecoilValue, useSetRecoilState,useRecoilState } from 'recoil';
 import { videoDetailsState, urlDetailsState, imgDetailsState,hubClassfiyState,
      docDetailsState, ActiveHubFileListState} from '../../../Resources/Recoil';
 
@@ -37,6 +37,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
     const urlRecoilInfo = useRecoilValue(urlDetailsState);
     const videoRecoilInfo = useRecoilValue(videoDetailsState);
     const imgRecoilInfo = useRecoilValue(imgDetailsState);
+
     //textArea 영역 글자수 제한
     const [currentCount, setCurrentCount] = useState(0);
     const totalCount = 100;
@@ -44,7 +45,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false); //파일 비활성화 여부
    
-      const [selectList, setSelectList] = useState<Options>([
+    const [selectList, setSelectList] = useState<Options>([
         { id: imgRecoilInfo.carosel_id?(imgRecoilInfo.carosel_id):(-2), name: imgRecoilInfo.casosel_name?(imgRecoilInfo.casosel_name):("설정되지 않음") },
       ]);
     // const [selectedCaroselId, setSelectedCaroselId] = useState('-10');
@@ -59,6 +60,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
 //입력값 null체크
     useEffect(() => { 
+
         function validNull(){
             switch(fileType){
                 case 'doc':
@@ -73,8 +75,8 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
                     if(description!==''){setIsButtonDisabled(true)}
                     else{setIsButtonDisabled(false)} 
                     break;
-                case 'link':
-                    if(description!==''&& urlInfo!==''){setIsButtonDisabled(true)}
+                case 'url':
+                    if(description!==''){setIsButtonDisabled(true)}
                     else{setIsButtonDisabled(false)} 
                     break;
                 default:
@@ -84,30 +86,34 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         };
         validNull();
     },[description, promtText, urlInfo]);
-//카로셀 목록(selectBox 내용) 조회.
-    // useEffect(() => {
-
-    //     function setCaroselGroupApi() {  
-    //         ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/${data.hub_id}` })
-    //             .then((res) => {
-    //                 const data = res.data;
-    //                 const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
-    //                 let updatedList:Options = [...selectList];
-    //                // selectList 배열의 index 2부터 newList 배열을 추가
-    //                 updatedList = [...updatedList.slice(0, 2), ...newList];
-    //                 setSelectList(updatedList); // 업데이트된 리스트 설정
-    //                 // caroselRecoilInfo(updatedList); //리코일로 관리, 추후 사이드바에서 필요
-                   
-                    
-    //             })
-    //             .catch((error) => {
-    //                 console.error('setCaroselGroupApi/ Error occurred:', error);
-    //             });
-    //     };
-
-    //     setCaroselGroupApi(); //카로셀 그룹 조회
+    useEffect(()=>{
+        function parseStringToCarouselArray(originTags:string) {
+         
+            // 문자열에서 불필요한 문자(따옴표 및 중괄호)를 제거
+            const cleanedStr = originTags.replace(/[{}"]/g, '');
     
-    // }, [caroselNewView]);
+            // 쉼표를 기준으로 문자열을 나누어 배열로 변환
+            const resultArray = cleanedStr.split(',');
+            const tagList: tag[] = resultArray.map(name => ({ name }));
+            setTags(tagList);
+        }
+        switch(fileType){
+            case 'doc':
+                break;
+            case 'img':
+                parseStringToCarouselArray(imgRecoilInfo.file_tag);
+                break;
+            case 'video':
+                parseStringToCarouselArray(videoRecoilInfo.file_tag);
+                break;
+            case 'url':
+                parseStringToCarouselArray(urlRecoilInfo.url_tag);
+                setCurrentCount(urlRecoilInfo.url_description.length);
+                break;
+            default:
+                break; 
+        }
+    },[]);
 
 //카로셀 선택 후 해당 이미지를 api로 get
     useEffect(() => { 
@@ -165,7 +171,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         getImgListApi();
     }, [imgRecoilInfo.carosel_id]);
 
-    useEffect(() => { },[setImages])
+    useEffect(() => { },[images])
 
  //카로셀 그룹 추가
     function addCaroselGroupApi() {
@@ -191,26 +197,55 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         e.dataTransfer.setData('text/plain', index.toString());
     };   
 //이미지 드롭
-const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     // e.preventDefault();
     if (draggedItem?.image_no === imgRecoilInfo.image_no) {
         // let targetIndex = Number(e.dataTransfer.getData('text/plain')),
         let  updatedImages = images.map((image) => ({ ...image }));
           
     
-        if (index > 0) {
-            updatedImages[index-1].turn = updatedImages[index-1].turn- 1;
-            updatedImages[index].turn = updatedImages[index].turn + 1;
-        } else {
-            updatedImages[index].turn = 1; // 만약 첫 번째 위치에 드롭되었다면 1로 설정
-        }
+    if (index > draggedItem.turn-1) {
+                updatedImages[draggedItem.turn-1].turn = index+1;
+                updatedImages[index].turn =draggedItem.turn;
+                updatedImages.sort((a, b) => a.turn - b.turn);
+    }else{
+            if(index === 0){
+                console.log("index가 0-----테스트완료.");
+                updatedImages[0].turn = 2;
+                updatedImages[draggedItem.turn-1].turn = 1;
+                
+                updatedImages.sort((a, b) => a.turn - b.turn);
+
+                for (let i = 1; i < images.length; i++) {
+                    updatedImages[i].turn = i+1;
+                }  
+               
+            }else{
+                console.log("=d=d=d=d=d=네번째 오타니가 첫번째가 아닌 자리로 갈때.---테스트완료.");
+                if(draggedItem.turn !== images.length){
+                    updatedImages[index].turn = images.length-index;
+                    updatedImages[draggedItem.turn-1].turn = index+1;
+                }else{
+                    updatedImages[index].turn =images.length;
+                    updatedImages[draggedItem.turn-1].turn =index+1;
+                }
+        
+                updatedImages.sort((a, b) => a.turn - b.turn);
+                for (let i =draggedItem.turn-1; i < images.length; i++) {
+                    updatedImages[i].turn = i+1;
+                }   
+            };
+        };
         setTurn(updatedImages[index].turn);
-    setImages(updatedImages);
-        console.log(turn);
-    }
-};
-
-
+        // console.log("updatedImages");
+        // console.log(updatedImages);
+        updatedImages.sort((a, b) => a.turn - b.turn);
+       
+        
+        setImages(updatedImages);
+        // console.log(images);
+        // console.log(turn);
+    }};
      
     const handleTextChange = (e:any) => {
         const newText = e.target.value;
@@ -258,15 +293,12 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
             case 'img':
                 patchImgFile();
                 break;
+            case 'url':
+                patchUrlFile();
+                break;
         }
-       
-        // let object:File|null= await makeVideoObjectFile();
-        // if(object !== null){
-        //     patchVideoFile(object);
-        // }
-        
-        
     };
+//기존 태그의 형을 변환시켜 수정요청 하기전 사용.
     function parseStringToCarouselArray(originTags:string) {
         try {
             // 문자열에서 불필요한 문자(따옴표 및 중괄호)를 제거
@@ -280,16 +312,35 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
             console.error("Error parsing string:", error);
             return [];
         }
-    }
+    };
+//url 수정 patch api
+    function patchUrlFile(){
+        const tagList: string[] = [];
+        let temp = parseStringToCarouselArray(urlRecoilInfo.url_tag);
+        temp.forEach((item) => item && tagList.push(item));
+        tags.forEach((item) => item.name && tagList.push(item.name));
+
+        axios({
+            headers: { 'Authorization': `Bearer ${token}` },
+            method: 'patch',
+            url: `/v1/api/datahub/url`,
+            data: {
+              hub_id: urlRecoilInfo.hub_id,
+              url_no:urlRecoilInfo.url_no,
+              url_description: urlRecoilInfo.url_description,
+              url_tag: urlRecoilInfo.url_tag,
+      
+            }
+          }).then(function (res){
+            if(res.data === true){
+                alert("통신성공")
+            }
+          });  
+    };
 //이미지 수정 patch api
     function patchImgFile(){
-        console.log("draggedItem");
-        console.log(draggedItem);
-        console.log(turn);
-        const tagList: string[] = [];
-        let aaa = parseStringToCarouselArray(imgRecoilInfo.file_tag);
-        aaa.forEach((item) => item && tagList.push(item));
-        tags.forEach((item) => item.name && tagList.push(item.name));
+        let tagList: string[] = [];
+        tags.forEach((item:any) => item.name && tagList.push(item.name));
 
         axios({
             headers: { 'Authorization': `Bearer ${token}` },
@@ -302,20 +353,21 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
               file_tag: tagList,
               carousel_id: imgRecoilInfo.carosel_id,
               turn:turn === 0? (1):(turn),
-      
             }
           }).then(function (res){
-            if(res.data === true){
-                alert("통신성공")
+            if(res.status === 200){
+                const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+                onClose(fakeEvent);
+                setActiveHubFileListRecoil(!relanderingActiveHubFileList)
             }
           });  
     };
-    //이미지 파일 생성(미완성 파일이 만들어지는것만 확인 )
+//이미지 파일 생성(미완성 파일이 만들어지는것만 확인 )
     async function makeImgObjectFile(){
         console.log("makeImgObjectFile start")
         console.log(imgRecoilInfo);
         let temp = imgRecoilInfo.download_url.split('/');;
-        const fileName = temp[temp.length - 1];
+        let fileName = temp[temp.length - 1];
         let theFileType=fileName.substring(fileName.lastIndexOf('.') + 1);
         
         console.log('theFileType: '+ theFileType);
@@ -339,9 +391,11 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
 
         return new File([data], videoRecoilInfo.file_name, { type:  `video/${theFileType}` });
     };
-    //비디오파일 수정 api
+//비디오파일 수정 api
     function patchVideoFile(){
         const tagList: string[] = [];
+        let temp = parseStringToCarouselArray(videoRecoilInfo.file_tag);
+        temp.forEach((item) => item && tagList.push(item));
         tags.forEach((item) => item.name && tagList.push(item.name));
         axios({
             headers: { 'Authorization': `Bearer ${token}`},
@@ -387,7 +441,7 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
       let addC = e.target.value;
       setAddCarosel(addC);   
     };
-    
+//url input 이벤트
     const handleUrlChange=(e:any)=>{
         const newText = e.target.value;
         setInfoUrl(newText);
@@ -429,11 +483,11 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
                     addCaroselGroupApi={addCaroselGroupApi}/>
                 </>
             }
-            {fileType === 'link' && 
+            {fileType === 'url' && 
                 <>
-                    <InputBox type='text' title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange}/>
-                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
-                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                    <InputBox type='text' title='URL' placeholder={urlRecoilInfo.url_name} handleTheTextChange={handleUrlChange} isDisabled ={true}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange} inputValue={urlRecoilInfo.url_description}/>
+                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag} originTags={urlRecoilInfo.url_tag}/>
                 </>
             }
 
@@ -441,8 +495,8 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
             {fileType === 'video' &&
                 <>
                     <UploadedFileName filename={videoRecoilInfo.file_name} fileType={videoRecoilInfo.download_url}/> 
-                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
-                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}  inputValue={videoRecoilInfo.file_description}/>
+                    <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag} originTags={videoRecoilInfo.file_tag}/>
                 </>
             }
         </div>

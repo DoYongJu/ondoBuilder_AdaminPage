@@ -108,7 +108,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     
     }, [caroselNewView]);
 
-    //카로셀 선택 후 해당 이미지를 api로 get
+ //올리려는 파일의 미리보기
     useEffect(() => { 
         function getFileInfo(){ //새로 올리려는 파일 미리보기
             setImages([]);
@@ -125,20 +125,14 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     };
                      // 기존 이미지 이후의 이미지들의 turn 값을 1씩 증가시킴
                     for (let i = 1; i < updatedImages.length; i++) {
-                        console.log("===========");
-                        console.log(updatedImages);
                         updatedImages[i].turn += 1;
-                        console.log(updatedImages);
                     }
                     setImages(updatedImages); // 이미지 상태 업데이트
-                    console.log("*****");
-                    console.log(updatedImages);
-                    console.log(images);
                 };
                 reader.readAsDataURL(oneFile);
             }
         };
-
+ //카로셀 선택 후 해당 이미지를 api로 get
         function getImgListApi() {
             
             const originImgs:any = [];
@@ -149,11 +143,10 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                 const data: imgInfoForCarselList = res.data;
                 // 이미지 다운로드 작업을 Promise 배열로 저장
                 let requests = data.map((img) => {
+                img.turn =img.turn+1;
+                    // let sum =data.length+2
+                    // img.turn =sum- img.turn;
                 
-                    let sum =data.length+2
-                    img.turn =sum- img.turn;
-                   
-          
                     if (img.file_url) {
                         return axios.get(img.file_url, {
                             responseType: 'blob',
@@ -235,7 +228,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             });
             
             setImages(updatedImages);
-            console.log(images);
             setDraggedItem(null);
         };
     };
@@ -281,8 +273,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     async function saveFile(){
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
-    
-        const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description, 
+        
+        const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description,
             content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem? (draggedItem.turn):(0), url_description:description})
 
         if(boolean === true){
@@ -298,7 +290,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
       let addC = e.target.value;
       setAddCarosel(addC);   
     };
-    
+//url input 이벤트  
     const handleUrlChange=(e:any)=>{
         const newText = e.target.value;
         setInfoUrl(newText);
@@ -343,7 +335,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             }
             {fileType === 'link' && 
                 <>
-                    <InputBox type='text' title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange}/>
+                    <InputBox type='text' title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange} isDisabled={false}/>
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>

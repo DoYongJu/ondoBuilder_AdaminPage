@@ -326,15 +326,16 @@ function ActiveHublist(){
         }
         
 
-        {/* 모달 띄우는 코드 */}
+        {/* 파일은 링크 업로드 띄우는 코드 */}
         {(selectedFile)&& (  
           <div className="overlay"> 
             <UploadFile onClose={()=>{setSelectedFile(null);}} oneFile={selectedFile} fileType={type} /> 
           </div>  
         )}
+        {/* 파일이 아닌 링크 업로드 띄우는 코드 */}
         {(openInputModal)&& (  
           <div className="overlay"> 
-            <UploadFile onClose={()=>{setOpenInputModal(!isSideBarOpen);}}  fileType={'link'} /> 
+            <UploadFile onClose={()=>{setOpenInputModal(false);}}  fileType={'link'} /> 
           </div>  
         )}
         

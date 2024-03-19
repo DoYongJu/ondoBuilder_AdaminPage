@@ -51,7 +51,8 @@ function SignUp() {
   //유효성 검사
   const validate= ():boolean =>  {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    //min3 max320 (min1,max64)a-z대소문자,한글,_허용 @ (min1, max255)a-z대소문자,한글 . a-z대소문자,한글 =>  한국유저기반 조건, 사용자가 바뀌면 수정필요.
+    const emailRegex = /^(?=.{3,320}$)(?=.{1,64}@)[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣+-\_.]+@{1,255}[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]+\.[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣.]+$/;
 
     if (passwordRegex.test(password) === true) {
 

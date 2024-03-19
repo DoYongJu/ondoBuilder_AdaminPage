@@ -42,7 +42,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
                         
                             <div className='imgArea' >
                             
-                            {img.image_no === 0 && 
+                            {img.image_no === 0  && 
                                 <> 
                                 <img style={{width:'102px', height:'102px' ,borderRadius:'6px'}} src={img.imageUrl} alt="File Preview"/> 
                                 <div className="image-number" style={{border:'1px solid #FFFFFFA3'}}>{(img.turn)}</div>
@@ -50,7 +50,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
                                 <ul >{img.file_name}</ul>
 
                                 </>}
-                            {img.image_no !== 0 && 
+                            {img.image_no !== 0  &&
                                 <>
                                 <img style={{width:'102px', height:'102px' ,borderRadius:'6px'}} src={img.imageUrl} alt="File Preview"/> 
                                 <div className="image-number">{(img.turn)}</div>

@@ -50,8 +50,10 @@ const UploadFileDataHandler = async ({
             break;
               
         default:
+            console.log("urlInfo: "+ urlInfo)
             apiUrl = `/v1/api/datahub/urlUpload`;
             sendParam = { hub_id: hubId, 
+                        url_name:urlInfo,
                         url_tag: file_tag, 
                         url_description: urlInfo};
             break;

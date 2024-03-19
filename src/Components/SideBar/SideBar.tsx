@@ -85,6 +85,7 @@ interface SideBarProps {
 
    
   };
+  //이미지 삭제 요청 api
   function deleteImgFile(){
     axios({
       headers: { 'Authorization': `Bearer ${token}` },
@@ -97,7 +98,12 @@ interface SideBarProps {
 
       }
     }).then(function (res){
-      console.log(res.data);
+      console.log(res);
+      if(res.status === 200){
+        const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+        onClose(fakeEvent);
+        //토스트메세지 출력자리
+      }
     });
   };
   function deleteUrlFile(){
@@ -110,7 +116,10 @@ interface SideBarProps {
         url_no:  urlInfo.url_no
       }
     }).then(function (res){
-      console.log(res.data);
+      if(res.data === true){
+        const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+        onClose(fakeEvent);
+      }
     });
   };
   function deleteVideoFile(){
@@ -123,7 +132,10 @@ interface SideBarProps {
         video_no:  videoInfo.video_no
       }
     }).then(function (res){
-      console.log(res.data);
+      if(res.data === true){
+        const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+        onClose(fakeEvent);
+      }
     });
   };
   function deleteDocFile(){
@@ -136,7 +148,10 @@ interface SideBarProps {
         doc_no:  docInfo.doc_no
       }
     }).then(function (res){
-      console.log(res.data);
+      if(res.data === true){
+        const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+        onClose(fakeEvent);
+      }
     });
   };
   function getDownloadFile(fileName: string) {
@@ -159,7 +174,10 @@ interface SideBarProps {
       link.download = fileName;
       link.setAttribute('download',fileName);
       link.click();
-    
+      if(res.data === true){
+        const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+        onClose(fakeEvent);
+      }
     }).catch((err)=>{alert(err)});;
   };
   
@@ -186,7 +204,6 @@ interface SideBarProps {
   function handleClickeditOrDel(option:string){
     if(option === '삭제'){
       delFile();
-      alert("삭제버튼이 눌림");
     }else if(option === '다운로드'){
       downloadFileBytype();
     }else{
@@ -364,7 +381,7 @@ interface SideBarProps {
      </>} 
      {(openInputModal)&& (  
           <div className="overlay"> 
-            <UpdateFile onClose={()=>{setOpenInputModal(false);}}  fileType={type} /> 
+            <UpdateFile onClose={onClose}  fileType={type} /> 
           </div>  
         )}  
     </div>

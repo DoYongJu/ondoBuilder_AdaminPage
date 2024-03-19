@@ -1,3 +1,4 @@
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 import './InputBox';
 import { useState } from 'react';
 import { FaRegEye } from "react-icons/fa";
@@ -11,10 +12,12 @@ interface InputBoxProps {
   placeholder?:string,
   value?:string,
   className?:string,
+  isDisabled?:boolean,
+  inputValue?:string, 
 
 };
 
-const InputBox: React.FC<InputBoxProps>=({handleTheTextChange,title,placeholder,value, type, className, isPwd})=>{
+const InputBox: React.FC<InputBoxProps>=({handleTheTextChange,title,placeholder,value, type, className, isPwd, isDisabled, inputValue})=>{
 
   const [showPassword, setShowPassword] = useState(isPwd);
 
@@ -43,7 +46,8 @@ const InputBox: React.FC<InputBoxProps>=({handleTheTextChange,title,placeholder,
     <div className='oneInputArea'>
         <div className='urlTitle'><ul>{title}</ul></div>
         <div className='urlBody' >
-          {type === 'text' &&<input type={type}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} />} 
+          {type === 'text' && isDisabled === false && <input type={type}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} />} 
+          {type === 'text' && isDisabled === true && <input type={type}  className={className} value={inputValue} placeholder={placeholder} onChange={handleTheTextChange} disabled/>} 
 
           {type === 'tel' &&<input type={type}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} maxLength={13} onInput={(e)=>addHyphen(e)}/>} 
           

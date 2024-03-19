@@ -6,26 +6,26 @@ const UploadedFileTag=({inputRef, onSubmitSearch, tags, deleteTag, originTags}:{
     
     const [originTagList, setOriginTagList] = useState<String[]>();
     
-    useEffect(()=>{
-        function parseStringToCarouselArray(originTags:string) {
-            try {
-                // 문자열에서 불필요한 문자(따옴표 및 중괄호)를 제거
-                const cleanedStr = originTags.replace(/[{}"]/g, '');
+    // useEffect(()=>{
+    //     function parseStringToCarouselArray(originTags:string) {
+    //         try {
+    //             // 문자열에서 불필요한 문자(따옴표 및 중괄호)를 제거
+    //             const cleanedStr = originTags.replace(/[{}"]/g, '');
         
-                // 쉼표를 기준으로 문자열을 나누어 배열로 변환
-                const resultArray = cleanedStr.split(',');
+    //             // 쉼표를 기준으로 문자열을 나누어 배열로 변환
+    //             const resultArray = cleanedStr.split(',');
         
-                return resultArray;
-            } catch (error) {
-                console.error("Error parsing string:", error);
-                return [];
-            }
-        }
-        if(originTags){
-            setOriginTagList(parseStringToCarouselArray(originTags));
-        }
+    //             return resultArray;
+    //         } catch (error) {
+    //             console.error("Error parsing string:", error);
+    //             return [];
+    //         }
+    //     }
+    //     if(originTags){
+    //         setOriginTagList(parseStringToCarouselArray(originTags));
+    //     }
        
-    },[]);
+    // },[]);
     
     return(
         <div className='FileTag'>

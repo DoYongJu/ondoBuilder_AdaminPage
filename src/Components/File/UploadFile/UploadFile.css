@@ -96,7 +96,7 @@
 .FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea .img
     {position: relative;  background-color: white;border-radius: 6px; border: 4px solid white;}
 .FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea .img .image-number {
-    position: absolute; z-index: 100;
+    position: absolute; z-index: 1;
     display: flex; 
     justify-content: center;
     align-items: center;width: 10px;
