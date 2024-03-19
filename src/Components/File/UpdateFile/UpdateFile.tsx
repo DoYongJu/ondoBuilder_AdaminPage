@@ -54,7 +54,9 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
 
-
+//문서 수정시
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
@@ -122,51 +124,54 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             console.log('selectedCaroselId: '+ imgRecoilInfo.carosel_id)
             const originImgs:any = [];
             let updatedList = [...images];
-            ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${imgRecoilInfo.carosel_id}` })
+            if(type === 'img'){
+                ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${imgRecoilInfo.carosel_id}` })
         
-            .then((res) => {
-                const data: imgInfoForCarselList = res.data;
-                // 이미지 다운로드 작업을 Promise 배열로 저장
-                let requests = data.map((img) => {
-                
-                    // let sum =data.length+1
-                    // img.turn =sum- img.turn;
-                   
+                .then((res) => {
+                    const data: imgInfoForCarselList = res.data;
+                    // 이미지 다운로드 작업을 Promise 배열로 저장
+                    let requests = data.map((img) => {
+                    
+                        // let sum =data.length+1
+                        // img.turn =sum- img.turn;
+                       
+              
+                        if (img.file_url) {
+                            return axios.get(img.file_url, {
+                                responseType: 'blob',
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            }).then(response => {
+                                // 이미지 URL을 생성하여 반환
+                                return window.URL.createObjectURL(response.data);
+                            }).then(result => {
+                                // 이미지 정보에 URL 추가
+                                img.imageUrl = result;
+                                originImgs.push(img);
+                            }).catch(error => {
+                                console.error("에러 발생:", error);
+                            });
+                        }
+                    });
+        
+                    // 모든 이미지 다운로드 작업이 완료될 때까지 기다림
+                    Promise.all(requests).then(() => {
+                        if(requests.length !== 0){
+                            updatedList = [...updatedList.slice(0, 1), ...originImgs];
+                            updatedList.sort((a, b) => a.turn - b.turn);
+                            setImages(updatedList);
           
-                    if (img.file_url) {
-                        return axios.get(img.file_url, {
-                            responseType: 'blob',
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        }).then(response => {
-                            // 이미지 URL을 생성하여 반환
-                            return window.URL.createObjectURL(response.data);
-                        }).then(result => {
-                            // 이미지 정보에 URL 추가
-                            img.imageUrl = result;
-                            originImgs.push(img);
-                        }).catch(error => {
-                            console.error("에러 발생:", error);
-                        });
-                    }
+                       
+                        }
+                    });
+       
+                    
+                }).catch((error) => {
+                    console.error('getCaroselGroupApi/ Error occurred:', error);
                 });
-    
-                // 모든 이미지 다운로드 작업이 완료될 때까지 기다림
-                Promise.all(requests).then(() => {
-                    if(requests.length !== 0){
-                        updatedList = [...updatedList.slice(0, 1), ...originImgs];
-                        updatedList.sort((a, b) => a.turn - b.turn);
-                        setImages(updatedList);
-      
-                   
-                    }
-                });
-   
-                
-            }).catch((error) => {
-                console.error('getCaroselGroupApi/ Error occurred:', error);
-            });
+            }
+            
         };
         getImgListApi();
     }, [imgRecoilInfo.carosel_id]);
@@ -296,6 +301,11 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             case 'url':
                 patchUrlFile();
                 break;
+            case 'doc':
+                patchDocFile();
+                break;
+            default:
+                break;
         }
     };
 //기존 태그의 형을 변환시켜 수정요청 하기전 사용.
@@ -313,7 +323,46 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             return [];
         }
     };
-//url 수정 patch api
+//doc 수정 patch api
+    async function patchDocFile(){
+        const formData = new FormData();
+        if(!selectedFile){ //파일 교체 케이스
+            let file = await makeImgObjectFile();
+            // setSelectedFile(file);
+            formData.append('hub_id', String(docRecoilInfo.hub_id));
+            formData.append('doc_no', String(docRecoilInfo.doc_no));
+            formData.append('file_description', description);
+            formData.append('prompt', promtText);
+            formData.append('doc', file);
+        }else{
+            formData.append('hub_id', String(docRecoilInfo.hub_id));
+            formData.append('doc_no', String(docRecoilInfo.doc_no));
+            formData.append('file_description', description);
+            formData.append('prompt', promtText);
+            formData.append('doc', selectedFile);
+        };
+       
+       
+        try {
+            const response = await axios.patch(`/v1/api/datahub/doc`, formData,{
+                headers: { 'Authorization': `Bearer ${token}`,
+                            'Content-Type' : `multipart/form-data`,
+                            'charset':'utf-8'},    
+                }).then(function (res){
+                if(res.status === 200){
+                    alert("통신성공")
+                }
+              });
+
+            console.log(response);
+          } catch (error) {
+            console.error("데이터를 불러오는 데 실패했습니다:", error);
+          };
+        
+        
+          
+    };
+//url 수정 patch api==============================>태호씨한테 물어봐야함.
     function patchUrlFile(){
         const tagList: string[] = [];
         let temp = parseStringToCarouselArray(urlRecoilInfo.url_tag);
@@ -365,8 +414,8 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
 //이미지 파일 생성(미완성 파일이 만들어지는것만 확인 )
     async function makeImgObjectFile(){
         console.log("makeImgObjectFile start")
-        console.log(imgRecoilInfo);
-        let temp = imgRecoilInfo.download_url.split('/');;
+        console.log(docRecoilInfo);
+        let temp = docRecoilInfo.download_url.split('/');;
         let fileName = temp[temp.length - 1];
         let theFileType=fileName.substring(fileName.lastIndexOf('.') + 1);
         
@@ -386,10 +435,10 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             if (!fileType || fileType === 'null') {
               fileType = 'application/octet-stream'; 
             }
-            return new File([res.data], videoRecoilInfo.file_name, { type: `video/${theFileType}` });
+            return new File([res.data], docRecoilInfo.file_name, { type: `doc/${theFileType}` });
             }).catch((err)=>{alert(err);  });
 
-        return new File([data], videoRecoilInfo.file_name, { type:  `video/${theFileType}` });
+        return new File([data], docRecoilInfo.file_name, { type:  `doc/${theFileType}` });
     };
 //비디오파일 수정 api
     function patchVideoFile(){
@@ -456,6 +505,40 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         const fileName = temp[temp.length - 1];
         return fileName.substring(fileName.lastIndexOf('.') + 1);
     };
+//파일업로드버튼 클릭 이벤트
+  const handleFileuploadButtonClick =()=>{
+    if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+  };
+//선택된 파일을 사이즈 검사를 시키며 value초기화
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    validateFile(file);
+    e.target.value = '';  
+  };
+  //문서 파일 타입과 사이즈 유효성 검사
+  function validateFile(file:File){
+    const fileType = file.type;
+    const fileSize = file.size;
+    let allowedTypes = [
+        'application/vnd.ms-powerpoint', // ppt
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation', // pptx
+        'text/csv', // csv
+        'application/vnd.ms-excel', // xls
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // xlsx
+        'application/pdf', // pdf
+        'application/msword', // doc
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // docs
+      ];
+      if (!allowedTypes.includes(fileType)) {
+        alert("올바른 문서 파일 형식이 아닙니다. ppt, pptx, csv, xls, xlsx, pdf, doc, docs 파일만 업로드할 수 있습니다.");
+      }else if(fileSize >= 5 * 1024 * 1024){
+        alert('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+      }else{
+        setSelectedFile(file);
+      }
+  }
     return(
         
     <div className="FileUpdate">
@@ -467,7 +550,10 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
 
             {fileType === 'doc' &&
                 <> 
-                 {/* <UploadedFileName filename={oneFile.name} fileType={oneFile.type}/> */}
+                    <UploadedFileName filename={docRecoilInfo.file_name} fileType={docRecoilInfo.file_name.split('.')[1]}/>
+                    <button className="updateFileBtn"  onClick={handleFileuploadButtonClick}>
+                        <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e)=>handleFileChange(e)}/>파일 선택
+                    </button>{selectedFile ? (<span>{selectedFile.name}</span>) : (<span>선택된 파일 없음</span>)}
                     <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTextArea title='파일 프롬프트' placeholder='파일에 대한 프롬프트를 입력해주세요.' handleTextChange={(e)=>{ setPromtText(e.target.value);}}/>
                 </>

@@ -147,7 +147,7 @@ function ActiveHublist(){
     return true;
   };
 
-//video 파일 타입 검사: 하기의 내용 확인.
+//doc 파일 타입 검사: 하기의 내용 확인.
   function isDocFileType(fileType:string){
     let allowedTypes = [
       'application/vnd.ms-powerpoint', // ppt

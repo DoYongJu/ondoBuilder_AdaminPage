@@ -11,7 +11,7 @@ import { GoPerson } from "react-icons/go";
 import SelectBox from '../SelectBox/SelectBox';
 import Cookies from 'js-cookie';
 
-const NavBar = () => {
+const NavBar = ( {setUser}:any ) => {
   const navigate = useNavigate(),
     username = useRecoilValue(usernameState),
     setusername = useSetRecoilState(usernameState),
@@ -34,7 +34,9 @@ const NavBar = () => {
       Cookies.remove('username');
       setusername('');
       setToken('');
+      setUser('');
       navigate('/Login');
+
   };
 
   function onClickQuest(){

@@ -32,14 +32,14 @@ const Router = () => {
       setUserName(storedUsername);
     }
   };
-  function userLoginAction_back(){
-    const storedUsername = Cookies.get('username');
-    user = Cookies.get('username');
-    console.log("user:"+user)
-    if (storedUsername) {
-      setUserName(storedUsername);
-    }
-  }
+  // function userLoginAction_back(){
+  //   const storedUsername = Cookies.get('username');
+  //   user = Cookies.get('username');
+  //   console.log("user:"+user)
+  //   if (storedUsername) {
+  //     setUserName(storedUsername);
+  //   }
+  // }
   useEffect(() => {
     // 매 렌더링마다 실행
     console.log("나 매 렌더링!")
@@ -53,7 +53,7 @@ const Router = () => {
   
   return (
     <BrowserRouter>
-     {username  && <NavBar />}
+     {username  && <NavBar setUser={setUser}/>}
       <Routes>
         {/* <Route path="/" element={<Login />} /> */}
         <Route path="/login" element={<Login setUser={setUser}/>} />

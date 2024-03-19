@@ -9,7 +9,12 @@
 .FileUpdate .header button{ width: 20%; border:none; background-color: #FFF; text-align: right;}
 
 .FileUpdate .body{height:560px;width:100%;border-top:1px solid #DBDBDB;padding: 16px 12px 16px 0;overflow-x: hidden; overflow-y: auto;}
-.FileUpdate .body .FileUploadtitle{display: flex; height:56px; gap:28px; padding-top:24px; }
+.FileUpdate .body .updateFileBtn{background-color:#6B6B6B;width: 73px; height:24px;font-family: Pretendard;
+    font-size: 14px; margin: 20px 5px 0 0;font-weight: 300;line-height: 20px;letter-spacing: -0.025em;
+    text-align: left; border: none; color: #FFFFFF; border-radius: 2px;}
+.FileUpdate .body span{font-family: Pretendard;font-size: 14px;font-weight: 400;line-height: 20px;
+    letter-spacing: -0.025em;text-align: left;}
+.FileUpdate .body .FileUploadtitle{display: flex; height:56px; gap:28px; padding-top:20px; }
 .FileUpdate .body .FileUploadtitle .key{display: flex;  flex-direction: column;gap:16px}
 .FileUpdate .body .FileUploadtitle .key ul{width:60px; color: #505050; font-size: 14px;font-weight: 400;line-height: 20px;
     letter-spacing: -0.35px}

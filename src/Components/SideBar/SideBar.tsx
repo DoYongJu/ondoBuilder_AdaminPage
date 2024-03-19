@@ -85,7 +85,7 @@ interface SideBarProps {
 
    
   };
-  //이미지 삭제 요청 api
+  //문서, 이미지, 비디오, url 삭제 요청 api
   function deleteImgFile(){
     axios({
       headers: { 'Authorization': `Bearer ${token}` },
@@ -132,9 +132,10 @@ interface SideBarProps {
         video_no:  videoInfo.video_no
       }
     }).then(function (res){
-      if(res.data === true){
+      if(res.status === 200){
         const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
         onClose(fakeEvent);
+        //토스트메세지 출력자리
       }
     });
   };

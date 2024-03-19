@@ -19,7 +19,6 @@ function Login(  {setUser}:any  ) {
     [isButtonDisabled, setIsButtonDisabled] = useState(true),
     [password, setPassword] = useState(''),
     setTokenRecoil = useSetRecoilState(tokenState);
-  
   useEffect(() => {
       setIsButtonDisabled(validateNullcheck());
       
