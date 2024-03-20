@@ -10,6 +10,7 @@ import SelectBox from '../SelectBox/SelectBox';
 import UploadFile from '../File/UploadFile/UploadFile';
 import ClassfiydataOnType from '../../Module/ClassfiydataOnType';
 
+import { ToastContainer, toast } from 'react-toastify';
 import { LuListFilter } from "react-icons/lu";
 import { FiUpload } from "react-icons/fi";
 import { FiGrid } from "react-icons/fi";
@@ -48,7 +49,6 @@ function ActiveHublist(){
       [uploadedInfo, setUploadedInfo] = useState(false),
       [selctedClick, setSelctedClick] = useState(false),
       setHubClassify = useSetRecoilState(hubClassfiyState);
-      console.log(type);
     //File 업로드 관련
     const handleDragStart = () => setActive(true);
     const handleDragEnd = () => setActive(false);
@@ -130,7 +130,6 @@ function ActiveHublist(){
   function isImageFileType(fileType:string) {
     let allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!allowedTypes.includes(fileType)) {
-        alert("올바른 이미지 파일 형식이 아닙니다. JPEG, PNG, JPG 파일만 업로드할 수 있습니다.");
         return false;
       };
 
@@ -141,7 +140,6 @@ function ActiveHublist(){
   function isVideoFileType(fileType:string) {
     let allowedTypes = ['video/mp4', 'video/avi', 'video/wmv', 'video/mov'];
       if (!allowedTypes.includes(fileType)) {
-        alert("올바른 비디오 파일 형식이 아닙니다. mp4, avi, wmv, mov 파일만 업로드할 수 있습니다.");
         return false;
       };
 
@@ -161,7 +159,6 @@ function ActiveHublist(){
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // docs
     ];
     if (!allowedTypes.includes(fileType)) {
-      alert("올바른 문서 파일 형식이 아닙니다. ppt, pptx, csv, xls, xlsx, pdf, doc, docs 파일만 업로드할 수 있습니다.");
       return false;
     };
 
@@ -175,25 +172,39 @@ function ActiveHublist(){
       //파일 validation
       switch (type) { 
         case 'img':
-          if (isImageFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
+          if (isImageFileType(fileType) === true && fileSize <= 5 * 1024 * 1024) {
               setSelectedFile(file);
-          } else {
-              alert('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
-          }
+          }else if(isImageFileType(fileType) === false && fileSize > 5 * 1024 * 1024){
+           notify("최대 5MB크기의 JPEG, PNG, JPG 파일만 업로드할 수 있습니다.")
+          }else if(isImageFileType(fileType) === false && fileSize <= 5 * 1024 * 1024){
+            notify("JPEG, PNG, JPG 파일만 업로드할 수 있습니다.");
+          }else{
+            notify('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+          };
           break;
+
       case "doc":
-          if (isDocFileType(fileType) && fileSize <= 5 * 1024 * 1024) {
+          if (isDocFileType(fileType) === true && fileSize <= 5 * 1024 * 1024) {
               setSelectedFile(file);
-          } else {
-              alert('문서 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
-          }
+          }else if(isDocFileType(fileType) === false && fileSize > 5 * 1024 * 1024){
+          notify("최대 5MB크기의 PPT, PPTX, CSV, XLS, XLSX, PDF, DOC, DOCS 파일만 업로드할 수 있습니다.")
+          }else if(isDocFileType(fileType) === false && fileSize <= 5 * 1024 * 1024){
+            notify("PPT, PPTX, CSV, XLS, XLSX, PDF, DOC, DOCS 파일만 업로드할 수 있습니다.");
+          }else{
+            notify('문서 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+          };
           break;
+          
       case "video":
           if (isVideoFileType(fileType) && fileSize <= 100 * 1024 * 1024) {
               setSelectedFile(file);
-          } else {
-              alert('비디오 파일의 크기는 최대 100MB를 초과할 수 없습니다.');
-          }
+          }else if(isVideoFileType(fileType) === false && fileSize >  100 * 1024 * 1024){
+            notify("최대 100MB크기의 MP4, AVI, WMV, MOV 파일만 업로드할 수 있습니다.")
+          }else if(isVideoFileType(fileType) === false && fileSize <=  100 * 1024 * 1024){
+              notify("MP4, AVI, WMV, MOV  파일만 업로드할 수 있습니다.");
+          }else{
+              notify('비디오 파일의 크기는 최대 100MB를 초과할 수 없습니다.');
+          };
           break;
       default:
           break;
@@ -206,11 +217,34 @@ function ActiveHublist(){
     validateFile(file);
     e.target.value = '';  
   };
-
+  const notify = (errorMsg:string) => toast.error(errorMsg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    });
     return (
 
       <div className={`activeHublist ${isSideBarOpen ? 'sidebarOpen' : ''}`}>
-
+             
+              
+                <ToastContainer
+position="bottom-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+/>
+            
         <div className="title"><span>{theHubInfo.hub_name}</span></div>
         <div className="sub_title">
           <div className='text' ><span>{theHubInfo.hub_description}</span></div> 

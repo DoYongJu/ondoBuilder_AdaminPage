@@ -2,8 +2,10 @@ import React, {useState, useRef, useEffect} from 'react';
 import { BiX } from "react-icons/bi";
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import './UpdateFile.css'; //안만들었는데 잘됨. id가 같아서 물려 들어가는듯. 추가 css 파일 작성 예정
+import './UpdateFile.css'; 
 import Cookies from 'js-cookie';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import {MyObject} from '../../../Resources/Models';
 import {tagsList, tag, UpdateFileProps, imgInfoForCarselList, imgInfoForCarsel,Options, dataByImg} from '../../../Resources/Models';
@@ -546,6 +548,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         setSelectedFile(file);
       }
   };
+  const notify = () => toast("Wow so easy!");
     return(
         
     <div className="FileUpdate">
@@ -556,7 +559,10 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         <div className='body'>
 
             {fileType === 'doc' &&
-                <> 
+                <>  <div>
+                <button onClick={notify}>Notify!</button>
+                <ToastContainer />
+              </div>
                     <UploadedFileName filename={docRecoilInfo.file_name} fileType={docRecoilInfo.download_url.substring(docRecoilInfo.download_url.lastIndexOf('.') + 1)}/>
                     <button className="updateFileBtn"  onClick={handleFileuploadButtonClick}>
                         <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e)=>handleFileChange(e)}/>파일 선택
