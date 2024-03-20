@@ -320,7 +320,7 @@ function ActiveHublist(){
         )}
         {/* 사이드바 나올때 다른 버튼들 못 건드리게 임시로 막음. */}
         {isSideBarOpen &&
-         <div className="overlay"> 
+         <div className="overlay" > 
         <SideBar isOpen={isSideBarOpen} onClose={()=>{ setIsSideBarOpen(false);}} /> 
         </div>  
         }

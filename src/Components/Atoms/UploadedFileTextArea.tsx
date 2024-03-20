@@ -1,10 +1,6 @@
 import React, {useState, useEffect} from 'react';
 const UploadedFileTextArea=({totalCount,currentCount, handleTextChange, title, placeholder,inputValue }:{
     totalCount?:number,currentCount?:number, title:string,placeholder:string, handleTextChange:React.ChangeEventHandler<HTMLTextAreaElement>, inputValue?:string})=>{
-//     const [turn, setTurn] = useState(inputValue?(inputValue?.length):(currentCount));
-// useEffect(()=>{
-//     setTurn(currentCount);
-// },[currentCount]);
     return (    
     <div className='FileUploadInfo'>
         <div className='FileUploadtitle'>

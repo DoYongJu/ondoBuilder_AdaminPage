@@ -30,7 +30,36 @@ interface SideBarProps {
   const imgInfo = useRecoilValue(imgDetailsState);
 
 
+  const [scrollY, setScrollY] = useState(0);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // 사이드 바의 스타일을 계산하는 함수
+  const calculateStyle = () => {
+    if (scrollY > 78) {
+      return {
+        top: '0px', // 스크롤이 78px 이상일 때 상단 고정
+        position: 'fixed',
+      };
+    } else {
+      return {
+        top: `${78 - scrollY}px`, // 스크롤에 따라 top 위치 조정
+        position: 'absolute',
+      };
+    }
+  };
+
+  // const translateY = (0, scrollY);
    useEffect(() => {
     console.log(urlInfo);
 
@@ -214,7 +243,7 @@ interface SideBarProps {
 
   return (
   
-      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <div className={`sidebar ${isOpen ? 'open' : ''}`} style={scrollY > 78?({top: '0px',position: 'fixed',}):({ top: `${78 - scrollY}px`, position: 'absolute',})}>
         <div className='nav'>
         <ul>
           <span>파일정보</span>
