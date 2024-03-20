@@ -12,6 +12,10 @@
 .FileUpdate .body .updateFileBtn{background-color:#6B6B6B;width: 73px; height:24px;font-family: Pretendard;
     font-size: 14px; margin: 20px 5px 0 0;font-weight: 300;line-height: 20px;letter-spacing: -0.025em;
     text-align: left; border: none; color: #FFFFFF; border-radius: 2px;}
+
+
+
+    
 .FileUpdate .body span{font-family: Pretendard;font-size: 14px;font-weight: 400;line-height: 20px;
     letter-spacing: -0.025em;text-align: left;}
 .FileUpdate .body .FileUploadtitle{display: flex; height:56px; gap:28px; padding-top:20px; }

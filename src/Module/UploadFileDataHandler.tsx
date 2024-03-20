@@ -55,7 +55,7 @@ const UploadFileDataHandler = async ({
             sendParam = { hub_id: hubId, 
                         url_name:urlInfo,
                         url_tag: file_tag, 
-                        url_description: urlInfo};
+                        url_description: url_description};
             break;
     };
 

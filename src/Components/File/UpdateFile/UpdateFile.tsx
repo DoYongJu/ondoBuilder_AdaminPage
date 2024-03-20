@@ -124,7 +124,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             console.log('selectedCaroselId: '+ imgRecoilInfo.carosel_id)
             const originImgs:any = [];
             let updatedList = [...images];
-            if(type === 'img'){
+            if(type === 'img' && imgRecoilInfo.carosel_id!== null){
                 ConnectApi({ method: 'GET', url: `/v1/api/datahub/carousel/img/${imgRecoilInfo.carosel_id}` })
         
                 .then((res) => {
@@ -310,6 +310,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
     };
 //기존 태그의 형을 변환시켜 수정요청 하기전 사용.
     function parseStringToCarouselArray(originTags:string) {
+        
         try {
             // 문자열에서 불필요한 문자(따옴표 및 중괄호)를 제거
             const cleanedStr = originTags.replace(/[{}"]/g, '');
@@ -362,56 +363,99 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         
           
     };
-//url 수정 patch api==============================>태호씨한테 물어봐야함.
+//url 수정 patch api
     function patchUrlFile(){
-        const tagList: string[] = [];
-        let temp = parseStringToCarouselArray(urlRecoilInfo.url_tag);
-        temp.forEach((item) => item && tagList.push(item));
+        const tagList: string[] = []; 
         tags.forEach((item) => item.name && tagList.push(item.name));
-
+        // let temp = parseStringToCarouselArray(urlRecoilInfo.url_tag);
+        // temp.forEach((item) => item && tagList.push(item));
+        // tags.forEach((item) => item.name && tagList.push(item.name));
+        // const formData = new FormData();
+        // formData.append('hub_id', String(urlRecoilInfo.hub_id));
+        // formData.append('url_name', String(urlRecoilInfo.url_name));
+        // formData.append('url_no', String(urlRecoilInfo.url_no));
+        // formData.append('url_description',description);
+        // formData.append('url_tag', JSON.stringify(tags));
         axios({
             headers: { 'Authorization': `Bearer ${token}` },
             method: 'patch',
-            url: `/v1/api/datahub/url`,
-            data: {
-              hub_id: urlRecoilInfo.hub_id,
-              url_no:urlRecoilInfo.url_no,
-              url_description: urlRecoilInfo.url_description,
-              url_tag: urlRecoilInfo.url_tag,
-      
+            url: `/v1/api/datahub/urlUpdate`,
+            data:  {
+                hub_id:urlRecoilInfo.hub_id,
+                url_name:urlRecoilInfo.url_name,
+                url_no:urlRecoilInfo.url_no,
+                url_description:description,
+                url_tag: tagList,
             }
           }).then(function (res){
-            if(res.data === true){
+            if(res.status === 200){
                 alert("통신성공")
             }
           });  
     };
 //이미지 수정 patch api
     function patchImgFile(){
-        let tagList: string[] = [];
-        tags.forEach((item:any) => item.name && tagList.push(item.name));
+        console.log("imgRecoilInfo****");
+        console.log(imgRecoilInfo);
+        
+        const tagList: string[] = [];
+        tags.forEach((item) => item.name && tagList.push(item.name));
+        // const formData = new FormData();
+        // formData.append('hub_id', String(imgRecoilInfo.hub_id));
+        // formData.append('image_no', String(imgRecoilInfo.image_no));
+        // formData.append('file_description', description);
+        // formData.append('file_tag', JSON.stringify(tagList));
+        
+        // if(imgRecoilInfo.carosel_id){
+        //     formData.append('carousel_id', String(imgRecoilInfo.carosel_id));
+        //     formData.append('turn',String(turn === 0 ? 1 : turn));
+          
+        // };
+        if(imgRecoilInfo.carosel_id === null){
+            axios({
+                headers: { 'Authorization': `Bearer ${token}`, 'charset':'utf-8' },
+                method: 'patch',
+                url: `/v1/api/datahub/img`,
+                data:  {
+                    hub_id:imgRecoilInfo.hub_id,
+                    image_no:imgRecoilInfo.image_no,
+                    file_tag:tagList,
+                    file_description: description,
+                }
+    
+              }).then(function (res){
+                if(res.status === 200){
+                    const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+                    onClose(fakeEvent);
+                    setActiveHubFileListRecoil(!relanderingActiveHubFileList)
+                }
+              }); 
+        }else{
+            axios({
+                headers: { 'Authorization': `Bearer ${token}`, 'charset':'utf-8' },
+                method: 'patch',
+                url: `/v1/api/datahub/img`,
+                data:  {
+                    hub_id:imgRecoilInfo.hub_id,
+                    image_no:imgRecoilInfo.image_no,
+                    file_tag:tagList,
+                    file_description: description,
+                    turn: imgRecoilInfo.turn,
+                    carousel_id: imgRecoilInfo.carosel_id,
+                }
+    
+              }).then(function (res){
+                if(res.status === 200){
+                    const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+                    onClose(fakeEvent);
+                    setActiveHubFileListRecoil(!relanderingActiveHubFileList)
+                }
+              }); 
+        }
 
-        axios({
-            headers: { 'Authorization': `Bearer ${token}` },
-            method: 'patch',
-            url: `/v1/api/datahub/img`,
-            data: {
-              hub_id: imgRecoilInfo.hub_id,
-              image_no: imgRecoilInfo.image_no,
-              file_description: description,
-              file_tag: tagList,
-              carousel_id: imgRecoilInfo.carosel_id,
-              turn:turn === 0? (1):(turn),
-            }
-          }).then(function (res){
-            if(res.status === 200){
-                const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
-                onClose(fakeEvent);
-                setActiveHubFileListRecoil(!relanderingActiveHubFileList)
-            }
-          });  
+
     };
-//이미지 파일 생성(미완성 파일이 만들어지는것만 확인 )
+//서류 파일 생성
     async function makeImgObjectFile(){
         console.log("makeImgObjectFile start")
         console.log(docRecoilInfo);
@@ -443,8 +487,6 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
 //비디오파일 수정 api
     function patchVideoFile(){
         const tagList: string[] = [];
-        let temp = parseStringToCarouselArray(videoRecoilInfo.file_tag);
-        temp.forEach((item) => item && tagList.push(item));
         tags.forEach((item) => item.name && tagList.push(item.name));
         axios({
             headers: { 'Authorization': `Bearer ${token}`},
@@ -463,28 +505,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             onClose(fakeEvent);
             setActiveHubFileListRecoil(!relanderingActiveHubFileList)
           }).catch(err =>{alert(err)});
-    }
-    // function patchVideoFile(file:File){ //doc에서 사용 예정
-    //     console.log(file);
-    //     const formData = new FormData();
-    //     formData.append('hub_id', String(videoRecoilInfo.hub_id));
-    //     formData.append('video_no', String(videoRecoilInfo.video_no));
-    //     formData.append('file_tag', String(videoRecoilInfo.file_tag));
-    //     formData.append('file_description', String(videoRecoilInfo.file_description));
-    //     formData.append('video', file);
-
-    //     axios({
-    //         headers: { 'Authorization': `Bearer ${token}` , 'Content-Type':`multipart/form-data`},
-    //         method: 'patch',
-    //         url: `/v1/api/datahub/video`,
-    //         data:  formData,
-    //       }
-    //       ).then(function (res){
-
-    //         const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
-    //         onClose(fakeEvent);
-    //       }).catch(err =>{alert(err)});
-    // }
+    };
 //파일 추가 버튼 이벤트
     const onSubmitAddCarosel = (e:any) => {
       let addC = e.target.value;
@@ -538,7 +559,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
       }else{
         setSelectedFile(file);
       }
-  }
+  };
     return(
         
     <div className="FileUpdate">

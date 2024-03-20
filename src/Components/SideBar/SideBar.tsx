@@ -348,7 +348,7 @@ interface SideBarProps {
     {type === 'url' &&
      <>
       <div className='title'>
-          <span>{urlInfo.url_description}</span>
+          <span>{urlInfo.url_name}</span>
       </div>
       <div className='docsImgArea'>
           <img style={{width:'212px', height:'164px' }} src={process.env.PUBLIC_URL +imageSrc}/>
