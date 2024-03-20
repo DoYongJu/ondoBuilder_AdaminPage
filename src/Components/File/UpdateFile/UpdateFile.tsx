@@ -101,12 +101,15 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         }
         switch(fileType){
             case 'doc':
+                setCurrentCount(docRecoilInfo.file_description.length);
                 break;
             case 'img':
                 parseStringToCarouselArray(imgRecoilInfo.file_tag);
+                setCurrentCount(imgRecoilInfo.file_description.length);
                 break;
             case 'video':
                 parseStringToCarouselArray(videoRecoilInfo.file_tag);
+                setCurrentCount(videoRecoilInfo.file_description.length);
                 break;
             case 'url':
                 parseStringToCarouselArray(urlRecoilInfo.url_tag);
@@ -350,9 +353,11 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
                             'Content-Type' : `multipart/form-data`,
                             'charset':'utf-8'},    
                 }).then(function (res){
-                if(res.status === 200){
-                    alert("통신성공")
-                }
+                    if(res.status === 200){
+                        const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+                        onClose(fakeEvent);
+                        setActiveHubFileListRecoil(!relanderingActiveHubFileList)
+                    }
               });
 
             console.log(response);
@@ -367,15 +372,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
     function patchUrlFile(){
         const tagList: string[] = []; 
         tags.forEach((item) => item.name && tagList.push(item.name));
-        // let temp = parseStringToCarouselArray(urlRecoilInfo.url_tag);
-        // temp.forEach((item) => item && tagList.push(item));
-        // tags.forEach((item) => item.name && tagList.push(item.name));
-        // const formData = new FormData();
-        // formData.append('hub_id', String(urlRecoilInfo.hub_id));
-        // formData.append('url_name', String(urlRecoilInfo.url_name));
-        // formData.append('url_no', String(urlRecoilInfo.url_no));
-        // formData.append('url_description',description);
-        // formData.append('url_tag', JSON.stringify(tags));
+
         axios({
             headers: { 'Authorization': `Bearer ${token}` },
             method: 'patch',
@@ -389,28 +386,16 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             }
           }).then(function (res){
             if(res.status === 200){
-                alert("통신성공")
+                const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+                onClose(fakeEvent);
+                setActiveHubFileListRecoil(!relanderingActiveHubFileList)
             }
           });  
     };
-//이미지 수정 patch api
+//이미지 파일 수정 patch api===>03.20카로셀이 없는 이미지 수정이 미흡
     function patchImgFile(){
-        console.log("imgRecoilInfo****");
-        console.log(imgRecoilInfo);
-        
         const tagList: string[] = [];
         tags.forEach((item) => item.name && tagList.push(item.name));
-        // const formData = new FormData();
-        // formData.append('hub_id', String(imgRecoilInfo.hub_id));
-        // formData.append('image_no', String(imgRecoilInfo.image_no));
-        // formData.append('file_description', description);
-        // formData.append('file_tag', JSON.stringify(tagList));
-        
-        // if(imgRecoilInfo.carosel_id){
-        //     formData.append('carousel_id', String(imgRecoilInfo.carosel_id));
-        //     formData.append('turn',String(turn === 0 ? 1 : turn));
-          
-        // };
         if(imgRecoilInfo.carosel_id === null){
             axios({
                 headers: { 'Authorization': `Bearer ${token}`, 'charset':'utf-8' },
@@ -455,6 +440,29 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
 
 
     };
+//비디오파일 수정 api
+    function patchVideoFile(){
+    const tagList: string[] = [];
+    tags.forEach((item) => item.name && tagList.push(item.name));
+    axios({
+        headers: { 'Authorization': `Bearer ${token}`},
+        method: 'patch',
+        url: `/v1/api/datahub/video`,
+        data:  {
+            hub_id:videoRecoilInfo.hub_id,
+            video_no:videoRecoilInfo.video_no,
+            file_tag:tagList,
+            file_description: description,
+        }
+      }
+      ).then(function (res){
+        if(res.status === 200){
+            const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
+            onClose(fakeEvent);
+            setActiveHubFileListRecoil(!relanderingActiveHubFileList)
+        }
+      }).catch(err =>{alert(err)});
+    };
 //서류 파일 생성
     async function makeImgObjectFile(){
         console.log("makeImgObjectFile start")
@@ -483,28 +491,6 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             }).catch((err)=>{alert(err);  });
 
         return new File([data], docRecoilInfo.file_name, { type:  `doc/${theFileType}` });
-    };
-//비디오파일 수정 api
-    function patchVideoFile(){
-        const tagList: string[] = [];
-        tags.forEach((item) => item.name && tagList.push(item.name));
-        axios({
-            headers: { 'Authorization': `Bearer ${token}`},
-            method: 'patch',
-            url: `/v1/api/datahub/video`,
-            data:  {
-                hub_id:videoRecoilInfo.hub_id,
-                video_no:videoRecoilInfo.video_no,
-                file_tag:tagList,
-                file_description: description,
-            }
-          }
-          ).then(function (res){
-
-            const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
-            onClose(fakeEvent);
-            setActiveHubFileListRecoil(!relanderingActiveHubFileList)
-          }).catch(err =>{alert(err)});
     };
 //파일 추가 버튼 이벤트
     const onSubmitAddCarosel = (e:any) => {
@@ -571,13 +557,15 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
 
             {fileType === 'doc' &&
                 <> 
-                    <UploadedFileName filename={docRecoilInfo.file_name} fileType={docRecoilInfo.file_name.split('.')[1]}/>
+                    <UploadedFileName filename={docRecoilInfo.file_name} fileType={docRecoilInfo.download_url.substring(docRecoilInfo.download_url.lastIndexOf('.') + 1)}/>
                     <button className="updateFileBtn"  onClick={handleFileuploadButtonClick}>
                         <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e)=>handleFileChange(e)}/>파일 선택
                     </button>{selectedFile ? (<span>{selectedFile.name}</span>) : (<span>선택된 파일 없음</span>)}
-                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
-                    <UploadedFileTextArea title='파일 프롬프트' placeholder='파일에 대한 프롬프트를 입력해주세요.' handleTextChange={(e)=>{ setPromtText(e.target.value);}}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' inputValue={docRecoilInfo.file_description} currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTextArea title='파일 프롬프트' placeholder='파일에 대한 프롬프트를 입력해주세요.' inputValue={docRecoilInfo.file_prompt} handleTextChange={(e)=>{ setPromtText(e.target.value);}}/>
                 </>
+
+
             }
             {fileType === 'img'&& 
                 <>
