@@ -44,21 +44,6 @@ interface SideBarProps {
     };
   }, []);
 
-  // 사이드 바의 스타일을 계산하는 함수
-  const calculateStyle = () => {
-    if (scrollY > 78) {
-      return {
-        top: '0px', // 스크롤이 78px 이상일 때 상단 고정
-        position: 'fixed',
-      };
-    } else {
-      return {
-        top: `${78 - scrollY}px`, // 스크롤에 따라 top 위치 조정
-        position: 'absolute',
-      };
-    }
-  };
-
   // const translateY = (0, scrollY);
    useEffect(() => {
     console.log(urlInfo);
@@ -253,16 +238,14 @@ interface SideBarProps {
           {selctedClick &&
               <ul className="options-list">
               {selectList.slice(1).map((option, index) => (
-                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>
-                  {option}
-                </li>
+                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>{option}</li>
               ))}
             </ul>
           }
           </span>
         </ul>
         <ul>
-          <span onClick={onClose} ><BiX size={20}  /></span>
+          <span onClick={onClose} ><BiX size={20}/></span>
         </ul>
       </div>
 

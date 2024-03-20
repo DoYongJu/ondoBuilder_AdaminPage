@@ -22,6 +22,7 @@ interface ClassifyType {
 }
 function ActiveHublist(){
     const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
+  
       location = useLocation(),
       navigate = useNavigate(),
       [isFirst, setIsFirst] = useState(true), //허브에 데이터가 없을 때
@@ -47,7 +48,7 @@ function ActiveHublist(){
       [uploadedInfo, setUploadedInfo] = useState(false),
       [selctedClick, setSelctedClick] = useState(false),
       setHubClassify = useSetRecoilState(hubClassfiyState);
-  
+      console.log(type);
     //File 업로드 관련
     const handleDragStart = () => setActive(true);
     const handleDragEnd = () => setActive(false);

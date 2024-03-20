@@ -23,6 +23,7 @@ export const searchState = atom({
 export const hubClassfiyState = atom({
   key:'type',
   default:'',
+  effects_UNSTABLE: [persistAtom],
 });
 export const ActiveHubFileListState = atom({
   key:'list',
