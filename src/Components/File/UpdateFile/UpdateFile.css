@@ -18,6 +18,9 @@
     
 .FileUpdate .body span{font-family: Pretendard;font-size: 14px;font-weight: 400;line-height: 20px;
     letter-spacing: -0.025em;text-align: left;}
+.FileUpdate .body .errMsg{color: #FF2F2F;font-family: Pretendard;
+        font-size: 13px;font-weight: 400;line-height: 18px;
+        letter-spacing: -0.025em;text-align: left;}
 .FileUpdate .body .FileUploadtitle{display: flex; height:56px; gap:28px; padding-top:20px; }
 .FileUpdate .body .FileUploadtitle .key{display: flex;  flex-direction: column;gap:16px}
 .FileUpdate .body .FileUploadtitle .key ul{width:60px; color: #505050; font-size: 14px;font-weight: 400;line-height: 20px;
@@ -130,7 +133,7 @@
 
 
 .FileUpdate .body .caroselArea .caroselInputArea input{width:65%;padding: 14px;border-radius: 6px;
-    border: 1px solid #111;}
+    outline: none;}
 .FileUpdate .body .caroselArea .caroselInputArea .addBtn{width:60px;padding: 14px;border-radius: 6px;color: #FFF;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; /* 142.857% */
     letter-spacing: -0.35px;border: 1px solid #105AEB;background: #105AEB; margin-left:8px;}

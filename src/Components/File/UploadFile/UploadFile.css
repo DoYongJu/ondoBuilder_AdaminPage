@@ -79,12 +79,8 @@
     letter-spacing: -0.35px;border: 1px solid #105AEB;background: #105AEB;}
 
 .FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea{height:140px; width: 470px; 
-    display: flex;
-    gap:8px;
-    justify-content: left; 
-    padding:11px 0;
-    overflow-y: hidden; 
-    overflow-x: auto;
+    display: flex;gap:8px;justify-content: left; padding:11px 0;
+    overflow-y: hidden; overflow-x: auto;
     &::-webkit-scrollbar-thumb {width: 1px;border-radius: 24px;background:#B0C5F2;;}
     &::-webkit-scrollbar-track {  background-color:#fff; }  
     &::-webkit-scrollbar {height: 4px;}
@@ -99,30 +95,17 @@
 .FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea .img
     {position: relative;  background-color: white;border-radius: 6px; border: 4px solid white;}
 .FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea .img .image-number {
-    position: absolute; z-index: 1;
-    display: flex; 
-    justify-content: center;
-    align-items: center;width: 10px;
-    top: 15%;left: 20%;transform: translate(-50%, -50%);background-color:rgba(17, 17, 17, 0.84);
-    height: 10px;padding: 9px;color: white;border-radius: 29px;font-size: 12px;
-  }
-
-  .FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea .img .imgArea span {
-    position: absolute; width:90px; height: 90px; border-radius: 6px;
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-    top: 40%;left: 50%;transform: translate(-50%, -50%);background-color:rgba(0, 0, 0, 0.7);
-    padding: 9px;color: white;font-size: 12px; 
-  }
-
-
+    position: absolute; z-index: 1;display: flex; justify-content: center;
+    align-items: center;width: 10px;top: 15%;left: 20%;transform: translate(-50%, -50%);background-color:rgba(17, 17, 17, 0.84);
+    height: 10px;padding: 9px;color: white;border-radius: 29px;font-size: 12px;}
+.FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea .img .imgArea span {
+    position: absolute; width:90px; height: 90px; border-radius: 6px;display: flex; 
+    justify-content: center;align-items: center;top: 40%;left: 50%;transform: translate(-50%, -50%);background-color:rgba(0, 0, 0, 0.7);
+    padding: 9px;color: white;font-size: 12px;}
 .FileUpload .body .caroselArea .selectAndMoveArea .moveCaroselArea .img ul{    
     color: #505050;width:99px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px;
     letter-spacing: -0.35px;}
-
-
 .FileUpload .body .caroselArea .caroselInputArea input{width:65%;padding: 14px;border-radius: 6px;
      outline: none;}
 .FileUpload .body .caroselArea .caroselInputArea .addBtn{width:60px;padding: 14px;border-radius: 6px;color: #FFF;

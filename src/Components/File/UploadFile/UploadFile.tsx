@@ -46,7 +46,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [selectedCaroselId, setSelectedCaroselId] = useState('-10');
     const [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
     const [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
-    const [inputErrMsg, setInputErrMsg] = useState(''); //허브 추가명 input 
+    const [inputErrMsg, setInputErrMsg] = useState(''); //카로셀 추가시 에러메세지명
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
 

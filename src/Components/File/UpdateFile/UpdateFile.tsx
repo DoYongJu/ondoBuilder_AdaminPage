@@ -32,6 +32,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
     const [turn, setTurn] = useState(0);
     // const [listByCarosel, setListByCarosel] = useState<|>([]);
     const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
+    const [inputErrMsg, setInputErrMsg] = useState(''); //카로셀 추가시 에러메세지명
     const [images, setImages] = useState<imgInfoForCarselList>([]);
     const token = Cookies.get('accessToken');
     //파일 업데이트 관련
@@ -494,10 +495,18 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         return new File([data], docRecoilInfo.file_name, { type:  `doc/${theFileType}` });
     };
 //파일 추가 버튼 이벤트
-    const onSubmitAddCarosel = (e:any) => {
-      let addC = e.target.value;
-      setAddCarosel(addC);   
-    };
+const onSubmitAddCarosel = (e:any) => {
+    let inputText = e.target.value;
+    if (inputText.length > 19) {
+      setInputErrMsg('최대 19자까지만 입력 가능합니다!');
+      setAddCarosel(inputText.slice(0, 19));
+    } else {
+      setInputErrMsg('');
+      setAddCarosel(inputText);
+    }
+
+  
+  };
 //url input 이벤트
     const handleUrlChange=(e:any)=>{
         const newText = e.target.value;
@@ -578,6 +587,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
                     selectList={selectList} setCaroselNewView={setCaroselNewView} images={images} handleDragStart={handleDragStart}
                     handleDrop={handleDrop}  inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel} 
                     addCaroselGroupApi={addCaroselGroupApi}/>
+                    <span className='errMsg'>{inputErrMsg}</span>
                 </>
             }
             {fileType === 'url' && 
