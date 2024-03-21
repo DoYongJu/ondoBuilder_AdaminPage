@@ -20,7 +20,8 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
     // const [previewimages, setPreviewimages] = useState<imgInfoForCarselList>([]);
     const token = Cookies.get('accessToken');
     const imgRecoilInfo = useRecoilValue(imgDetailsState);
-  
+    const [inputValue, setInputValue] = useState('');
+    const inputStyle = inputValue.length > 19 ? { border: '1px solid red' } : { border: '1px solid #BDBDBD' };
     return(
         <div className='caroselArea'>
         <div className='caroselTitle'>카로셀</div>
@@ -66,7 +67,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
           }
         {caroselNewView&&
           <div className='caroselInputArea'>
-              <input type='text' placeholder="카로셀 추가" onChange={(e)=>onSubmitAddCarosel(e)} maxLength={19}/>
+              <input type='text' placeholder="카로셀 추가" onChange={(e)=>{onSubmitAddCarosel(e);setInputValue(e.target.value)}} maxLength={19} style={inputStyle}/>
               <button className="deleteBtn" onClick={()=>{setCaroselNewView(!caroselNewView)}}>취소</button>
               <button className="addBtn" onClick={addCaroselGroupApi}>추가</button>
           </div>

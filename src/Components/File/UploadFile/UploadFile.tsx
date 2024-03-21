@@ -18,6 +18,7 @@ import Alert from '../../Modal.components/Alert/Alert';
 import { useRecoilValue, useSetRecoilState, } from 'recoil';
 import { ActiveHubFileListState, videoDetailsState, urlDetailsState, imgDetailsState,
      docDetailsState} from '../../../Resources/Recoil';
+import { ToastContainer, toast } from 'react-toastify';
 
 const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -45,6 +46,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [selectedCaroselId, setSelectedCaroselId] = useState('-10');
     const [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
     const [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
+    const [inputErrMsg, setInputErrMsg] = useState(''); //허브 추가명 input 
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
 
@@ -328,9 +330,10 @@ const handleTextChange = (e:any) => {
     const onSubmitAddCarosel = (e:any) => {
       let inputText = e.target.value;
       if (inputText.length > 19) {
-        alert('최대 19자까지만 입력 가능합니다!');
+        setInputErrMsg('최대 19자까지만 입력 가능합니다!');
         setAddCarosel(inputText.slice(0, 19));
       } else {
+        setInputErrMsg('');
         setAddCarosel(inputText);
       }
 
@@ -349,6 +352,18 @@ const handleTextChange = (e:any) => {
     return(
         
     <div className="FileUpload">
+        {/* <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        /> */}
         <div className="header">
             {fileType === 'link'? <ul>링크 업로드</ul>: <ul>파일 업로드</ul>}
             <button  onClick={openAlart}><BiX size={20}  /></button>
@@ -370,6 +385,7 @@ const handleTextChange = (e:any) => {
                     selectList={selectList} setCaroselNewView={setCaroselNewView} images={images} handleDragStart={handleDragStart}
                     handleDrop={handleDrop}  inputRef={inputRef} onSubmitAddCarosel={onSubmitAddCarosel} 
                     addCaroselGroupApi={addCaroselGroupApi}/>
+                    <span>{inputErrMsg}</span>
                 </>
             }
             {fileType === 'video' &&oneFile && 

@@ -65,6 +65,9 @@
 
 
 .FileUpload .body .caroselArea{width:100%; margin-top:48px}
+.FileUpload .body span{color: #FF2F2F;font-family: Pretendard;
+    font-size: 13px;font-weight: 400;line-height: 18px;
+    letter-spacing: -0.025em;text-align: left;}
 .FileUpload .body .caroselArea .caroselTitle{height: 26px; color: #505050;
     font-family: Pretendard;font-size: 14px;font-style: normal;
     font-weight: 400;line-height: 20px; /* 142.857% */letter-spacing: -0.35px;}
@@ -121,7 +124,7 @@
 
 
 .FileUpload .body .caroselArea .caroselInputArea input{width:65%;padding: 14px;border-radius: 6px;
-    border: 1px solid #111;}
+     outline: none;}
 .FileUpload .body .caroselArea .caroselInputArea .addBtn{width:60px;padding: 14px;border-radius: 6px;color: #FFF;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; /* 142.857% */
     letter-spacing: -0.35px;border: 1px solid #105AEB;background: #105AEB; margin-left:8px;}
