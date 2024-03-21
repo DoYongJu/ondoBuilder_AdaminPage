@@ -46,7 +46,7 @@ const InputBox: React.FC<InputBoxProps>=({handleTheTextChange,title,placeholder,
     <div className='oneInputArea'>
         <div className='urlTitle'><ul>{title}</ul></div>
         <div className='urlBody' >
-          {type === 'text' && isDisabled === false && <input type={type}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} />} 
+          {type === 'text'  && isDisabled === false && <input type={type}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} />} 
           {type === 'text' && isDisabled === true && <input type={type}  className={className} placeholder={placeholder?.substring(0,65)+'...'}onChange={handleTheTextChange} disabled/>} 
 
           {type === 'tel' &&<input type={type}  className={className} value={value} placeholder={placeholder} onChange={handleTheTextChange} maxLength={13} onInput={(e)=>addHyphen(e)}/>} 

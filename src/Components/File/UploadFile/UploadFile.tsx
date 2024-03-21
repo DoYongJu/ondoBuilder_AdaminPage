@@ -16,7 +16,7 @@ import UploadedFileCarosel from '../../Atoms/UploadedFileCarosel';
 import InputBox from '../../Atoms/InputBox/InputBox';
 import Alert from '../../Modal.components/Alert/Alert';
 import { useRecoilValue, useSetRecoilState, } from 'recoil';
-import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
+import { ActiveHubFileListState, videoDetailsState, urlDetailsState, imgDetailsState,
      docDetailsState} from '../../../Resources/Recoil';
 
 const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
@@ -54,7 +54,11 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const videoRecoilInfo = useRecoilValue(videoDetailsState);
     const imgRecoilInfo = useRecoilValue(imgDetailsState);
 
-    // const caroselRecoilInfo = useSetRecoilState(casoselInfoState);
+    const [turn, setTurn] = useState(1);
+
+
+    const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
+    const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
 
     useEffect(() => {
         function validNull(){
@@ -211,32 +215,66 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         e.dataTransfer.setData('text/plain', index.toString());
     };   
 //이미지 드롭
-    const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-        e.preventDefault();
-        if (draggedItem) {
-            let targetIndex = Number(e.dataTransfer.getData('text/plain')),
-                updatedImages = images.map((image) => ({ ...image }));
-           
-            // 현재 드래그한 이미지의 정보를 대상 이미지의 위치로 업데이트
-            updatedImages.splice(targetIndex > index ? index : index+1 , 0, { ...draggedItem, turn: updatedImages[index].turn });
-            // 대상 이미지의 정보를 드래그한 이미지의 위치로 업데이트
-            updatedImages.splice(targetIndex > index ? targetIndex + 1 : targetIndex, 1);
-            
-            // 재조정된 순서값을 적용
-            updatedImages.forEach((image, i) => {
-                image.turn = i + 1;
-            });
-            
-            setImages(updatedImages);
-            setDraggedItem(null);
+const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    // e.preventDefault();
+    if (draggedItem) {
+        // let targetIndex = Number(e.dataTransfer.getData('text/plain')),
+        let  updatedImages:imgInfoForCarselList= images.map((image: imgInfoForCarsel) => ({ ...image }));
+          
+    
+    if (index > draggedItem.turn-1) {
+                updatedImages[draggedItem.turn-1].turn = index+1;
+                updatedImages[index].turn =draggedItem.turn;
+                updatedImages.sort((a, b) => a.turn - b.turn);
+    }else{
+            if(index === 0){
+                console.log("index가 0-----테스트완료.");
+                updatedImages[0].turn = 2;
+                updatedImages[draggedItem.turn-1].turn = 1;
+                
+                updatedImages.sort((a, b) => a.turn - b.turn);
+
+                for (let i = 1; i < images.length; i++) {
+                    updatedImages[i].turn = i+1;
+                }  
+               
+            }else{
+                console.log("=d=d=d=d=d=네번째 오타니가 첫번째가 아닌 자리로 갈때.---테스트완료.");
+                if(draggedItem.turn !== images.length){
+                    updatedImages[index].turn = images.length-index;
+                    updatedImages[draggedItem.turn-1].turn = index+1;
+                }else{
+                    updatedImages[index].turn =images.length;
+                    updatedImages[draggedItem.turn-1].turn =index+1;
+                }
+        
+                updatedImages.sort((a, b) => a.turn - b.turn);
+                for (let i =draggedItem.turn-1; i < images.length; i++) {
+                    updatedImages[i].turn = i+1;
+                }   
+            };
         };
-    };
+        console.log("updatedImages[1]");
+        console.log(updatedImages[index]);
+        console.log("updatedImages[1].turn");
+        console.log(updatedImages[index].turn);
+        let turn =updatedImages[index].turn;
+        setTurn(turn);
+        console.log("updatedImages");
+        console.log(updatedImages);
+        updatedImages.sort((a, b) => a.turn - b.turn);
+       
+        
+        setImages(updatedImages);
+        console.log(images);
+        console.log(turn);
+    }};
      
-    const handleTextChange = (e:any) => {
+const handleTextChange = (e:any) => {
         const newText = e.target.value;
         setInfoText(newText);
         setCurrentCount(newText.length);     
-    };
+};
 //태그 추가
     const onSubmitSearch = (e:any) => {
 
@@ -275,11 +313,12 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         tags.forEach((item) => item.name && tagList.push(item.name));
         
         const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description,
-            content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem? (draggedItem.turn):(0), url_description:description})
+            content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem? (turn):(1), url_description:urlInfo})
 
         if(boolean === true){
             const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
             onClose(fakeEvent);
+            setActiveHubFileListRecoil(!relanderingActiveHubFileList);
         }else{
             alert('업로드 실패');
         }

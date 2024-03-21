@@ -31,6 +31,8 @@ const UploadFileDataHandler = async ({
                             turn:turn,
                             img:content
                             }
+                            console.log("========sendParam========");
+                            console.log(sendParam);
             };
             break;
         case 'video':

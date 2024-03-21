@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './UpdateFile.css'; 
 import Cookies from 'js-cookie';
-import { ToastContainer, toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 import {MyObject} from '../../../Resources/Models';
@@ -334,7 +334,6 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         const formData = new FormData();
         if(!selectedFile){ //파일 교체 케이스
             let file = await makeImgObjectFile();
-            // setSelectedFile(file);
             formData.append('hub_id', String(docRecoilInfo.hub_id));
             formData.append('doc_no', String(docRecoilInfo.doc_no));
             formData.append('file_description', description);
@@ -390,7 +389,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
             if(res.status === 200){
                 const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
                 onClose(fakeEvent);
-                setActiveHubFileListRecoil(!relanderingActiveHubFileList)
+                setActiveHubFileListRecoil(!relanderingActiveHubFileList);
             }
           });  
     };
@@ -427,7 +426,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
                     image_no:imgRecoilInfo.image_no,
                     file_tag:tagList,
                     file_description: description,
-                    turn: imgRecoilInfo.turn,
+                    turn: turn,
                     carousel_id: imgRecoilInfo.carosel_id,
                 }
     
@@ -548,7 +547,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         setSelectedFile(file);
       }
   };
-  const notify = () => toast("Wow so easy!");
+  
     return(
         
     <div className="FileUpdate">
@@ -559,10 +558,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         <div className='body'>
 
             {fileType === 'doc' &&
-                <>  <div>
-                <button onClick={notify}>Notify!</button>
-                <ToastContainer />
-              </div>
+                <>  
                     <UploadedFileName filename={docRecoilInfo.file_name} fileType={docRecoilInfo.download_url.substring(docRecoilInfo.download_url.lastIndexOf('.') + 1)}/>
                     <button className="updateFileBtn"  onClick={handleFileuploadButtonClick}>
                         <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e)=>handleFileChange(e)}/>파일 선택

@@ -3,7 +3,7 @@ import ConnectApi from '../../Module/ConnectApi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
 import { useRecoilValue, useSetRecoilState, useRecoilState} from 'recoil';
-import { hubClassfiyState, MyObjectsState} from '../../Resources/Recoil';
+import { hubClassfiyState, MyObjectsState, ActiveHubFileListDetailsState} from '../../Resources/Recoil';
 import SideBar from '../SideBar/SideBar';
 import SearchBar from '../SearchBar/SearchBar'
 import SelectBox from '../SelectBox/SelectBox';
@@ -49,6 +49,7 @@ function ActiveHublist(){
       [uploadedInfo, setUploadedInfo] = useState(false),
       [selctedClick, setSelctedClick] = useState(false),
       setHubClassify = useSetRecoilState(hubClassfiyState);
+     
     //File 업로드 관련
     const handleDragStart = () => setActive(true);
     const handleDragEnd = () => setActive(false);
@@ -56,9 +57,12 @@ function ActiveHublist(){
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
 
+    //랜더링
+    const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListDetailsState);
+
   //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
   useEffect(() => {
-      
+      console.log("activeHublist 컴포넌트의 첫번째 useEffect 실행됨.")
       function selectDataByTypeApi() {
         console.log('hub_id: '+theHubInfo.hub_id);
         
@@ -79,8 +83,11 @@ function ActiveHublist(){
   
       selectDataByTypeApi();
   
-  }, [isFirst, type, selectedFile, openInputModal]);
- 
+  }, [isFirst, type, selectedFile, openInputModal, isSideBarOpen]);
+
+
+
+
   //상단 탭 정보
   const buttons = [ 
         { label: '정보', value: 'info' },
@@ -175,11 +182,11 @@ function ActiveHublist(){
           if (isImageFileType(fileType) === true && fileSize <= 5 * 1024 * 1024) {
               setSelectedFile(file);
           }else if(isImageFileType(fileType) === false && fileSize > 5 * 1024 * 1024){
-           notify("최대 5MB크기의 JPEG, PNG, JPG 파일만 업로드할 수 있습니다.")
+            alertNotify("최대 5MB크기의 JPEG, PNG, JPG 파일만 업로드할 수 있습니다.");
           }else if(isImageFileType(fileType) === false && fileSize <= 5 * 1024 * 1024){
-            notify("JPEG, PNG, JPG 파일만 업로드할 수 있습니다.");
+            alertNotify("JPEG, PNG, JPG 파일만 업로드할 수 있습니다.");
           }else{
-            notify('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+            alertNotify('이미지 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
           };
           break;
 
@@ -187,23 +194,23 @@ function ActiveHublist(){
           if (isDocFileType(fileType) === true && fileSize <= 5 * 1024 * 1024) {
               setSelectedFile(file);
           }else if(isDocFileType(fileType) === false && fileSize > 5 * 1024 * 1024){
-          notify("최대 5MB크기의 PPT, PPTX, CSV, XLS, XLSX, PDF, DOC, DOCS 파일만 업로드할 수 있습니다.")
+            alertNotify("최대 5MB크기의 PPT, PPTX, CSV, XLS, XLSX, PDF, DOC, DOCS 파일만 업로드할 수 있습니다.");
           }else if(isDocFileType(fileType) === false && fileSize <= 5 * 1024 * 1024){
-            notify("PPT, PPTX, CSV, XLS, XLSX, PDF, DOC, DOCS 파일만 업로드할 수 있습니다.");
+            alertNotify("PPT, PPTX, CSV, XLS, XLSX, PDF, DOC, DOCS 파일만 업로드할 수 있습니다.");
           }else{
-            notify('문서 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
+            alertNotify('문서 파일의 크기는 최대 5MB를 초과할 수 없습니다.');
           };
           break;
-          
+
       case "video":
           if (isVideoFileType(fileType) && fileSize <= 100 * 1024 * 1024) {
               setSelectedFile(file);
           }else if(isVideoFileType(fileType) === false && fileSize >  100 * 1024 * 1024){
-            notify("최대 100MB크기의 MP4, AVI, WMV, MOV 파일만 업로드할 수 있습니다.")
+            alertNotify("최대 100MB크기의 MP4, AVI, WMV, MOV 파일만 업로드할 수 있습니다.");
           }else if(isVideoFileType(fileType) === false && fileSize <=  100 * 1024 * 1024){
-              notify("MP4, AVI, WMV, MOV  파일만 업로드할 수 있습니다.");
+            alertNotify("MP4, AVI, WMV, MOV  파일만 업로드할 수 있습니다.");
           }else{
-              notify('비디오 파일의 크기는 최대 100MB를 초과할 수 없습니다.');
+            alertNotify('비디오 파일의 크기는 최대 100MB를 초과할 수 없습니다.');
           };
           break;
       default:
@@ -217,7 +224,8 @@ function ActiveHublist(){
     validateFile(file);
     e.target.value = '';  
   };
-  const notify = (errorMsg:string) => toast.error(errorMsg, {
+//alert toast
+  const alertNotify = (errorMsg:string) => toast.error(errorMsg, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -226,24 +234,37 @@ function ActiveHublist(){
     draggable: true,
     progress: undefined,
     theme: "light",
-    });
+    
+  });
+  //suceess toast
+  const successNotify = (errorMsg:string) => toast.success(errorMsg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    
+  });
     return (
 
       <div className={`activeHublist ${isSideBarOpen ? 'sidebarOpen' : ''}`}>
              
               
-                <ToastContainer
-position="bottom-right"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        />
             
         <div className="title"><span>{theHubInfo.hub_name}</span></div>
         <div className="sub_title">
@@ -330,7 +351,7 @@ theme="light"
 
         {!isFirst && viewWays && (
           <div className='contbox'>
-            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
+            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} IsRelandering={relanderingActiveHubFileList}
             onClick={()=>{setIsSideBarOpen(!isSideBarOpen);}} selectedF={()=>{setSelectedFile(null)}}/>
           </div>
         )}
@@ -348,7 +369,7 @@ theme="light"
             </div>
 
             {!isFirst && (
-              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} 
+              <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} IsRelandering={relanderingActiveHubFileList}
               onClick={()=>{ setIsSideBarOpen(!isSideBarOpen); }} selectedF={()=>{setSelectedFile(null)}}/>
             )}
           </div>
@@ -356,7 +377,7 @@ theme="light"
         {/* 사이드바 나올때 다른 버튼들 못 건드리게 임시로 막음. */}
         {isSideBarOpen &&
          <div className="overlay" > 
-        <SideBar isOpen={isSideBarOpen} onClose={()=>{ setIsSideBarOpen(false);}} /> 
+        <SideBar isOpen={isSideBarOpen} onClose={()=>{ setIsSideBarOpen(false); }} /> 
         </div>  
         }
         

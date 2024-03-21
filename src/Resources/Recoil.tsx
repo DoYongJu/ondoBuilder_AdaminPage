@@ -29,6 +29,12 @@ export const ActiveHubFileListState = atom({
   key:'list',
   default:false,
 });
+export const ActiveHubFileListDetailsState = selector({
+  key: 'ActiveHubFileListDetailsState',
+  get: ({get}) => {
+    return get(ActiveHubFileListState);
+  },
+});
 export const userInfoState = atom<userInfoType>({
   key: 'userInfoState',
   default: {

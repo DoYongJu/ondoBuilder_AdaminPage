@@ -6,9 +6,9 @@ import { BiX } from "react-icons/bi";
 import {dataByType} from '../../Resources/Models';
 import Cookies from 'js-cookie';
 import UpdateFile from '../File/UpdateFile/UpdateFile';
-import { useRecoilValue, useRecoilState} from 'recoil';
+import { useRecoilValue, useSetRecoilState} from 'recoil';
 import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
-  docDetailsState} from '../../Resources/Recoil';
+  docDetailsState, ActiveHubFileListState} from '../../Resources/Recoil';
 interface SideBarProps {
     isOpen: boolean;
     onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -31,6 +31,10 @@ interface SideBarProps {
 
 
   const [scrollY, setScrollY] = useState(0);
+
+  //랜더링
+  const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
+  const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,6 +120,7 @@ interface SideBarProps {
       if(res.status === 200){
         const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
         onClose(fakeEvent);
+        setActiveHubFileListRecoil(!relanderingActiveHubFileList);
         //토스트메세지 출력자리
       }
     });
@@ -130,9 +135,10 @@ interface SideBarProps {
         url_no:  urlInfo.url_no
       }
     }).then(function (res){
-      if(res.data === true){
+      if(res.status === 200){
         const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
         onClose(fakeEvent);
+        setActiveHubFileListRecoil(!relanderingActiveHubFileList);
       }
     });
   };
@@ -149,6 +155,7 @@ interface SideBarProps {
       if(res.status === 200){
         const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
         onClose(fakeEvent);
+        setActiveHubFileListRecoil(!relanderingActiveHubFileList);
         //토스트메세지 출력자리
       }
     });
@@ -163,9 +170,10 @@ interface SideBarProps {
         doc_no:  docInfo.doc_no
       }
     }).then(function (res){
-      if(res.data === true){
+      if(res.status === 200){
         const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;
         onClose(fakeEvent);
+        setActiveHubFileListRecoil(!relanderingActiveHubFileList);
       }
     });
   };
@@ -244,8 +252,9 @@ interface SideBarProps {
           }
           </span>
         </ul>
+        {/* {사이드바 닫기 버튼} */}
         <ul>
-          <span onClick={onClose} ><BiX size={20}/></span>
+          <span onClick={onClose} ><BiX size={20}/></span> 
         </ul>
       </div>
 

@@ -25,7 +25,8 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
     const setUserPwdRecoil = useSetRecoilState(userPwdState),
     [isButtonDisabled, setIsButtonDisabled] = useState(true),
     [isFormValid, setIsFormValid] = useState(true);
-
+    console.log(userInfo);
+    console.log(infoDetails)
     switch(action){
         case 'changepwd': title='비밀번호 변경'; saveBtn='비밀번호 변경하기'; break;
         case 'changeInfo': title='내 정보 변경'; saveBtn='저장'; break;
@@ -108,8 +109,8 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
             alert('비밀번호 변경 실패');
         });
     };
-
-    function requestChangePwdAPi(){ //비밀번호 변경 
+//비밀번호 변경 
+    function requestChangePwdAPi(){ 
         let sendParam={
             nowPassword: userPwdInfos.originPwd,
             newPassword: userPwdInfos.newPwd,
@@ -144,18 +145,18 @@ const MypageInfoModal: React.FC<MypageProps>=({action, onClose, infoDetails})=>{
                 }
                 {action === 'changeInfo' &&  infoDetails &&
                 <>
-                    <div><InputBox className='username' type='text' title='이름'  value={userInfo.username} handleTheTextChange={handleSetUserInfo}/></div>
+                    <div><InputBox className='username' type='text' title='이름'  value={userInfo.username} handleTheTextChange={handleSetUserInfo} isDisabled={false}/></div>
                     <div><InputBox className='tel' type='tel' title='전화번호' value={userInfo.tel} handleTheTextChange={handleSetUserInfo}/></div>
-                    <div><InputBox className='company'type='text' title='회사명' value={userInfo.company} handleTheTextChange={handleSetUserInfo}/></div>
-                    <div><InputBox className='division' type='text' title='소속' value={userInfo.division} handleTheTextChange={handleSetUserInfo}/></div>
+                    <div><InputBox className='company'type='text' title='회사명' value={userInfo.company} handleTheTextChange={handleSetUserInfo} isDisabled={false}/></div>
+                    <div><InputBox className='division' type='text' title='소속' value={userInfo.division} handleTheTextChange={handleSetUserInfo} isDisabled={false}/></div>
                 </>
                 }
                  {action === 'changeOtherUserInfo' &&  infoDetails &&
                 <>
-                    <div><InputBox className='username' type='text' title='이름'  value={userInfo.username} handleTheTextChange={handleSetUserInfo}/></div>
+                    <div><InputBox className='username' type='text' title='이름'  value={userInfo.username} handleTheTextChange={handleSetUserInfo} isDisabled={false}/></div>
                     <div><InputBox className='tel' type='tel' title='전화번호' value={userInfo.tel} handleTheTextChange={handleSetUserInfo}/></div>
-                    <div><InputBox className='company'type='text' title='회사명' value={userInfo.company} handleTheTextChange={handleSetUserInfo}/></div>
-                    <div><InputBox className='division' type='text' title='소속' value={userInfo.division} handleTheTextChange={handleSetUserInfo}/></div>
+                    <div><InputBox className='company'type='text' title='회사명' value={userInfo.company} handleTheTextChange={handleSetUserInfo} isDisabled={false}/></div>
+                    <div><InputBox className='division' type='text' title='소속' value={userInfo.division} handleTheTextChange={handleSetUserInfo} isDisabled={false}/></div>
                 </>
                 }
                
