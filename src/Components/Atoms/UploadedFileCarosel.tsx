@@ -66,7 +66,7 @@ const UploadedFileCarosel=({caroselNewView,selected,handleSelect,selectList,setC
           }
         {caroselNewView&&
           <div className='caroselInputArea'>
-              <input type='text' placeholder="카로셀 추가" onChange={(e)=>onSubmitAddCarosel(e)}/>
+              <input type='text' placeholder="카로셀 추가" onChange={(e)=>onSubmitAddCarosel(e)} maxLength={19}/>
               <button className="deleteBtn" onClick={()=>{setCaroselNewView(!caroselNewView)}}>취소</button>
               <button className="addBtn" onClick={addCaroselGroupApi}>추가</button>
           </div>

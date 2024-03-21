@@ -326,8 +326,15 @@ const handleTextChange = (e:any) => {
     };
 //파일 추가 버튼 이벤트
     const onSubmitAddCarosel = (e:any) => {
-      let addC = e.target.value;
-      setAddCarosel(addC);   
+      let inputText = e.target.value;
+      if (inputText.length > 19) {
+        alert('최대 19자까지만 입력 가능합니다!');
+        setAddCarosel(inputText.slice(0, 19));
+      } else {
+        setAddCarosel(inputText);
+      }
+
+    
     };
 //url input 이벤트  
     const handleUrlChange=(e:any)=>{
