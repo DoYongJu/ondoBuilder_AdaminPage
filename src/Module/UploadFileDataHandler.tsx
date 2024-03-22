@@ -61,7 +61,7 @@ const UploadFileDataHandler = async ({
     };
 
     try {
-        if(classfiyType === 'link'){
+        if(classfiyType === 'url'){
             await ConnectApi({ method: 'POST', url: apiUrl, sendParam: sendParam, formData: false });
             return true;
         }else{

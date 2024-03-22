@@ -56,7 +56,7 @@ function ActiveHublist(){
 
 //랜더링
   const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListDetailsState);
-
+console.log(type);
 //데이터 허브의 파일 유무 체크
   useEffect(() => {
       function selectDataByTypeApi() {
@@ -288,7 +288,7 @@ function closeCompForSuccess(){
             <ul>
             {buttons.map((button, index) => (
                 <li key={index}>
-                <button className={activeButton === button.value ? 'active' : ''}
+                <button className={activeButton === button.value ? 'active' : `${type}`}
                     onClick={() => handleButtonClick(button.value)}
                     value={button.value} >
                     {button.label}
@@ -404,7 +404,7 @@ function closeCompForSuccess(){
         {/* 파일이 아닌 링크 업로드 띄우는 코드 */}
         {(openInputModal)&& (  
           <div className="overlay"> 
-            <UploadFile onClose={()=>{closeCompForSuccess()}}  fileType={'link'} /> 
+            <UploadFile onClose={()=>{closeCompForSuccess()}}  fileType={'url'} /> 
           </div>  
         )}
         

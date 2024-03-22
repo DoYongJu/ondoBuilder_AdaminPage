@@ -54,7 +54,7 @@ hub_description:theHubInfo.hub_description} )
     { label: '문서', value: 'doc' },
     { label: '이미지', value: 'img' },
     { label: '동영상', value: 'video' },
-    { label: '링크', value: 'link' },
+    { label: '링크', value: 'url' },
   ];
 
   function changehubInfoApi() {
@@ -90,7 +90,7 @@ hub_description:theHubInfo.hub_description} )
       case "doc" :   navigate('/activeHublist',{state:theHubInfo}); break;
       case "img" :  navigate('/activeHublist',{state:theHubInfo}); break;
       case "video" :  navigate('/activeHublist',{state:theHubInfo}); break;
-      case "link" :  navigate('/activeHublist',{state:theHubInfo}); break;
+      case "url" :  navigate('/activeHublist',{state:theHubInfo}); break;
       default :   navigate('/updateDataHub',{state:theHubInfo}); 
     };
     setActiveButton(value);

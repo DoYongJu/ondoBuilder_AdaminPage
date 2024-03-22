@@ -534,7 +534,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         
     <div className="FileUpdate">
         <div className="header">
-            {fileType === 'link'? <ul>링크 수정</ul>: <ul>파일 수정</ul>}
+            {fileType === 'url'? <ul>링크 수정</ul>: <ul>파일 수정</ul>}
             <button  onClick={openAlart}><BiX size={20}  /></button>
         </div>
         <div className='body'>

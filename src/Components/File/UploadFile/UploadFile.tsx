@@ -69,7 +69,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     if(description!==''){setIsButtonDisabled(true)}
                     else{setIsButtonDisabled(false)} 
                     break;
-                case 'link':
+                case 'url':
                     if(description!==''&& urlInfo!==''){setIsButtonDisabled(true)}
                     else{setIsButtonDisabled(false)} 
                     break;
@@ -337,7 +337,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         theme="light"
         /> */}
         <div className="header">
-            {fileType === 'link'? <ul>링크 업로드</ul>: <ul>파일 업로드</ul>}
+            {fileType === 'url'? <ul>링크 업로드</ul>: <ul>파일 업로드</ul>}
             <button  onClick={openAlart}><BiX size={20}  /></button>
         </div>
         <div className='body'>
@@ -367,7 +367,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>
             }
-            {fileType === 'link' && 
+            {fileType === 'url' && 
                 <>
                     <InputBox type='text' title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange} isDisabled={false}/>
                     <UploadedFileTextArea totalCount={totalCount} title='링크설명' placeholder='링크에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
