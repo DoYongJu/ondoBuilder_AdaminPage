@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, DragEvent } from 'react';
 import ConnectApi from '../../Module/ConnectApi';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FiList } from "react-icons/fi";
 import { useRecoilValue, useSetRecoilState, useRecoilState} from 'recoil';
 import { hubClassfiyState, MyObjectsState, ActiveHubFileListDetailsState} from '../../Resources/Recoil';
@@ -19,48 +19,45 @@ import './ActiveHublist.css';
 interface ClassifyType {
   id: number,
   name: string;
- 
-}
+};
+
 function ActiveHublist(){
+
   var Buffer = require('buffer/').Buffer;
-    const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
-      navigate = useNavigate(),
-      [isFirst, setIsFirst] = useState(true), //허브에 데이터가 없을 때
-      [viewWays, setViewWays] = useState(true), //false가 card방식으로 보기 눌렀을 때
-      [searchType, setSearchType] = useState(''), //왼쪽상단 select에따른 정렬
-      [, setSearchText] = useState(''),
-      [selectedFilters, setSelectedFilters] = useState<string[]>([]),
-      // data:MyObject= location.state,//허브 정보 
-      [activeButton, setActiveButton] = useState(type),
-      [selectList, setSelectList] = useState<ClassifyType[]>([
+  const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
+    navigate = useNavigate(),
+    [isFirst, setIsFirst] = useState(true), //허브에 데이터가 없을 때
+    [viewWays, setViewWays] = useState(true), //false가 card방식으로 보기 눌렀을 때
+    [searchType, setSearchType] = useState(''), //왼쪽상단 select에따른 정렬
+    [, setSearchText] = useState(''),
+    [selectedFilters, setSelectedFilters] = useState<string[]>([]),
+    [activeButton, setActiveButton] = useState(type),
+    [selectList, setSelectList] = useState<ClassifyType[]>([
       { id: -1, name: '조회' },
       { id: -2, name: '이름순' },
       { id: -3, name: '수정일순' },
       { id: -4, name: '업로드순' },  
-      ]),
+    ]),
 
-      [theHubInfo] = useRecoilState (MyObjectsState),
-      
+    [theHubInfo] = useRecoilState (MyObjectsState),
 
-      filterList = ['선택','PDF','DOC','PPT','CSV'],
-      [isSideBarOpen, setIsSideBarOpen] = useState(false),
-      [isActive, setActive] = useState(false),
-      [uploadedInfo, setUploadedInfo] = useState(false),
-      [selctedClick, setSelctedClick] = useState(false),
-      setHubClassify = useSetRecoilState(hubClassfiyState);
+    filterList = ['선택','PDF','DOC','PPT','CSV'],
+    [isSideBarOpen, setIsSideBarOpen] = useState(false),
+    [isActive, setActive] = useState(false),
+    [selctedClick, setSelctedClick] = useState(false),
+    setHubClassify = useSetRecoilState(hubClassfiyState);
      
-    //File 업로드 관련
-    const handleDragStart = () => setActive(true);
-    const handleDragEnd = () => setActive(false);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
+//File 업로드 관련
+  const handleDragStart = () => setActive(true);
+  const handleDragEnd = () => setActive(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
 
-    //랜더링
-    const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListDetailsState);
-    console.log("at activeHubList"+selectedFilters);
+//랜더링
+  const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListDetailsState);
 
-  //데이터 허브의 종속된 파일 유무 체크
+//데이터 허브의 파일 유무 체크
   useEffect(() => {
       function selectDataByTypeApi() {
         if(theHubInfo.hub_id !== -1){ //default가 -1, 허브를 클릭했을때만 api호출
@@ -82,10 +79,7 @@ function ActiveHublist(){
   
   }, [isFirst, type, selectedFile, openInputModal, isSideBarOpen]);
 
-
-
-
-  //상단 탭 정보
+//상단 탭 정보
   const buttons = [ 
         { label: '정보', value: 'info' },
         { label: '문서', value: 'doc' },
@@ -94,13 +88,13 @@ function ActiveHublist(){
         { label: '링크', value: 'url' },
   ];
 
-  //상단 select박스 클릭 이벤트
+//상단 select박스 클릭 이벤트
   function handleSelect (selectedValue:ClassifyType){
         setSearchText('');
         setSearchType(selectedValue.name);
   };
 
-  //상단 탭 클릭 페이지 이동 이벤트 
+//상단 탭 클릭 페이지 이동 이벤트 
   const handleButtonClick = (value:string) => {
       setHubClassify(value);
       setActiveButton(value);
@@ -115,7 +109,7 @@ function ActiveHublist(){
         };
   };
 
-  //이미지 드롭
+//이미지 드롭
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     let file = e.dataTransfer.files[0];
@@ -123,7 +117,7 @@ function ActiveHublist(){
     setActive(false);
   };
 
-  //파일업로드버튼 클릭 이벤트
+//파일업로드버튼 클릭 이벤트
   const handleFileuploadButtonClick =()=>{
     if (fileInputRef.current) {
         fileInputRef.current.click();
@@ -235,7 +229,7 @@ function ActiveHublist(){
     theme: "light",
     
   });
-  //suceess toast
+//suceess toast
   const successNotify = (errorMsg:string) => toast.success(errorMsg, {
     position: "bottom-right",
     autoClose: 5000,
@@ -257,6 +251,13 @@ const toggleFilter = (option:string) => {
     setSelectedFilters([...selectedFilters, option]);
   }
 };
+//사용자가 요청한것을 성공했을때
+function closeCompForSuccess(){
+  setIsSideBarOpen(false);
+  setSelectedFile(null);
+  setOpenInputModal(false);
+  successNotify('성공적으로 업로드 되었습니다.')
+};
     return (
 
       <div className={`activeHublist ${isSideBarOpen ? 'sidebarOpen' : ''}`}>
@@ -264,7 +265,7 @@ const toggleFilter = (option:string) => {
               
       <ToastContainer
         position="bottom-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -347,7 +348,7 @@ const toggleFilter = (option:string) => {
               onDragOver={(e)=>{ e.preventDefault();}}> 
               <input type="file" className="chatFile" onChange={(e)=>handleFileChange(e)}/>
 
-              {!uploadedInfo && (
+              {isFirst && (
                 <>
                   <img style={{width:'85px', height:'85px'}} src={process.env.PUBLIC_URL + '/fileupload.svg'} alt="클라우드 대기 이미지"/>
                   <p className="preview_msg">
@@ -389,7 +390,7 @@ const toggleFilter = (option:string) => {
         {/* 사이드바 나올때 다른 버튼들 못 건드리게 임시로 막음. */}
         {isSideBarOpen &&
          <div className="overlay" > 
-        <SideBar isOpen={isSideBarOpen} onClose={()=>{ setIsSideBarOpen(false); }} /> 
+        <SideBar isOpen={isSideBarOpen} onClose={closeCompForSuccess} /> 
         </div>  
         }
         
@@ -397,13 +398,13 @@ const toggleFilter = (option:string) => {
         {/* 파일은 링크 업로드 띄우는 코드 */}
         {(selectedFile)&& (  
           <div className="overlay"> 
-            <UploadFile onClose={()=>{setSelectedFile(null);}} oneFile={selectedFile} fileType={type} /> 
+            <UploadFile onClose={()=>{closeCompForSuccess()}} oneFile={selectedFile} fileType={type} /> 
           </div>  
         )}
         {/* 파일이 아닌 링크 업로드 띄우는 코드 */}
         {(openInputModal)&& (  
           <div className="overlay"> 
-            <UploadFile onClose={()=>{setOpenInputModal(false);}}  fileType={'link'} /> 
+            <UploadFile onClose={()=>{closeCompForSuccess()}}  fileType={'link'} /> 
           </div>  
         )}
         

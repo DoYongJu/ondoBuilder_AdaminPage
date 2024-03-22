@@ -207,51 +207,43 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     // e.preventDefault();
     if (draggedItem) {
-        // let targetIndex = Number(e.dataTransfer.getData('text/plain')),
         let  updatedImages:imgInfoForCarselList= images.map((image: imgInfoForCarsel) => ({ ...image }));
-          
     
-    if (index > draggedItem.turn-1) {
-                updatedImages[draggedItem.turn-1].turn = index+1;
-                updatedImages[index].turn =draggedItem.turn;
-                updatedImages.sort((a, b) => a.turn - b.turn);
-    }else{
-            if(index === 0){
-                console.log("index가 0-----테스트완료.");
-                updatedImages[0].turn = 2;
-                updatedImages[draggedItem.turn-1].turn = 1;
-                
-                updatedImages.sort((a, b) => a.turn - b.turn);
-
-                for (let i = 1; i < images.length; i++) {
-                    updatedImages[i].turn = i+1;
-                }  
-               
-            }else{
-                console.log("=d=d=d=d=d=네번째 오타니가 첫번째가 아닌 자리로 갈때.---테스트완료.");
-                if(draggedItem.turn !== images.length){
-                    updatedImages[index].turn = images.length-index;
+        if (index > draggedItem.turn-1) {
                     updatedImages[draggedItem.turn-1].turn = index+1;
+                    updatedImages[index].turn =draggedItem.turn;
+                    updatedImages.sort((a, b) => a.turn - b.turn);
+        }else{
+                if(index === 0){
+                    updatedImages[0].turn = 2;
+                    updatedImages[draggedItem.turn-1].turn = 1;
+                    
+                    updatedImages.sort((a, b) => a.turn - b.turn);
+
+                    for (let i = 1; i < images.length; i++) {
+                        updatedImages[i].turn = i+1;
+                    };
+                
                 }else{
-                    updatedImages[index].turn =images.length;
-                    updatedImages[draggedItem.turn-1].turn =index+1;
-                }
-        
-                updatedImages.sort((a, b) => a.turn - b.turn);
-                for (let i =draggedItem.turn-1; i < images.length; i++) {
-                    updatedImages[i].turn = i+1;
-                }   
+                    if(draggedItem.turn !== images.length){
+                        updatedImages[index].turn = images.length-index;
+                        updatedImages[draggedItem.turn-1].turn = index+1;
+                    }else{
+                        updatedImages[index].turn =images.length;
+                        updatedImages[draggedItem.turn-1].turn =index+1;
+                    };
+            
+                    updatedImages.sort((a, b) => a.turn - b.turn);
+                    for (let i =draggedItem.turn-1; i < images.length; i++) {
+                        updatedImages[i].turn = i+1;
+                    };  
+                };
             };
-        };
-    
-        let turn =updatedImages[index].turn;
-        setTurn(turn);
-        updatedImages.sort((a, b) => a.turn - b.turn);
-       
         
-        setImages(updatedImages);
-        console.log(images);
-        console.log(turn);
+            let turn =updatedImages[index].turn;
+            setTurn(turn);
+            updatedImages.sort((a, b) => a.turn - b.turn);            
+            setImages(updatedImages);
     }}; 
 //파일설명 unput 이벤트
     const handleTextChange = (e:any) => {
@@ -378,7 +370,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
             {fileType === 'link' && 
                 <>
                     <InputBox type='text' title='URL' placeholder='url을 입력하세요.'handleTheTextChange={handleUrlChange} isDisabled={false}/>
-                    <UploadedFileTextArea totalCount={totalCount} title='파일설명' placeholder='파일에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
+                    <UploadedFileTextArea totalCount={totalCount} title='링크설명' placeholder='링크에 대한 설명을 입력해주세요.' currentCount={currentCount} handleTextChange={handleTextChange}/>
                     <UploadedFileTag inputRef={inputRef} tags={tags} onSubmitSearch={onSubmitSearch} deleteTag={deleteTag}/>
                 </>
             }

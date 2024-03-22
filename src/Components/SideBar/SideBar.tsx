@@ -1,41 +1,44 @@
 import React, { useState, useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState} from 'recoil';
 import './SideBar.css';
 import axios from "axios"
+import Cookies from 'js-cookie';
+
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BiX } from "react-icons/bi";
-import {dataByType} from '../../Resources/Models';
-import Cookies from 'js-cookie';
 import UpdateFile from '../File/UpdateFile/UpdateFile';
-import { useRecoilValue, useSetRecoilState} from 'recoil';
 import { hubClassfiyState, videoDetailsState, urlDetailsState, imgDetailsState,
   docDetailsState, ActiveHubFileListState} from '../../Resources/Recoil';
-interface SideBarProps {
+
+  interface SideBarProps {
     isOpen: boolean;
     onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  }
-
+  };
 
   const SideBar: React.FC<SideBarProps> = ({ isOpen, onClose }) => {
-  const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
-  const [imageSrc, setImageSrc] = useState('');
-  const [openInputModal, setOpenInputModal] = useState<boolean | null>(null);
-  const [changeProm, setChangeProm] = useState(false);
-  const [selctedClick, setSelctedClick] = useState(false);
-  const selectList=[',','다운로드','수정','삭제'],
-  token = Cookies.get('accessToken');
 
-  const docInfo = useRecoilValue(docDetailsState);
-  const urlInfo = useRecoilValue(urlDetailsState);
-  const videoInfo = useRecoilValue(videoDetailsState);
-  const imgInfo = useRecoilValue(imgDetailsState);
+  const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
+    [imageSrc, setImageSrc] = useState(''), //타입에 따른 이미지 정보
+    [openInputModal, setOpenInputModal] = useState<boolean | null>(null),// 수정창
+    [changeProm, setChangeProm] = useState(false),//프롬프트 접기
+    [selctedClick, setSelctedClick] = useState(false),//사이드바 상단 selectBox 클릭값
+    selectList=[',','다운로드','수정','삭제'], 
+    token = Cookies.get('accessToken');
 
+//파일 정보
+  let docInfo = useRecoilValue(docDetailsState),
+    urlInfo = useRecoilValue(urlDetailsState),
+    videoInfo = useRecoilValue(videoDetailsState),
+    imgInfo = useRecoilValue(imgDetailsState);
 
+//스크롤 값
   const [scrollY, setScrollY] = useState(window.scrollY);
 
-  //랜더링
-  const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
-  const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
+//랜더링
+  let setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState),
+    relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
 
+//Y스크롤 체크.
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -47,15 +50,9 @@ interface SideBarProps {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  // const translateY = (0, scrollY);
+// 타입에 따른 초기 이미지 할당.
    useEffect(() => {
-    console.log(urlInfo);
-
-    function chooseImgByType() {
-
-      console.log('fileType: '+type);
-      
+    function chooseImgByType() {      
       switch(type) {
         case 'doc':
           setImageSrc('/doc.svg');
@@ -76,11 +73,8 @@ interface SideBarProps {
     };
     
     chooseImgByType();   
-  }, [docInfo, urlInfo, imgInfo, videoInfo]); 
-
-  function openProm(){
-    setChangeProm(!changeProm)
-  };
+  }, []); 
+//타입에 따른 delete함수 호출. 
   function delFile(){
   
     switch(type){
@@ -103,7 +97,7 @@ interface SideBarProps {
 
    
   };
-  //문서, 이미지, 비디오, url 삭제 요청 api
+//문서, 이미지, 비디오, url 삭제 요청 api
   function deleteImgFile(){
     axios({
       headers: { 'Authorization': `Bearer ${token}` },
@@ -177,6 +171,7 @@ interface SideBarProps {
       }
     });
   };
+//파일다운로드 정보get api
   function getDownloadFile(fileName: string) {
     console.log(fileName);
     axios({
@@ -203,7 +198,7 @@ interface SideBarProps {
       }
     }).catch((err)=>{alert(err)});;
   };
-  
+//다운로드 버튼이 눌렸을때 이벤트.
   function downloadFileBytype(){
     let fileName=''
     switch(type){
@@ -229,7 +224,7 @@ interface SideBarProps {
       delFile();
     }else if(option === '다운로드'){
       downloadFileBytype();
-    }else{
+    }else{ //수정
       setOpenInputModal(true);
     };
   };
@@ -246,9 +241,12 @@ interface SideBarProps {
           <span onClick={()=>{setSelctedClick(!selctedClick);}}><BiDotsHorizontalRounded  size={20}/>
           {selctedClick &&
               <ul className="options-list">
-              {selectList.slice(1).map((option, index) => (
+                {type === 'url' &&  selectList.slice(2).map((option, index) => (
                 <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>{option}</li>
-              ))}
+                ))}
+                {type !== 'url' &&  selectList.slice(1).map((option, index) => (
+                <li key={index} onClick={() => { handleClickeditOrDel(option);}} value={option}>{option}</li>
+                ))}
             </ul>
           }
           </span>
@@ -289,7 +287,7 @@ interface SideBarProps {
       <div className='fileDescription'>
         <ul>파일 프롬프트</ul> 
         <div className='promtArea'> {changeProm? docInfo.file_prompt.slice(0, 300)+'...' :  docInfo.file_prompt}</div>
-        <button onClick={openProm}> 
+        <button onClick={()=>setChangeProm(!changeProm)}> 
           {changeProm ? '프롬프트 열기' : '프롬프트 접기'}
           {!changeProm && <img src={process.env.PUBLIC_URL + '/promtBtn.svg'} alt="버튼svg." />}
           {changeProm && <img src={process.env.PUBLIC_URL + '/promtBtnDown.svg'} alt="버튼svg." />}

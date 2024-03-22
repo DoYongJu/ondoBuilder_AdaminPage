@@ -7,6 +7,7 @@ import { userInfoState } from '../../../Resources/Recoil'
 import MypageInfoModal from '../../Atoms/MyPageInfoModal/MypageInfoModal';
 import ConnectApi from '../../../Module/ConnectApi';
 import TabBar from '../../TabBar/TabBar';
+import { ToastContainer, toast } from 'react-toastify';
 import './AdminUser.css'
 const AdminUser=()=>{
     const [viewInputModal, setViewInputModal] = useState<string>(''),
@@ -61,7 +62,10 @@ const AdminUser=()=>{
               id: userId
             }
           }).then(function (res){
-            setIsrendering(!Isrendering);
+            if(res.status === 200){
+                setIsrendering(!Isrendering);
+                successNotify('승인 거절 되었습니다.');
+            };
           });
     };
 //비밀번호 리셋
@@ -74,7 +78,10 @@ const AdminUser=()=>{
               id: userId
             }
           }).then(function (res){
-            setIsrendering(!Isrendering);
+            if(res.status === 200){
+                setIsrendering(!Isrendering);
+                successNotify('비밀번호가 초기화 되었습니다.');
+            };
           });
     };
 //가입 승인 클릭 이벤트 및 patch호출
@@ -87,9 +94,29 @@ const AdminUser=()=>{
           id: userId
         }
       }).then(function (res){
-        setIsrendering(!Isrendering);
+        if(res.status === 200){
+            setIsrendering(!Isrendering);
+            successNotify('가입 승인 되었습니다.');
+        };
       });
     };
+//사용자가 요청한것을 성공했을때    
+    function closeCompForSuccess(){
+        setViewInputModal(''); setIsrendering(!Isrendering);
+        successNotify('성공적으로 반영 되었습니다.')
+    };
+//suceess toast
+  const successNotify = (errorMsg:string) => toast.success(errorMsg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    
+  });
  return( 
     <div className="AdminUser">
         <div className='tabBar'>
@@ -162,9 +189,20 @@ const AdminUser=()=>{
         </div>
         {viewInputModal === 'changeOtherUserInfo' &&
             <div className="overlay"> 
-                <MypageInfoModal onClose={()=>{setViewInputModal(''); setIsrendering(!Isrendering)}} action={viewInputModal} infoDetails={userInfo} /> 
+                <MypageInfoModal onClose={closeCompForSuccess} action={viewInputModal} infoDetails={userInfo} /> 
             </div>  
         }
+        <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </div>
     );
 };

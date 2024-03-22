@@ -5,6 +5,7 @@ import ConnectApi from '../../../Module/ConnectApi';
 import MypageInfoModal from '../../Atoms/MyPageInfoModal/MypageInfoModal';
 import { userInfoState } from '../../../Resources/Recoil'
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const Mypage =()=>{
@@ -27,9 +28,24 @@ const Mypage =()=>{
         setMyinfoApi(); //개인정보get.
      
     }, []);
-
-   
-    return(
+//사용자가 요청한것을 성공했을때
+    function closeCompForSuccess(){
+        setViewInputModal('');
+        successNotify('성공적으로 업로드 되었습니다.')
+    };
+//suceess toast
+  const successNotify = (errorMsg:string) => toast.success(errorMsg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    
+  });
+  return(
     <div className="myPage">
         <div className='tabBar'>
            <TabBar/>
@@ -72,13 +88,24 @@ const Mypage =()=>{
             {/* 모달 띄우는 코드 */}
             {viewInputModal === 'changepwd' &&  
                 <div className="overlay"> 
-                    <MypageInfoModal onClose={()=>{setViewInputModal('');}} action={viewInputModal} /> 
+                    <MypageInfoModal onClose={closeCompForSuccess} action={viewInputModal} /> 
                 </div>  
             }{viewInputModal === 'changeInfo' &&  userInfo && 
                 <div className="overlay"> 
-                    <MypageInfoModal onClose={()=>{setViewInputModal('');}} action={viewInputModal} infoDetails={userInfo} /> 
+                    <MypageInfoModal onClose={closeCompForSuccess} action={viewInputModal} infoDetails={userInfo} /> 
                 </div>  
             }
+        <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </div>
     );
 };

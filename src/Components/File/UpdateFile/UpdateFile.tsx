@@ -21,6 +21,7 @@ import { videoDetailsState, urlDetailsState, imgDetailsState,hubClassfiyState,
      docDetailsState, ActiveHubFileListState} from '../../../Resources/Recoil';
 
 const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
+    
     const token = Cookies.get('accessToken');
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
@@ -61,6 +62,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
 //랜더링 변수
     const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
+
 //입력값 null체크
     useEffect(() => { 
 
@@ -244,7 +246,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         updatedImages.sort((a, b) => a.turn - b.turn);
         setImages(updatedImages);
     }};
-     
+//파일설명 onChange 이벤트    
     const handleTextChange = (e:any) => {
         const newText = e.target.value;
         setInfoText(newText);
