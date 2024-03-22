@@ -22,6 +22,7 @@ interface ClassifyType {
  
 }
 function ActiveHublist(){
+  var Buffer = require('buffer/').Buffer;
     const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
   
       location = useLocation(),
@@ -30,7 +31,7 @@ function ActiveHublist(){
       [viewWays, setViewWays] = useState(true), //false가 card방식으로 보기 눌렀을 때
       [searchType, setSearchType] = useState(''), //왼쪽상단 select에따른 정렬
       [, setSearchText] = useState(''),
-      [selectedOption, setSelectedOption] = useState(''),
+      [filterOption, setFilterOption] = useState(''),
       // data:MyObject= location.state,//허브 정보 
       [activeButton, setActiveButton] = useState(type),
       [selectList, setSelectList] = useState<ClassifyType[]>([
@@ -60,7 +61,7 @@ function ActiveHublist(){
     //랜더링
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListDetailsState);
 
-  //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
+  //데이터 허브의 종속된 파일 유무 체크
   useEffect(() => {
       function selectDataByTypeApi() {
         if(theHubInfo.hub_id !== -1){ //default가 -1, 허브를 클릭했을때만 api호출
@@ -100,7 +101,7 @@ function ActiveHublist(){
         setSearchType(selectedValue.name);
   };
 
-  //상단 탭 클릭 이벤트 
+  //상단 탭 클릭 페이지 이동 이벤트 
   const handleButtonClick = (value:string) => {
       setHubClassify(value);
       setActiveButton(value);
@@ -171,9 +172,9 @@ function ActiveHublist(){
 
 //file type에 따른 size 검사.
   const validateFile = (file:File)=>{
-      const Filedata : File = new File([file],Buffer.from(file.name, 'ascii').toString('utf8' ), { type: file.type })
-      let fileType = Filedata.type;
-      let fileSize = Filedata.size;
+      const Filedata : File = new File([file], Buffer.from(file.name, 'ascii').toString('utf8'), { type: file.type }); 
+      let fileType = file.type;
+      let fileSize = file.size;
       setSelectedFile(Filedata);
 
       //파일 validation
@@ -296,13 +297,15 @@ function ActiveHublist(){
                 <SearchBar />
             </div>
             <div className='buttonArea'>
+                {type === 'doc' && 
                 <button onClick={()=>{setSelctedClick(!selctedClick)}} className='filter' value='필터'>
-                    <LuListFilter size={20}/>필터
-                </button>
+                <LuListFilter size={20}/>필터
+              </button>
+                }
                 {selctedClick &&
                     <ul className="options-list">
                     {filterList.slice(1).map((option, index) => ( 
-                        <li key={index} onClick={() => { setSelectedOption(option);}} value={option}>
+                        <li key={index} onClick={() => { setFilterOption(option);}} value={option}>
                         {option}
                         <input type="checkbox"  className="Checkbox" value={option}></input>
                         </li>

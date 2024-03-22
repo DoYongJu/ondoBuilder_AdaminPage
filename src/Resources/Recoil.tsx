@@ -117,6 +117,7 @@ export const dataByDocState = atom<dataByDoc>({
     file_prompt:'',
     download_url:'',
     writer:'',
+    docType:'', //문서의 파일 종류, 예)pdf
     }
 });
 export const docDetailsState = selector({

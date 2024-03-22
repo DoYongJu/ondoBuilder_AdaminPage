@@ -130,6 +130,7 @@ export interface dataByDoc{
   file_prompt:string,
   download_url:string,
   writer:string,
+  docType:string, 
 }
 export interface dataByVideo{
   hub_id:number,

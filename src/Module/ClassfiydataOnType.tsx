@@ -3,7 +3,7 @@ import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList, dataByType} from '../Resources/Models';
 import {  useSetRecoilState, useRecoilValue} from 'recoil';
 import {  dataByDocState, dataByVideoState,dataByUrlState,dataByImgState, syncSearchTextState, ActiveHubFileListDetailsState } from '../Resources/Recoil';
-import {DataHub_searchWordIntheHub_module}from '../Module/Search_module';
+import {DataHub_searchWordIntheHub_module, DataHub_searchWordIntheHub_url_module}from '../Module/Search_module';
 
 
 const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, IsRelandering, selectedF}: 
@@ -13,7 +13,6 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
     const [originlist, setOriginList] = useState<dataByTypeList>([]);
     const searchText = useRecoilValue(syncSearchTextState);
     const [listByselc, setListBySelc] = useState<dataByTypeList>(originlist),
-  
 
 
     //file recoil
@@ -23,7 +22,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
     setVideoInfoRecoil = useSetRecoilState(dataByVideoState);
     //랜더링
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListDetailsState);
-     function selectDataByTypeApi() {
+    function selectDataByTypeApi() {
             console.log("classfiydataOntype 컴포넌트의 selectDataByTypeApi useEffect 실행됨.")
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/${hubId}?type=${classfiyType}`})
                 .then((res) => {
@@ -50,20 +49,14 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
                 .catch((error) => {
                     console.error('Error occurred:', error);
                 });
-                  console.log("at firstApi");
-                   console.log(originlist);
-                   console.log(listByselc);
-                   console.log(relanderingActiveHubFileList)
-        };
+    };
+
     useEffect(()=>{
-        console.log("classfiydataOntype 컴포넌트의 첫번째 useEffect 실행됨.");
         selectDataByTypeApi();
     },[IsRelandering]);
-    useEffect(() => {
-        //데이터 허브의 종속된 파일을 타입별로 조회
-       
-        selectDataByTypeApi();
     
+    useEffect(() => {
+        selectDataByTypeApi();
     }, [classfiyType, IsRelandering, ]); //selectedF가 있었으나 뺌. 파일이 업로드 된후, 업로드한 파일이 포함된 케이스 고려때문에 잇엇지만, 정렬기능 만들며 충돌
 
     useEffect(() => {
@@ -76,11 +69,18 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
 
     useEffect(() => {
     async function getContentBySelect() {
-            let datass =await DataHub_searchWordIntheHub_module({ data: originlist },searchText, selected );
+            if(classfiyType === 'url'){
+                let datass =await DataHub_searchWordIntheHub_url_module({ data: originlist },searchText, selected );
+                setListBySelc(datass);
+            }else{
+                let datass =await DataHub_searchWordIntheHub_module({ data: originlist },searchText, selected );
+                setListBySelc(datass);
+            }
+           
         //    if(datass.length === 0){
         //     alert('원하시는 검색 결과가 없습니다.')
         //    }
-            setListBySelc(datass);
+           
         };
         
         getContentBySelect();
@@ -99,7 +99,8 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
                     file_size:item.file_size,
                     file_prompt:item.file_prompt,
                     download_url:item.download_url,
-                    writer:item.writer})
+                    writer:item.writer,
+                    docType:item.file_name.substring(item.file_name.lastIndexOf('.') + 1),})
                 break;
             case 'img':
                 setImageInfoRecoil({hub_id:Number(hubId), 
