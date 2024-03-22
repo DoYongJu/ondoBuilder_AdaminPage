@@ -1,66 +1,64 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { BiX } from "react-icons/bi";
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import './UpdateFile.css'; 
-import Cookies from 'js-cookie';
 
+import { BiX } from "react-icons/bi";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {MyObject} from '../../../Resources/Models';
-import {tagsList, tag, UpdateFileProps, imgInfoForCarselList, imgInfoForCarsel,Options, dataByImg} from '../../../Resources/Models';
+import {tagsList, tag, UpdateFileProps, imgInfoForCarselList, imgInfoForCarsel,Options} from '../../../Resources/Models';
 import ConnectApi from '../../../Module/ConnectApi';
-import UploadFileDataHandler from '../../../Module/UploadFileDataHandler';
 import UploadedFileName from '../../Atoms/UploadedFileName';
 import UploadedFileTextArea from '../../Atoms/UploadedFileTextArea';
 import UploadedFileTag from '../../Atoms/UploadedFileTag';
 import UploadedFileCarosel from '../../Atoms/UploadedFileCarosel';
 import InputBox from '../../Atoms/InputBox/InputBox';
 import Alert from '../../Modal.components/Alert/Alert';
-import { useRecoilValue, useSetRecoilState,useRecoilState } from 'recoil';
 import { videoDetailsState, urlDetailsState, imgDetailsState,hubClassfiyState,
      docDetailsState, ActiveHubFileListState} from '../../../Resources/Recoil';
 
 const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [urlInfo, setInfoUrl] = useState(''); //url 입력 input
-    const [description, setInfoText] = useState(''); //파일설명 input
-    const [promtText, setPromtText] = useState(''); //프롬프트 textArea 
-    const [tags, setTags] = useState<tagsList>([]); //태그 값들
-    const [caroselNewView, setCaroselNewView] = useState(false); 
-    const [draggedItem, setDraggedItem] = useState<imgInfoForCarsel |null>(null); 
-    const [turn, setTurn] = useState(0);
-    // const [listByCarosel, setListByCarosel] = useState<|>([]);
-    const type = useRecoilValue(hubClassfiyState); //상단탭 눌렀을때 분류 타입
-    const [inputErrMsg, setInputErrMsg] = useState(''); //카로셀 추가시 에러메세지명
-    const [images, setImages] = useState<imgInfoForCarselList>([]);
     const token = Cookies.get('accessToken');
-    //파일 업데이트 관련
-    const docRecoilInfo = useRecoilValue(docDetailsState);
-    const urlRecoilInfo = useRecoilValue(urlDetailsState);
-    const videoRecoilInfo = useRecoilValue(videoDetailsState);
-    const imgRecoilInfo = useRecoilValue(imgDetailsState);
-
-    //textArea 영역 글자수 제한
-    const [currentCount, setCurrentCount] = useState(0);
-    const totalCount = 100;
-
-
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false); //파일 비활성화 여부
-   
-    const [selectList, setSelectList] = useState<Options>([
-        { id: imgRecoilInfo.carosel_id?(imgRecoilInfo.carosel_id):(-2), name: imgRecoilInfo.casosel_name?(imgRecoilInfo.casosel_name):("설정되지 않음") },
-      ]);
-    // const [selectedCaroselId, setSelectedCaroselId] = useState('-10');
-    const [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
-    const [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
 
-//문서 수정시
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+//파일 업데이트 관련 recoilState value
+    const docRecoilInfo = useRecoilValue(docDetailsState),
+     urlRecoilInfo = useRecoilValue(urlDetailsState),
+     videoRecoilInfo = useRecoilValue(videoDetailsState),
+     imgRecoilInfo = useRecoilValue(imgDetailsState);
+//카로셀 리스트 초기값.     
+    const [selectList, setSelectList] = useState<Options>([
+        { id: imgRecoilInfo.carosel_id?(imgRecoilInfo.carosel_id):(-2), name: imgRecoilInfo.casosel_name?(imgRecoilInfo.casosel_name):("설정되지 않음") },
+      ]);
+//업데이트에 대한 정보 변수. 
+    const inputRef = useRef<HTMLInputElement>(null),
+     [urlInfo, setInfoUrl] = useState(''), //url 입력 input
+     [description, setInfoText] = useState(''), //파일설명 textArea
+     [currentCount, setCurrentCount] = useState(0), //파일설명 textArea 영역 글자수
+     totalCount = 100, //파일설명 textArea 영역 글자수 제한
+     [promtText, setPromtText] = useState(''), //프롬프트 textArea 
+     [tags, setTags] = useState<tagsList>([]), //태그 값들
+     [draggedItem, setDraggedItem] = useState<imgInfoForCarsel |null>(null), //카로셀에서 이동하려고 집은 이미지.
+     [turn, setTurn] = useState(0), //수정할 이미지파일의 turn 값.
+     type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
+     [inputErrMsg, setInputErrMsg] = useState(''), //카로셀 추가시 에러메세지명
+     [images, setImages] = useState<imgInfoForCarselList>([]),// 카로셀별 이미지 배열
+     [addCarosel, setAddCarosel] = useState(''); //허브 추가명 input 
+    
+//보여 줄지 말지에 대한 상태값 관련.
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false), //파일 비활성화 여부
+    [caroselNewView, setCaroselNewView] = useState(false),
+    [selectedFile, setSelectedFile] = useState<File | null>(null),
+     [viewAlart, setViewAlart] = useState(false);//alert 활성 여부
 
+//파일 업로드시
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+ 
+//랜더링 변수
     const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
 //입력값 null체크
@@ -209,9 +207,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
     };   
 //이미지 드롭
     const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    // e.preventDefault();
     if (draggedItem?.image_no === imgRecoilInfo.image_no) {
-        // let targetIndex = Number(e.dataTransfer.getData('text/plain')),
         let  updatedImages = images.map((image) => ({ ...image }));
           
     
@@ -221,41 +217,32 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
                 updatedImages.sort((a, b) => a.turn - b.turn);
     }else{
             if(index === 0){
-                console.log("index가 0-----테스트완료.");
                 updatedImages[0].turn = 2;
                 updatedImages[draggedItem.turn-1].turn = 1;
-                
                 updatedImages.sort((a, b) => a.turn - b.turn);
 
                 for (let i = 1; i < images.length; i++) {
                     updatedImages[i].turn = i+1;
-                }  
+                };  
                
             }else{
-                console.log("=d=d=d=d=d=네번째 오타니가 첫번째가 아닌 자리로 갈때.---테스트완료.");
                 if(draggedItem.turn !== images.length){
                     updatedImages[index].turn = images.length-index;
                     updatedImages[draggedItem.turn-1].turn = index+1;
                 }else{
                     updatedImages[index].turn =images.length;
                     updatedImages[draggedItem.turn-1].turn =index+1;
-                }
+                };
         
                 updatedImages.sort((a, b) => a.turn - b.turn);
                 for (let i =draggedItem.turn-1; i < images.length; i++) {
                     updatedImages[i].turn = i+1;
-                }   
+                }; 
             };
         };
         setTurn(updatedImages[index].turn);
-        // console.log("updatedImages");
-        // console.log(updatedImages);
         updatedImages.sort((a, b) => a.turn - b.turn);
-       
-        
         setImages(updatedImages);
-        // console.log(images);
-        // console.log(turn);
     }};
      
     const handleTextChange = (e:any) => {
@@ -312,22 +299,6 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
                 break;
             default:
                 break;
-        }
-    };
-//기존 태그의 형을 변환시켜 수정요청 하기전 사용.
-    function parseStringToCarouselArray(originTags:string) {
-        
-        try {
-            // 문자열에서 불필요한 문자(따옴표 및 중괄호)를 제거
-            const cleanedStr = originTags.replace(/[{}"]/g, '');
-    
-            // 쉼표를 기준으로 문자열을 나누어 배열로 변환
-            const resultArray = cleanedStr.split(',');
-    
-            return resultArray;
-        } catch (error) {
-            console.error("Error parsing string:", error);
-            return [];
         }
     };
 //doc 수정 patch api
@@ -495,7 +466,7 @@ const UpdateFile: React.FC<UpdateFileProps> = ({ onClose, fileType}) => {
         return new File([data], docRecoilInfo.file_name, { type:  `doc/${theFileType}` });
     };
 //파일 추가 버튼 이벤트
-const onSubmitAddCarosel = (e:any) => {
+    const onSubmitAddCarosel = (e:any) => {
     let inputText = e.target.value;
     if (inputText.length > 19) {
       setInputErrMsg('최대 19자까지만 입력 가능합니다!');
@@ -506,7 +477,7 @@ const onSubmitAddCarosel = (e:any) => {
     }
 
   
-  };
+    };
 //url input 이벤트
     const handleUrlChange=(e:any)=>{
         const newText = e.target.value;
@@ -523,19 +494,19 @@ const onSubmitAddCarosel = (e:any) => {
         return fileName.substring(fileName.lastIndexOf('.') + 1);
     };
 //파일업로드버튼 클릭 이벤트
-  const handleFileuploadButtonClick =()=>{
+    const handleFileuploadButtonClick =()=>{
     if (fileInputRef.current) {
         fileInputRef.current.click();
       }
-  };
+    };
 //선택된 파일을 사이즈 검사를 시키며 value초기화
-  const handleFileChange = (e: any) => {
+    const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     validateFile(file);
     e.target.value = '';  
-  };
-  //문서 파일 타입과 사이즈 유효성 검사
-  function validateFile(file:File){
+    };
+//문서 파일 타입과 사이즈 유효성 검사
+    function validateFile(file:File){
     const fileType = file.type;
     const fileSize = file.size;
     let allowedTypes = [
@@ -555,7 +526,7 @@ const onSubmitAddCarosel = (e:any) => {
       }else{
         setSelectedFile(file);
       }
-  };
+    };
   
     return(
         

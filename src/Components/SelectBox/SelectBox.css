@@ -4,8 +4,8 @@
     cursor: pointer; width:90%;display: flex; justify-content: space-between; }
 
 .custom-select-box .select-header:hover .options-list {border: none;border: 1px solid #BDBDBD;  padding:0;  }
-.custom-select-box .select-header .options-list {list-style-type: none;border-radius: 8px; padding:0 ;
-    position: absolute;top: 100%;left: 0;width: 99%; background-color: #fff;overflow-y: auto;overflow-x: hidden;max-height: 168px;
+.custom-select-box .select-header .options-list {list-style-type: none;border-radius: 8px; padding:0 ; 
+    position: absolute;top: 100%;left: 0;width: 99%; background-color: #fff;overflow-y: auto;overflow-x: hidden;min-height: 136px; max-height: 168px;
     transition: height 0.1s ease-in-out;  
     &::-webkit-scrollbar {width: 4px }
     &::-webkit-scrollbar-thumb {height: 50px;border-radius: 16px;background: #E6E6E6;}

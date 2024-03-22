@@ -124,8 +124,6 @@
     top: 40%;left: 50%;transform: translate(-50%, -50%);background-color:rgba(0, 0, 0, 0.7);
     padding: 9px;color: white;font-size: 12px; 
   }
-
-
 .FileUpdate .body .caroselArea .selectAndMoveArea .moveCaroselArea .img ul{    
     color: #505050;width:99px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px;
@@ -140,8 +138,6 @@
 .FileUpdate .body .caroselArea .caroselInputArea .deleteBtn{width:60px; padding: 14px;border-radius: 6px;color: #111111;
     font-family: Pretendard;font-size: 14px;font-style: normal;font-weight: 400;line-height: 20px; /* 142.857% */
     letter-spacing: -0.35px;border: none; background-color:white; margin-left:8px;}
-
-
 .FileUpdate .footerUpdate{ height: 50px;width: 100%;padding: 16px 0 0 0;display: flex;justify-content: center;align-items: center; bottom:0}
 .FileUpdate .footerUpdate .btn{border-radius: 6px; border: none;width: 100%;cursor: pointer;
     background: #105AEB;padding: 14px 0; color:white} 

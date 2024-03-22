@@ -1,12 +1,14 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { BiX } from "react-icons/bi";
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { useRecoilValue, useSetRecoilState, } from 'recoil';
 import './UploadFile.css';
+
+import axios from 'axios';
 import Cookies from 'js-cookie';
+import { BiX } from "react-icons/bi";
 
 import {MyObject} from '../../../Resources/Models';
-import {tagsList, tag, UploadFileProps, imgInfoForCarselList, imgInfoForCarsel,Options, Option} from '../../../Resources/Models';
+import {tagsList, tag, UploadFileProps, imgInfoForCarselList, imgInfoForCarsel,Options} from '../../../Resources/Models';
 import ConnectApi from '../../../Module/ConnectApi';
 import UploadFileDataHandler from '../../../Module/UploadFileDataHandler';
 import UploadedFileName from '../../Atoms/UploadedFileName';
@@ -15,10 +17,7 @@ import UploadedFileTag from '../../Atoms/UploadedFileTag';
 import UploadedFileCarosel from '../../Atoms/UploadedFileCarosel';
 import InputBox from '../../Atoms/InputBox/InputBox';
 import Alert from '../../Modal.components/Alert/Alert';
-import { useRecoilValue, useSetRecoilState, } from 'recoil';
-import { ActiveHubFileListState, videoDetailsState, urlDetailsState, imgDetailsState,
-     docDetailsState} from '../../../Resources/Recoil';
-import { ToastContainer, toast } from 'react-toastify';
+import { ActiveHubFileListState} from '../../../Resources/Recoil';
 
 const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -49,19 +48,12 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
     const [inputErrMsg, setInputErrMsg] = useState(''); //카로셀 추가시 에러메세지명
     const location = useLocation();
     const data:MyObject= location.state; //허브 정보
-
-    //파일 업데이트 관련
-    const docRecoilInfo = useRecoilValue(docDetailsState);
-    const urlRecoilInfo = useRecoilValue(urlDetailsState);
-    const videoRecoilInfo = useRecoilValue(videoDetailsState);
-    const imgRecoilInfo = useRecoilValue(imgDetailsState);
-
     const [turn, setTurn] = useState(1);
 
 
     const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListState);
-
+//업로드 입력요청값 null체크
     useEffect(() => {
         function validNull(){
             switch(fileType){
@@ -89,7 +81,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         validNull();
     },[description, promtText, urlInfo, selectedCaroselId]);
 
-    //카로셀 목록(selectBox 내용) 조회.
+//카로셀 목록(selectBox 내용) 조회.
     useEffect(() => {
 
         function setCaroselGroupApi() {  
@@ -98,12 +90,8 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                     const data = res.data;
                     const newList = data.map((item:any) => ({ id: item.carousel_id, name: item.carousel_name }));
                     let updatedList:Options = [...selectList];
-                   // selectList 배열의 index 2부터 newList 배열을 추가
                     updatedList = [...updatedList.slice(0, 2), ...newList];
-                    setSelectList(updatedList); // 업데이트된 리스트 설정
-                    // caroselRecoilInfo(updatedList); //리코일로 관리, 추후 사이드바에서 필요
-                   
-                    
+                    setSelectList(updatedList); // 업데이트된 리스트 설정    
                 })
                 .catch((error) => {
                     console.error('setCaroselGroupApi/ Error occurred:', error);
@@ -192,7 +180,6 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         getFileInfo();  //파일 미리보기 기능
     }, [selectedCaroselId]);
     
-
  //카로셀 그룹 추가
     function addCaroselGroupApi() {
        
@@ -217,7 +204,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         e.dataTransfer.setData('text/plain', index.toString());
     };   
 //이미지 드롭
-const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     // e.preventDefault();
     if (draggedItem) {
         // let targetIndex = Number(e.dataTransfer.getData('text/plain')),
@@ -270,13 +257,13 @@ const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         setImages(updatedImages);
         console.log(images);
         console.log(turn);
-    }};
-     
-const handleTextChange = (e:any) => {
+    }}; 
+//파일설명 unput 이벤트
+    const handleTextChange = (e:any) => {
         const newText = e.target.value;
         setInfoText(newText);
         setCurrentCount(newText.length);     
-};
+    };
 //태그 추가
     const onSubmitSearch = (e:any) => {
 
@@ -335,9 +322,7 @@ const handleTextChange = (e:any) => {
       } else {
         setInputErrMsg('');
         setAddCarosel(inputText);
-      }
-
-    
+      };
     };
 //url input 이벤트  
     const handleUrlChange=(e:any)=>{

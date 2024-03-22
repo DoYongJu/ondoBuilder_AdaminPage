@@ -62,10 +62,7 @@ function ActiveHublist(){
 
   //데이터 허브의 종속된 파일을 타입별로 조회 null값 체크
   useEffect(() => {
-      console.log("activeHublist 컴포넌트의 첫번째 useEffect 실행됨.")
       function selectDataByTypeApi() {
-        console.log('hub_id: '+theHubInfo.hub_id);
-        
         if(theHubInfo.hub_id !== -1){ //default가 -1, 허브를 클릭했을때만 api호출
           ConnectApi({ method: 'GET', url: `/v1/api/datahub/${theHubInfo.hub_id}?type=${type}`})
           .then((res) => {
