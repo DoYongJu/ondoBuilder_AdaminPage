@@ -24,14 +24,12 @@ interface ClassifyType {
 function ActiveHublist(){
   var Buffer = require('buffer/').Buffer;
     const type = useRecoilValue(hubClassfiyState), //상단탭 눌렀을때 분류 타입
-  
-      location = useLocation(),
       navigate = useNavigate(),
       [isFirst, setIsFirst] = useState(true), //허브에 데이터가 없을 때
       [viewWays, setViewWays] = useState(true), //false가 card방식으로 보기 눌렀을 때
       [searchType, setSearchType] = useState(''), //왼쪽상단 select에따른 정렬
       [, setSearchText] = useState(''),
-      [filterOption, setFilterOption] = useState(''),
+      [selectedFilters, setSelectedFilters] = useState<string[]>([]),
       // data:MyObject= location.state,//허브 정보 
       [activeButton, setActiveButton] = useState(type),
       [selectList, setSelectList] = useState<ClassifyType[]>([
@@ -60,6 +58,7 @@ function ActiveHublist(){
 
     //랜더링
     const relanderingActiveHubFileList = useRecoilValue(ActiveHubFileListDetailsState);
+    console.log("at activeHubList"+selectedFilters);
 
   //데이터 허브의 종속된 파일 유무 체크
   useEffect(() => {
@@ -218,7 +217,6 @@ function ActiveHublist(){
           break;
       };
   };
-
 //선택된 파일을 사이즈 검사를 시키며 value초기화
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
@@ -249,6 +247,16 @@ function ActiveHublist(){
     theme: "light",
     
   });
+// 클릭된 옵션을 toggle하는 함수
+const toggleFilter = (option:string) => {
+  if (selectedFilters.includes(option)) {
+    // 이미 선택된 옵션이면 제외
+    setSelectedFilters(selectedFilters.filter(item => item !== option));
+  } else {
+    // 선택되지 않은 옵션이면 추가
+    setSelectedFilters([...selectedFilters, option]);
+  }
+};
     return (
 
       <div className={`activeHublist ${isSideBarOpen ? 'sidebarOpen' : ''}`}>
@@ -305,7 +313,7 @@ function ActiveHublist(){
                 {selctedClick &&
                     <ul className="options-list">
                     {filterList.slice(1).map((option, index) => ( 
-                        <li key={index} onClick={() => { setFilterOption(option);}} value={option}>
+                        <li key={index} onClick={() => { toggleFilter(option);}} value={option}>
                         {option}
                         <input type="checkbox"  className="Checkbox" value={option}></input>
                         </li>
@@ -354,8 +362,9 @@ function ActiveHublist(){
 
         {!isFirst && viewWays && (
           <div className='contbox'>
-            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} IsRelandering={relanderingActiveHubFileList}
-            onClick={()=>{setIsSideBarOpen(!isSideBarOpen);}} selectedF={()=>{setSelectedFile(null)}}/>
+            <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} 
+            selected={searchType} filterDocType={selectedFilters} IsRelandering={relanderingActiveHubFileList}
+            onClick={()=>{setIsSideBarOpen(!isSideBarOpen);}}/>
           </div>
         )}
         { !viewWays && ( 
@@ -373,7 +382,7 @@ function ActiveHublist(){
 
             {!isFirst && (
               <ClassfiydataOnType classfiyType={`${type}`} hubId={`${theHubInfo.hub_id}`} viewType={`${viewWays}`} selected={searchType} IsRelandering={relanderingActiveHubFileList}
-              onClick={()=>{ setIsSideBarOpen(!isSideBarOpen); }} selectedF={()=>{setSelectedFile(null)}}/>
+              onClick={()=>{ setIsSideBarOpen(!isSideBarOpen); }} filterDocType={selectedFilters}/>
             )}
           </div>
         )}

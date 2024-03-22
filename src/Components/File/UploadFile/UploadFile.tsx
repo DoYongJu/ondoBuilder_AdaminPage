@@ -243,14 +243,9 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                 }   
             };
         };
-        console.log("updatedImages[1]");
-        console.log(updatedImages[index]);
-        console.log("updatedImages[1].turn");
-        console.log(updatedImages[index].turn);
+    
         let turn =updatedImages[index].turn;
         setTurn(turn);
-        console.log("updatedImages");
-        console.log(updatedImages);
         updatedImages.sort((a, b) => a.turn - b.turn);
        
         

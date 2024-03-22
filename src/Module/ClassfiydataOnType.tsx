@@ -3,11 +3,11 @@ import ConnectApi from '../Module/ConnectApi';
 import {dataByTypeList, dataByType} from '../Resources/Models';
 import {  useSetRecoilState, useRecoilValue} from 'recoil';
 import {  dataByDocState, dataByVideoState,dataByUrlState,dataByImgState, syncSearchTextState, ActiveHubFileListDetailsState } from '../Resources/Recoil';
-import {DataHub_searchWordIntheHub_module, DataHub_searchWordIntheHub_url_module}from '../Module/Search_module';
+import {DataHub_searchWordIntheHub_module, DataHub_searchWordIntheHub_url_module, filterDocsByType_module}from '../Module/Search_module';
 
 
-const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, IsRelandering, selectedF}: 
-    { classfiyType: string,IsRelandering:boolean,  hubId: string, viewType: string,onClick: () => void, selected?:string,  selectedF?:(item:File | null)=>void }) =>{
+const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, IsRelandering, filterDocType}: 
+    { classfiyType: string,IsRelandering:boolean,  hubId: string, viewType: string,onClick: () => void, selected?:string,  filterDocType?:string[]}) =>{
 
     const [imageSrc, setImageSrc] = useState('');
     const [originlist, setOriginList] = useState<dataByTypeList>([]);
@@ -26,18 +26,26 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
             console.log("classfiydataOntype 컴포넌트의 selectDataByTypeApi useEffect 실행됨.")
             ConnectApi({ method: 'GET', url: `/v1/api/datahub/${hubId}?type=${classfiyType}`})
                 .then((res) => {
-                    setOriginList(res.data);
                     switch (classfiyType) {
                         case 'doc':
                             setImageSrc('/doc.svg');
+                            const updatedData = res.data.map((item:any) => {
+                                const fileExtension = item.file_name.substring(item.file_name.lastIndexOf('.') + 1);
+                                // 예시로, 확장자를 'extension' 속성에 저장 (실제 사용에 맞게 조정 필요)
+                                return { ...item, docType: fileExtension };
+                            });
+                            setOriginList(updatedData);
                             break;
                         case 'img':
+                            setOriginList(res.data);
                             setImageSrc('/img.svg');
                             break;
                         case 'video':
+                            setOriginList(res.data);
                             setImageSrc('/video.svg');
                             break;
                         case 'url':
+                            setOriginList(res.data);
                             setImageSrc('/link.svg');
                             break;
                         default:
@@ -45,12 +53,16 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
                             break;
                     }; 
 
+                   
+                    
                 })
                 .catch((error) => {
                     console.error('Error occurred:', error);
                 });
     };
-
+    // useEffect(()=>{
+    //     selectDataByTypeApi();
+    // },[filterDocType]);
     useEffect(()=>{
         selectDataByTypeApi();
     },[IsRelandering]);
@@ -69,14 +81,20 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
 
     useEffect(() => {
     async function getContentBySelect() {
+        // if(filterDocType )
+        let datass: dataByTypeList = []; 
             if(classfiyType === 'url'){
-                let datass =await DataHub_searchWordIntheHub_url_module({ data: originlist },searchText, selected );
-                setListBySelc(datass);
+                datass =await DataHub_searchWordIntheHub_url_module({ data: originlist },searchText, selected );
             }else{
-                let datass =await DataHub_searchWordIntheHub_module({ data: originlist },searchText, selected );
-                setListBySelc(datass);
-            }
-           
+                if(filterDocType?.length !== 0){
+                    console.log(`classfiyType === 'doc' && filterDocType!== ${filterDocType}`);
+                    datass =await filterDocsByType_module({ data: originlist },filterDocType );
+                }else{
+                    datass =await DataHub_searchWordIntheHub_module({ data: originlist },searchText, selected );
+                 
+                }; 
+            };
+            setListBySelc(datass);
         //    if(datass.length === 0){
         //     alert('원하시는 검색 결과가 없습니다.')
         //    }
@@ -84,7 +102,7 @@ const ClassfiydataOnType =({ classfiyType, hubId, viewType, onClick, selected, I
         };
         
         getContentBySelect();
-    }, [selected, searchText]);
+    }, [selected, searchText, classfiyType, filterDocType]);
 
     function handleClick (item:dataByType){
         console.log(item);

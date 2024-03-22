@@ -82,6 +82,7 @@ export interface dataByType{
   carousel_id:number;
   image_no:number;
   url_name:string,
+  docType:string, 
 }
 export interface userInfoType{
   email: string;

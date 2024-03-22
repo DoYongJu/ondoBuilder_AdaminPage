@@ -1,7 +1,5 @@
-import React from 'react';
-import { MyObjects, dataByTypeList } from '../Resources/Models';
-import {useSetRecoilState} from 'recoil';
-import {searchState } from '../Resources/Recoil';
+import { MyObjects, dataByTypeList, dataByType } from '../Resources/Models';
+
 
 
 //검색 모듈
@@ -37,6 +35,25 @@ function DataHub_module({data}:{data:MyObjects}, searchText:string) {
 //   if (/[ㄱ-ㅎ가-힣]/.test(char)) return 3;
 //   return 4; // 특수문자
 // };
+//doc타입 분류
+export function filterDocsByType_module({data}:{ data: dataByTypeList }, filterDocType:string[] |undefined){
+
+  let isSearchTextlist: dataByTypeList = []; 
+ 
+  filterDocType?.forEach((doc: string) => {
+    // 필터링 조건에 맞는지 확인하여 filteredDocs에 추가
+    // 예를 들어, 문서의 유형이 filterOptions에 포함되는지 확인하여 추가할 수 있음
+    data?.forEach((item: dataByType) => {
+      if (item.docType.includes(doc.toLowerCase())) {
+        isSearchTextlist.push(item);
+      }
+    });
+   
+  });
+    return isSearchTextlist;
+ 
+
+};
 export function DataHub_searchWordIntheHub_url_module({data}:{ data: dataByTypeList }, searchText:string, classify?:string){
 
   let isSearchTextlist: dataByTypeList = []; 
@@ -66,7 +83,7 @@ export function DataHub_searchWordIntheHub_url_module({data}:{ data: dataByTypeL
   }
 
 };
-//1개의 허브 안에서 파일 정렬
+//1개의 허브 안에서 url select값에 따라 정렬
  function DataHub_sortIntheHub_url_module({data}:{ data: dataByTypeList }, classify?:string){
   if(data){
     console.log("DataHub_sortIntheHub_url_module start!!!");
@@ -106,7 +123,7 @@ export function DataHub_searchWordIntheHub_url_module({data}:{ data: dataByTypeL
   }
  
 };
-//문서, 이미지, 동영상에 대한 분류와 검색.
+//문서, 이미지, 동영상에 대한 단어 검색.
 export function DataHub_searchWordIntheHub_module({data}:{ data: dataByTypeList }, searchText:string, classify?:string){
 
   let isSearchTextlist: dataByTypeList = []; 
@@ -135,8 +152,8 @@ export function DataHub_searchWordIntheHub_module({data}:{ data: dataByTypeList 
   }
 
 };
-//1개의 허브 안에서 파일 정렬
-export function DataHub_sortIntheHub_module({data}:{ data: dataByTypeList }, classify?:string){
+//1개의 허브 안에서 select값에 따라 파일 정렬
+function DataHub_sortIntheHub_module({data}:{ data: dataByTypeList }, classify?:string){
   if(data){
     console.log("DataHub_sortIntheHub_module start!!!");
     console.log(classify);
@@ -167,8 +184,8 @@ export function DataHub_sortIntheHub_module({data}:{ data: dataByTypeList }, cla
       default:
         break;
     };
-    console.log("resultList");
-    console.log(resultList);
+    // console.log("resultList");
+    // console.log(resultList);
     return resultList; 
   }else{
     return [];
