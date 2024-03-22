@@ -313,9 +313,9 @@ const toggleFilter = (option:string) => {
                 {selctedClick &&
                     <ul className="options-list">
                     {filterList.slice(1).map((option, index) => ( 
-                        <li key={index} onClick={() => { toggleFilter(option);}} value={option}>
+                        <li key={index}  value={option}>
                         {option}
-                        <input type="checkbox"  className="Checkbox" value={option}></input>
+                        <input type="checkbox"  className="Checkbox" value={option} onClick={() => { toggleFilter(option);}}></input>
                         </li>
                 
                     ))}

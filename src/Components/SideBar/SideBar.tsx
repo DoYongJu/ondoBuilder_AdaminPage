@@ -30,7 +30,7 @@ interface SideBarProps {
   const imgInfo = useRecoilValue(imgDetailsState);
 
 
-  const [scrollY, setScrollY] = useState(0);
+  const [scrollY, setScrollY] = useState(window.scrollY);
 
   //랜더링
   const setActiveHubFileListRecoil = useSetRecoilState(ActiveHubFileListState);
@@ -53,7 +53,7 @@ interface SideBarProps {
     console.log(urlInfo);
 
     function chooseImgByType() {
-      console.log(imgInfo);
+
       console.log('fileType: '+type);
       
       switch(type) {
@@ -236,7 +236,8 @@ interface SideBarProps {
 
   return (
   
-      <div className={`sidebar ${isOpen ? 'open' : ''}`} style={scrollY > 78?({top: '0px',position: 'fixed',}):({ top: `${78 - scrollY}px`, position: 'absolute',})}>
+      <div className={`sidebar ${isOpen ? 'open' : ''}`} style={scrollY > 78?({top: '0px',position: 'fixed',}):
+      ({ top: `${78 - scrollY}px`, position: 'absolute',})}>
         <div className='nav'>
         <ul>
           <span>파일정보</span>
