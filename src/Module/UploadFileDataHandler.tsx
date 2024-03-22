@@ -1,5 +1,5 @@
 import ConnectApi from './ConnectApi';
-
+/*파일에 대한 정보를 입력받아 파일의 타입에 따라 정해진 스키마로 배치되는 함수 */
 const UploadFileDataHandler = async ({
     classfiyType, hubId, file_description, file_tag, carousel_id, turn, content, url_tag, url_description, prompt, urlInfo
 }: {
@@ -9,7 +9,6 @@ const UploadFileDataHandler = async ({
 
     let apiUrl = '';
     let sendParam: any = {};
-    let formData = new FormData();
 
 
 

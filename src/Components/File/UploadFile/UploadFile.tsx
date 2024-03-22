@@ -302,7 +302,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
         tags.forEach((item) => item.name && tagList.push(item.name));
         
         const boolean = await UploadFileDataHandler({classfiyType: fileType, hubId: data.hub_id,  file_tag: tagList, file_description: description,
-            content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem? (turn):(1), url_description:urlInfo})
+            content:oneFile, prompt:promtText, urlInfo:urlInfo, carousel_id:Number(selectedCaroselId), turn:draggedItem? (turn):(1), url_description:description})
 
         if(boolean === true){
             const fakeEvent = { } as React.MouseEvent<HTMLButtonElement>;

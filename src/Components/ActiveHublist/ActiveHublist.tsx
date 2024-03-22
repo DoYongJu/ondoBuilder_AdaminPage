@@ -118,7 +118,7 @@ function ActiveHublist(){
   //이미지 드롭
   const handleDrop = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
+    let file = e.dataTransfer.files[0];
     validateFile(file);
     setActive(false);
   };
@@ -171,8 +171,11 @@ function ActiveHublist(){
 
 //file type에 따른 size 검사.
   const validateFile = (file:File)=>{
-      const fileType = file.type;
-      const fileSize = file.size;
+      const Filedata : File = new File([file],Buffer.from(file.name, 'ascii').toString('utf8' ), { type: file.type })
+      let fileType = Filedata.type;
+      let fileSize = Filedata.size;
+      setSelectedFile(Filedata);
+
       //파일 validation
       switch (type) { 
         case 'img':
