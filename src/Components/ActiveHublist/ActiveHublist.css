@@ -1,4 +1,4 @@
-.activeHublist{margin: 0 240px 0 240px; display: flex;flex-wrap: wrap; justify-content: left;  
+.activeHublist{margin: 0 240px 172px 240px; display: flex;flex-wrap: wrap; justify-content: left;  
     gap:4px;align-items: center;   transition: margin-right 0.3s ease-in-out;}
 .activeHublist.sidebarOpen {margin-right: 460px;}
 .activeHublist .title{width: 100%;height: 52px; margin: 40px 0 4px 0;}
