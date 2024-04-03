@@ -138,7 +138,7 @@ const UploadFile: React.FC<UploadFileProps> = ({ onClose, oneFile, fileType }) =
                 // 이미지 다운로드 작업을 Promise 배열로 저장
                 let requests = data.map((img) => {
                 img.turn =img.turn+1;
-                    // let sum =data.length+2
+                    // let sum =data.length+2 -> 역순정렬
                     // img.turn =sum- img.turn;
                 
                     if (img.file_url) {

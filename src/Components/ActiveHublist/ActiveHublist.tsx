@@ -79,8 +79,8 @@ console.log(type);
   
   }, [isFirst, type, selectedFile, openInputModal, isSideBarOpen]);
 
-//상단 탭 정보
-  const buttons = [ 
+
+  const buttons = [  //상단 탭 정보
         { label: '정보', value: 'info' },
         { label: '문서', value: 'doc' },
         { label: '이미지', value: 'img' },
@@ -88,14 +88,14 @@ console.log(type);
         { label: '링크', value: 'url' },
   ];
 
-//상단 select박스 클릭 이벤트
-  function handleSelect (selectedValue:ClassifyType){
+
+  function handleSelect (selectedValue:ClassifyType){ //상단 select박스 클릭 이벤트
         setSearchText('');
         setSearchType(selectedValue.name);
   };
 
-//상단 탭 클릭 페이지 이동 이벤트 
-  const handleButtonClick = (value:string) => {
+
+  const handleButtonClick = (value:string) => { //상단 탭 클릭 페이지 이동 이벤트 
       setHubClassify(value);
       setActiveButton(value);
         switch(value){

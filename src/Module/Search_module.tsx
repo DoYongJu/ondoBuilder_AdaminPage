@@ -50,14 +50,13 @@ export function filterDocsByType_module({data}:{ data: dataByTypeList }, filterD
     });
    
   });
-    return isSearchTextlist;
- 
-
+    return isSearchTextlist; 
 };
+
+//url검색기능
 export function DataHub_searchWordIntheHub_url_module({data}:{ data: dataByTypeList }, searchText:string, classify?:string){
 
   let isSearchTextlist: dataByTypeList = []; 
-  console.log("dddddddddd url 검색 모듈 start!! ddddddddd");
   if(searchText !== 'default'){ //검색어가 있는 경우
     searchText = searchText.toLowerCase();
     for (let i = 0; i < data.length; i++) {
@@ -69,27 +68,24 @@ export function DataHub_searchWordIntheHub_url_module({data}:{ data: dataByTypeL
           nowData.url_regdate.match(searchText)) {
   
           isSearchTextlist.push(nowData);
-          if(classify){ //검색어도 있고 분류도 있는경우
+          if(classify){ //검색어도 있고 분류체크도 있는경우
             isSearchTextlist = DataHub_sortIntheHub_url_module({data:isSearchTextlist},classify );
           }
-      }
+      };
     };
-    // setSearchState('default');
     return isSearchTextlist;
-  }else{//검색어가 없는 경우.
+
+  }else{//검색어가 없는 경우->전체 데이터 반환.
     isSearchTextlist = DataHub_sortIntheHub_url_module({data:data},classify);
-    // setSearchState('');
     return isSearchTextlist;
-  }
+  };
 
 };
 //1개의 허브 안에서 url select값에 따라 정렬
  function DataHub_sortIntheHub_url_module({data}:{ data: dataByTypeList }, classify?:string){
   if(data){
-    console.log("DataHub_sortIntheHub_url_module start!!!");
-    console.log(classify);
-
     let resultList: dataByTypeList = [...data]; 
+
     switch (classify) {
       case '이름순':
         resultList.sort((a,b) => {
@@ -115,14 +111,14 @@ export function DataHub_searchWordIntheHub_url_module({data}:{ data: dataByTypeL
       default:
         break;
     };
-    console.log("resultList");
-    console.log(resultList);
+
     return resultList; 
+    
   }else{
     return [];
-  }
- 
+  };
 };
+
 //문서, 이미지, 동영상에 대한 단어 검색.
 export function DataHub_searchWordIntheHub_module({data}:{ data: dataByTypeList }, searchText:string, classify?:string){
 

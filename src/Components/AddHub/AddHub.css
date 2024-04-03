@@ -17,10 +17,10 @@
 .AddHub .AddHubCenter .mainArea .bodyArea .hubInfoArea{width:100%; height:134px;position: relative;}
 .AddHub .AddHubCenter .mainArea .bodyArea .hubInfoArea span {color: #505050;font-size: 14px;font-style: normal;
     font-weight: 400;line-height: 20px;letter-spacing: -0.35px;}
-.AddHub .AddHubCenter .mainArea .bodyArea .hubInfoArea textarea{width: 428px; height: 76px; 
+.AddHub .AddHubCenter .mainArea .bodyArea .hubInfoArea textarea{width: 428px; height: 76px;
     padding: 16px;border-radius: 6px;border: 1px solid #BDBDBD;}
 .AddHub .AddHubCenter .mainArea .bodyArea .hubInfoArea .count{position: absolute; bottom: 10px; right: 10px; color: #999;font-size: 14px;
-    font-style: normal;font-weight: 400;line-height: 20px; letter-spacing: -0.35px;}
+    font-style: normal;font-weight: 400;line-height: 20px; letter-spacing: -0.35px; }
 
 .AddHub .AddHubCenter .mainArea .footerArea{width:100%; height: 56px;}
 .AddHub .AddHubCenter .mainArea .footerArea button {width:100%; height:100%; padding: 16px 0px; text-align: center;border-radius: 6px; border:none;
